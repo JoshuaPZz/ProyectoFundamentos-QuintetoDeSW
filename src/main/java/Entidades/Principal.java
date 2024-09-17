@@ -11,7 +11,7 @@ import java.io.IOException;
 public class Principal extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(Principal.class.getResource("/Pantallas/hello-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Principal.class.getResource("/Pantallas/PantallaLogin.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         scene.getStylesheets().add(getClass().getResource("/CssStyle/LoginStyle.css").toExternalForm());
         Font.loadFont(getClass().getResourceAsStream("/fonts/Lato-Bold.ttf"), 10);
