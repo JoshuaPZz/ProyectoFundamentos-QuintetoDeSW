@@ -1,0 +1,39 @@
+.root{
+    -fx-background-image:url('../Images/deparatamentos-e-institutos.jpg');
+    -fx-background-size:cover;
+    -fx-debug: true;
+}
+#logInPane{
+    -fx-background-color:"white";
+}
+
+#logInTitle{
+    -fx-font-family: 'Lato';
+    -fx-text-fill: #47525E;
+    -fx-font-size: 35px;
+    -fx-line-spacing: 51px;
+    -fx-pref-width: 559px;
+    -fx-alignment: center;
+}
+#logInTitle2{
+    -fx-font-family: 'Lato';
+    -fx-text-fill: #8190A5;
+    -fx-font-size: 14px;
+    -fx-line-spacing: 51px;
+    -fx-pref-width: 559px;
+    -fx-alignment: center;
+}
+#logInTitle3{
+    -fx-font-family: 'Lato';
+    -fx-text-fill: #8190A5;
+    -fx-font-size: 14px;
+    -fx-line-spacing: 51px;
+    -fx-pref-width: 559px;
+    -fx-alignment: center;
+}
+
+#logInButton{
+    -fx-background-color: #62ACC1;
+    -fx-font-family: 'Lato';
+    -fx-font-size: 14px;
+}
