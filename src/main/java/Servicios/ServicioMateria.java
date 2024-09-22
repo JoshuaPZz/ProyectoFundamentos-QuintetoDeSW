@@ -20,4 +20,19 @@ public class ServicioMateria {
         nuevaMateria.setCorequisitos(corequisitos != null ? corequisitos : new ArrayList<>());
         return nuevaMateria;
     }
+
+    // Método para consultar información de una materia
+    public String consultarMateria(Materia materia) {
+        if (materia != null) {
+            return "Materia: " + materia.getNombre() + ", ID: " + materia.getiD() +
+                    ", Descripción: " + materia.getDescripcion() + ", Créditos: " + materia.getCreditos();
+        }
+        return "Materia no encontrada.";
+    }
+
+
+
+
+
+
 }

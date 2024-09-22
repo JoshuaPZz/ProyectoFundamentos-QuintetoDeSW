@@ -16,9 +16,12 @@ public class ServicioSala {
         nuevaSala.setUbicacion(ubicacion);
         nuevaSala.setCapacidad(capacidad);
         nuevaSala.setTipo(tipo);
-        salas.add(nuevaSala); // Agregar la nueva sala a la lista
+        salas.add(nuevaSala);
         System.out.println("Sala " + ID + " creada correctamente.");
         return nuevaSala;
     }
+
+
+
 
 }

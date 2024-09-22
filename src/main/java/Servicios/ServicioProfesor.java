@@ -1,4 +1,5 @@
 package Servicios;
+import Entidades.Curso;
 import Entidades.Profesor;
 
 import java.util.ArrayList;
@@ -8,5 +9,7 @@ public class ServicioProfesor {
     public ServicioProfesor() {
         this.profesores = new ArrayList<>();
     }
+
+
 
 }
