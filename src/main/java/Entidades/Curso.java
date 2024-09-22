@@ -7,6 +7,8 @@ import java.util.List;
 public class Curso {
 
     private String iD;
+    private int cupos;
+
     private int capacidad;
     private List<Date> horarios;
     private Materia materia;
@@ -70,7 +72,11 @@ public class Curso {
         this.estudiantes = estudiantes;
     }
 
-    public Curso(String ID, Materia materia, int capacidad, List<Date> horarios, List<Sala> salas) {
+    public int getCupos() {return cupos;}
+
+    public void setCupos(int cupos) {this.cupos = cupos;}
+
+    public Curso(String ID, Materia materia, int capacidad, List<Date> horarios, List<Sala> salas, int cupos) {
         this.iD = ID;
         this.capacidad = capacidad;
         this.horarios = horarios;
@@ -78,6 +84,7 @@ public class Curso {
         this.salas = salas;
         this.profesores = new ArrayList<>();
         this.estudiantes = new ArrayList<>();
+        this.cupos = cupos;
     }
-
 }
+
