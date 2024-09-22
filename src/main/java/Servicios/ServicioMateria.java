@@ -30,6 +30,17 @@ public class ServicioMateria {
         return "Materia no encontrada.";
     }
 
+    // Metodo buscar una materia por su ID
+    public Materia buscarMateriaPorID(String id) {
+        for (Materia materia : materias) {
+            if (materia.getiD().equals(id)) {
+                return materia; // Devuelve la materia si se encuentra
+            }
+        }
+        System.out.println("Materia no encontrada con ID: " + id);
+        return null; // Devuelve null si no se encuentra la materia
+    }
+
 
 
 
