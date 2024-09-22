@@ -21,6 +21,13 @@ public class ServicioSala {
         return nuevaSala;
     }
 
+    public String consultarSala(Sala sala) {
+        if (sala != null) {
+            return "Sala: " + sala.getiD() + ", Ubicación: " + sala.getUbicacion() +
+                    ", Capacidad: " + sala.getCapacidad() + ", Tipo: " + sala.getTipo();
+        }
+        return "Sala no encontrada.";
+    }
 
 
 
