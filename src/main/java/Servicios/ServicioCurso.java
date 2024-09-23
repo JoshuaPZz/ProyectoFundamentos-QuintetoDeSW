@@ -44,6 +44,15 @@ public class ServicioCurso {
         }
         return null;
     }
-
+    // Buscar curso por ID
+    public Curso buscarCursoPorID(String idCurso) {
+        for (Curso curso : cursos) {
+            if (curso.getiD().equalsIgnoreCase(idCurso)) {
+                return curso;
+            }
+        }
+        System.out.println("No se encontró un curso con el ID proporcionado: " + idCurso);
+        return null;
+    }
 
 }
