@@ -55,4 +55,18 @@ public class ServicioCurso {
         return null;
     }
 
+    // Crear los horarios del curso
+    public static Date crearHorario(int year, int month, int day, int hourOfDay) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, year);          // Establecer el año
+        calendar.set(Calendar.MONTH, month);        // Establecer el mes (0=enero, 1=febrero, ..., 11=diciembre)
+        calendar.set(Calendar.DAY_OF_MONTH, day);   // Establecer el día del mes
+        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay); // Establecer la hora (formato 24 horas)// Establecer los minutos
+        calendar.set(Calendar.SECOND, 0);           // Establecer los segundos en 0
+        calendar.set(Calendar.MILLISECOND, 0);      // Establecer los milisegundos en 0
+        return calendar.getTime();
+    }
+
+    
+
 }
