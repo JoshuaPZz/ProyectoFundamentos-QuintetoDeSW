@@ -67,6 +67,18 @@ public class ServicioCurso {
         return calendar.getTime();
     }
 
-    
+    // Verificar cruce de horarios entre los cursos
+    public boolean hayCruceHorarios(Curso nuevoCurso, List<Curso> cursosInscritos) {
+        for (Curso cursoInscrito : cursosInscritos) {
+            for (Date horarioNuevo : nuevoCurso.getHorarios()) {
+                for (Date horarioInscrito : cursoInscrito.getHorarios()) {
+                    if (horarioNuevo.equals(horarioInscrito)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
 
 }
