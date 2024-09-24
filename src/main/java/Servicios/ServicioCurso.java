@@ -81,4 +81,56 @@ public class ServicioCurso {
         return false;
     }
 
+    // Verificacion de cumplimiento de requisitos pre y co
+    public boolean cumpleRequisitos(Estudiante estudiante, Curso curso) {
+        List<Materia> materiasVistas = new ArrayList<>();
+
+        // Obtener las materias ya vistas (de cursos completados)
+        for (Curso cursoVisto : estudiante.getCursosVistos()) {
+            materiasVistas.add(cursoVisto.getMateria());
+        }
+
+        // Verificar los pre-requisitos de la materia asociada al curso
+        List<Materia> preRequisitos = curso.getMateria().getPrerequisitos();
+        for (Materia preRequisito : preRequisitos) {
+            if (!materiasVistas.contains(preRequisito)) {
+                System.out.println("Falta el pre-requisito: " + preRequisito.getNombre());
+                return false;
+            }
+        }
+
+        // Verificar los co-requisitos de la materia asociada al curso
+        List<Materia> coRequisitos = curso.getMateria().getCorequisitos();
+        for (Materia coRequisito : coRequisitos) {
+            boolean coRequisitoCumplido = false;
+            // Revisar si el estudiante ya está inscrito en algún curso que tenga esta materia como co-requisito
+            for (Curso cursoInscrito : estudiante.getCursos()) {
+                if (cursoInscrito.getMateria().equals(coRequisito)) {
+                    coRequisitoCumplido = true;
+                    break;
+                }
+            }
+
+            // Si no está inscrito en la materia, verificar si ya la ha visto
+            if (!coRequisitoCumplido) {
+                // Asumiendo que 'cursosVistos' es una lista de materias que el estudiante ya ha visto
+                for (Curso cursoVisto : estudiante.getCursosVistos()) {
+                    if (cursoVisto.getMateria().equals(coRequisito)) {
+                        coRequisitoCumplido = true;
+                        break;
+                    }
+                }
+            }
+
+            // Si no se cumple el co-requisito, mostrar el mensaje y detener la inscripción
+            if (!coRequisitoCumplido) {
+                System.out.println("Falta el co-requisito: " + coRequisito.getNombre());
+                return false;
+            }
+        }
+
+        // Si se cumplieron todos los requisitos, se puede inscribir al curso
+        return true;
+    }
+
 }
