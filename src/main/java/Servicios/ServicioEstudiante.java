@@ -61,6 +61,25 @@ public class ServicioEstudiante {
         return false;
     }
 
+    // Metodo para ver el horario ya inscrito del estudiante
+    public List<String> verHorario(Estudiante estudiante) {
+        if (estudiante != null && estudiante.getCursos() != null) {
+            List<String> detallesMaterias = new ArrayList<>();
+            for (Curso curso : estudiante.getCursos()) {
+                String materiaNombre = curso.getMateria().getNombre();  // Obtenemos el nombre de la materia
+                List<Date> horarios = curso.getHorarios();  // Obtenemos la lista de horarios
+                StringBuilder detallesCurso = new StringBuilder(materiaNombre + " - Horarios: ");
+                for (Date horario : horarios) {
+                    detallesCurso.append(horario.toString()).append(" ");  // Agregamos cada horario a la cadena
+                }
+                detallesMaterias.add(detallesCurso.toString());  // Añadimos la información del curso a la lista
+            }
+            return detallesMaterias;
+        }
+        return null;
+    }
+
+
 
 
 }
