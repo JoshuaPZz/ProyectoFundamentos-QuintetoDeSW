@@ -1,6 +1,7 @@
 package Servicios;
 import Entidades.Curso;
 import Entidades.Estudiante;
+import Entidades.Materia;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,6 +36,19 @@ public class ServicioEstudiante {
             return true;
         }
         return false;
+    }
+
+    // Ver las materias que se encuetran actualmente en el carrito
+    public List<Materia> verCarrito(Estudiante estudiante) {
+        if (estudiante != null && estudiante.getCarrito() != null) {
+            List<Materia> materias = new ArrayList<>();
+            for (Curso curso : estudiante.getCarrito()) {
+                System.out.println(curso.getMateria().getNombre() + " " + curso.getiD()); // Mostrar lista de materias en carrito
+                materias.add(curso.getMateria());
+            }
+            return materias;
+        }
+        return null;
     }
 
 
