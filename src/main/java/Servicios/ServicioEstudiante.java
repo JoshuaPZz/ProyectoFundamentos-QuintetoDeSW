@@ -51,5 +51,16 @@ public class ServicioEstudiante {
         return null;
     }
 
+    // Método para remover a un estudiante de un curso
+    public boolean removerCurso(Estudiante estudiante, Curso curso) {
+        if (estudiante != null && curso != null && curso.getEstudiantes().contains(estudiante)) {
+            curso.getEstudiantes().remove(estudiante);
+            estudiante.getCursos().remove(curso);
+            return true;
+        }
+        return false;
+    }
+
+
 
 }
