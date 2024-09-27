@@ -10,14 +10,6 @@ import javafx.scene.text.Text;
 
 public class ControladorLogIn {
 
-    @FXML
-    private Button logInButton;
-
-    @FXML
-    private Pane logInPane;
-
-    @FXML
-    private Text logInTitle;
 
     @FXML
     private PasswordField textPass;
