@@ -15,7 +15,7 @@ public class Principal extends Application {
         Scene scene = new Scene(fxmlLoader.load());
         scene.getStylesheets().add(getClass().getResource("/CssStyle/LoginStyle.css").toExternalForm());
         Font.loadFont(getClass().getResourceAsStream("/fonts/Lato-Bold.ttf"), 10);
-        stage.setTitle("Hello!");
+        stage.setTitle("Bienvenido......");
         stage.setScene(scene);
         stage.setResizable(false);
         stage.show();
