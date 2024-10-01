@@ -36,3 +36,45 @@
 14. Finalmente, el usuario podrá ejecutar el **SQL Server Management Studio**.
 
 15. Dentro de la base de datos, el usuario deberá ingresar los datos que creó anteriormente y podrá acceder al **Motor de Base de Datos**.
+
+## Configuración JDBC
+
+1. Ingresar a [Descarga de Microsoft JDBC Driver para SQL Server](https://learn.microsoft.com/es-es/sql/connect/jdbc/download-microsoft-jdbc-driver-for-sql-server?view=sql-server-ver16). E instalar la última versión del driver, descargar la que esta en formato ZIP
+
+2. Una vez descargado, se descoprime el archivo
+
+3. Abrir el Proyecto en Intellij, irse a file --> Proyect Structure --> Module --> Dependencies
+
+4. En Dependencies, darle al + y agregar un JAR, seleccionabos el que descargamos anteriormente (Abrir la carpeta descomprimida y abrir la carpeta JAR) y darle Apply y OK
+
+5. Ahora, en el buscador de Windows buscar y abrir **SQL SERVER CONFIGURATION MANAGER**
+
+6. En las opciones de la izquierda, buscar **SQL Server Network Configurations**, selecionar:
+     - **Protocols for SQLEXPRESS**
+
+7. Ahora se debe dar click derecho y poner en **Enable** las siguiente opciones:
+     - **Named Pipes**
+     - **TCP/IP**
+
+8. En la opción de **TCP/IP**, dar click derecho, y dar en propiedades:
+     - Dirigirse a **IP Address**
+     - Irse a la ultima opción **IPAII**, y en TCP Port poner 1433. (Puerto del motor de base de datos)
+
+9. Volver a la pestaña de **SQL Server Service** y dar click derecho y restart en **SQL Server (SQLEXPRESS)**
+
+10. Una vez se haya reiniciado el servicio, nos dirigimos al que dice **SQL Server Browse**, le damos click derecho, Propiedades:
+      - Nos dirigimos a **Service** y en **Start Mode** lo ponemos Automatic
+      - Ahora en **Advanced**, verificamos que la pestaña **Active** este en Yes
+
+11. Ahora en Intellij, tenemos que poner el siguiente codigo:
+```java
+      String conexionURL = "jdbc:sqlserver://nombre_de_instancia;databaseName=nombre_base_datos;user=nombre_usuario;password=contraseña;encrypt=true;trustServerCertificate=true;"; //Reemplazar en los campos por la información de su Base de datos
+  
+      try (Connection connection = DriverManager.getConnection(conexionURL);){
+      System.out.println("Conexión Exitosa");
+      } catch (SQLException e) {
+            e.printStackTrace();
+        }
+```
+
+12. Ejecutar el codigo y si todo esta bien, imprime **Confirmación Exitosa**
