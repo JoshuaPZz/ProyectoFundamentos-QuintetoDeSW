@@ -1,8 +1,7 @@
 package Entidades;
 
+import Controladores.SceneManager;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
@@ -11,13 +10,18 @@ import java.io.IOException;
 public class Principal extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(Principal.class.getResource("/Pantallas/PantallaLogin.fxml"));
-        Scene scene = new Scene(fxmlLoader.load());
-        scene.getStylesheets().add(getClass().getResource("/CssStyle/LoginStyle.css").toExternalForm());
+        // Set the primary stage in SceneManager
+        SceneManager.getInstance().setPrimaryStage(stage);
+
+        // Load custom font
         Font.loadFont(getClass().getResourceAsStream("/fonts/Lato-Bold.ttf"), 10);
+        // Set stage properties
         stage.setTitle("Bienvenido......");
-        stage.setScene(scene);
         stage.setResizable(false);
+
+        // Switch to the login scene using SceneManager
+        SceneManager.getInstance().switchScene("/Pantallas/PantallaLogin.fxml", "/CssStyle/LoginStyle.css");
+
         stage.show();
     }
 
