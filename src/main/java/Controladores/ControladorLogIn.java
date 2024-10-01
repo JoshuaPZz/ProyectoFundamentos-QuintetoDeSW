@@ -8,6 +8,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
+import java.io.IOException;
+
 public class ControladorLogIn {
 
 
@@ -20,6 +22,8 @@ public class ControladorLogIn {
     @FXML
     void logInButtonPressed(ActionEvent event) {
 
+
+
         /*
         Realizar la consulta de bases de datos y pasar datos de usuario al metodo
         getText() de cada campo
@@ -29,6 +33,14 @@ public class ControladorLogIn {
          */
         if(textPass.getText().equals("") && textUser.getText().equals("")) {
             System.out.println("Si es el usuario!!!");
+        }
+        try {
+            // Switch to the main application scene
+            SceneManager.getInstance().switchScene("/Pantallas/pantallaEstudiante.fxml", null);
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Handle the exception (e.g., show an error message to the user)
+            System.err.println("Error al cambiar de escena: " + e.getMessage());
         }
     }
 
