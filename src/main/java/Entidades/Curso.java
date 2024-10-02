@@ -7,9 +7,9 @@ import java.util.List;
 public class Curso {
 
     private String iD;
-    private int cupos;
+    private int cupos; //Hace referencia a los cupos maximos
 
-    private int capacidad;
+    private int capacidad; //la capacidad ocupada actualmente
     private List<Date> horarios;
     private Materia materia;
     private List<Sala> salas;
@@ -86,5 +86,6 @@ public class Curso {
         this.estudiantes = new ArrayList<>();
         this.cupos = cupos;
     }
+
 }
 
