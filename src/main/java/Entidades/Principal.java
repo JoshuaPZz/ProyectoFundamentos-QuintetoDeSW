@@ -15,6 +15,7 @@ public class Principal extends Application {
 
         // Load custom font
         Font.loadFont(getClass().getResourceAsStream("/fonts/Lato-Bold.ttf"), 10);
+        Font.loadFont(getClass().getResourceAsStream("/fonts/LeagueGothic.ttf"), 10);
         // Set stage properties
         stage.setTitle("Bienvenido......");
         stage.setResizable(false);

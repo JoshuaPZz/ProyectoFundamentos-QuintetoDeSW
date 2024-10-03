@@ -3,13 +3,15 @@
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="820.0" prefWidth="1160.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controladores.ControladorEstudiante">
+<AnchorPane prefHeight="820.0" prefWidth="1160.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controladores.ControladorEstudiante">
    <children>
       <Pane fx:id="topPanel" prefHeight="58.0" prefWidth="1160.0" stylesheets="@../CssStyle/LoginStyle.css">
          <children>
@@ -50,8 +52,21 @@
       </Pane>
       <Pane layoutY="58.0" prefHeight="57.0" prefWidth="1160.0">
          <children>
-            <Text fx:id="inscText" layoutX="519.0" layoutY="33.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Inscripcion de materias" textAlignment="CENTER" />
+            <Text fx:id="inscText" fill="#014ba0" layoutY="48.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Inscripcion Materias" textAlignment="CENTER" wrappingWidth="1160.0">
+               <font>
+                  <Font size="49.0" />
+               </font>
+            </Text>
          </children>
       </Pane>
+      <Pane fx:id="backInscPane" layoutY="125.0" prefHeight="530.0" prefWidth="732.0">
+         <children>
+            <Pane layoutX="31.0" layoutY="23.0" prefHeight="485.0" prefWidth="670.0">
+               <children>
+                  <Label fx:id="labelInscritas" layoutX="-12.0" layoutY="49.0" prefHeight="436.0" prefWidth="310.0" />
+                  <Label fx:id="labelCarrito" layoutX="360.0" layoutY="42.0" prefHeight="436.0" prefWidth="310.0" />
+               </children>
+            </Pane>
+         </children></Pane>
    </children>
 </AnchorPane>

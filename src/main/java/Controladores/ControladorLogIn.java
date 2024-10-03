@@ -33,7 +33,7 @@ public class ControladorLogIn {
         }
         try {
             // Switch to the main application scene
-            SceneManager.getInstance().switchScene("/Pantallas/pantallaInscripcion.fxml", null);
+            SceneManager.getInstance().switchScene("/Pantallas/pantallaInscripcion.fxml", "/CssStyle/LoginStyle.css");
         } catch (IOException e) {
             e.printStackTrace();
             // Handle the exception (e.g., show an error message to the user)
