@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Estudiante {
+    private int id;
     private String nombre;
     private String documento;
     private String correo;
@@ -13,6 +14,9 @@ public class Estudiante {
     private List<Curso> cursosVistos;
     private List<Curso> carrito;
 
+    public int getId() {return id;}
+
+    public void setId(int id) {this.id = id;}
 
     public String getNombre() {
         return nombre;

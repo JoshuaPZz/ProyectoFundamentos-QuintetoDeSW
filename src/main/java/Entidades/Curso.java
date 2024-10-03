@@ -76,6 +76,17 @@ public class Curso {
 
     public void setCupos(int cupos) {this.cupos = cupos;}
 
+    public Curso() {
+        this.iD = "";
+        this.cupos = 0;
+        this.capacidad = 0;
+        this.horarios = new ArrayList<>();
+        this.materia = new Materia();
+        this.salas = new ArrayList<>();
+        this.profesores = new ArrayList<>();
+        this.estudiantes = new ArrayList<>();
+    }
+
     public Curso(String ID, Materia materia, int capacidad, List<Date> horarios, List<Sala> salas, int cupos) {
         this.iD = ID;
         this.capacidad = capacidad;
