@@ -1,24 +1,16 @@
 package Servicios;
-import Entidades.*;
+
+import Entidades.Curso;
+import Entidades.Estudiante;
+import Entidades.Materia;
+import Entidades.Profesor;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
 public class ServicioCurso {
-    private List<Curso> cursos;
-
-    // Constructor
-    public ServicioCurso() {
-        this.cursos = new ArrayList<>();
-    }
-    public Curso crearCurso(String ID, Materia materia, int capacidad, List<Date> horarios, List<Sala> salas, int cupos, List<Profesor> profesores) {
-        Curso nuevoCurso = new Curso(ID, materia, capacidad, horarios, salas, cupos);
-        nuevoCurso.setProfesores(profesores);
-        cursos.add(nuevoCurso);
-        return nuevoCurso;
-    }
-
 
     // Método para consultar un curso
     public String consultarCurso(Curso curso) {
@@ -44,11 +36,14 @@ public class ServicioCurso {
         }
         return null;
     }
-    // Buscar curso por ID
-    public Curso buscarCursoPorID(String idCurso) {
-        for (Curso curso : cursos) {
-            if (curso.getiD().equalsIgnoreCase(idCurso)) {
-                return curso;
+
+    // Buscar curso por ID en una lista de cursos
+    public Curso buscarCursoPorID(String idCurso, List<Curso> listaCursos) {
+        if (listaCursos != null) {
+            for (Curso curso : listaCursos) {
+                if (curso.getiD().equalsIgnoreCase(idCurso)) {
+                    return curso;
+                }
             }
         }
         System.out.println("No se encontró un curso con el ID proporcionado: " + idCurso);
@@ -61,7 +56,7 @@ public class ServicioCurso {
         calendar.set(Calendar.YEAR, year);          // Establecer el año
         calendar.set(Calendar.MONTH, month);        // Establecer el mes (0=enero, 1=febrero, ..., 11=diciembre)
         calendar.set(Calendar.DAY_OF_MONTH, day);   // Establecer el día del mes
-        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay); // Establecer la hora (formato 24 horas)// Establecer los minutos
+        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay); // Establecer la hora (formato 24 horas)
         calendar.set(Calendar.SECOND, 0);           // Establecer los segundos en 0
         calendar.set(Calendar.MILLISECOND, 0);      // Establecer los milisegundos en 0
         return calendar.getTime();
@@ -81,7 +76,7 @@ public class ServicioCurso {
         return false;
     }
 
-    // Verificacion de cumplimiento de requisitos pre y co
+    // Verificación de cumplimiento de requisitos pre y co
     public boolean cumpleRequisitos(Estudiante estudiante, Curso curso) {
         List<Materia> materiasVistas = new ArrayList<>();
 
@@ -113,7 +108,6 @@ public class ServicioCurso {
 
             // Si no está inscrito en la materia, verificar si ya la ha visto
             if (!coRequisitoCumplido) {
-                // Asumiendo que 'cursosVistos' es una lista de materias que el estudiante ya ha visto
                 for (Curso cursoVisto : estudiante.getCursosVistos()) {
                     if (cursoVisto.getMateria().equals(coRequisito)) {
                         coRequisitoCumplido = true;
@@ -132,5 +126,4 @@ public class ServicioCurso {
         // Si se cumplieron todos los requisitos, se puede inscribir al curso
         return true;
     }
-
 }
