@@ -2,11 +2,8 @@ package Controladores;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Pane;
-import javafx.scene.text.Text;
 
 import java.io.IOException;
 
@@ -36,7 +33,7 @@ public class ControladorLogIn {
         }
         try {
             // Switch to the main application scene
-            SceneManager.getInstance().switchScene("/Pantallas/pantallaEstudiante.fxml", null);
+            SceneManager.getInstance().switchScene("/Pantallas/pantallaInscripcion.fxml", null);
         } catch (IOException e) {
             e.printStackTrace();
             // Handle the exception (e.g., show an error message to the user)

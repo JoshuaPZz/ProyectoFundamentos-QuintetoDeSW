@@ -37,3 +37,20 @@
     -fx-font-family: 'Lato';
     -fx-font-size: 14px;
 }
+
+#topPanel{
+    -fx-background-color: #f0bc14;
+}
+
+.button-bar .button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #014BA0;
+    -fx-font-family: 'Lato';
+    -fx-font-size: 14px;
+}
+#inscText {
+    -fx-text-fill: #014BA0;
+    -fx-font-family: 'Lato';
+    -fx-font-size:49px
+}
+
