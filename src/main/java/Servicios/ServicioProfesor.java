@@ -21,4 +21,5 @@ public class ServicioProfesor {
             return new ArrayList<>(); // Retorna una lista vacía en caso de error
         }
     }
+
 }

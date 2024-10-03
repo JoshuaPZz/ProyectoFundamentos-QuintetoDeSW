@@ -1,6 +1,7 @@
 package RepositorioBD;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import Entidades.Curso;
@@ -121,5 +122,25 @@ public class EstudianteRepositorio {
         }
 
         return new Curso(cursoId, materia, capacidad, horarios, salas, 0);
+    }
+
+    public List<Curso> obtenerHorarios(String idCurso) throws SQLException {
+        List<Curso> horarios = new ArrayList<>();
+        String consulta = "SELECT hora_inicio, hora_fin FROM Horario WHERE curso_id = ?";
+
+        try (Connection conexion = getConnection();
+             PreparedStatement pstmt = conexion.prepareStatement(consulta)) {
+            pstmt.setString(1, idCurso);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    java.sql.Timestamp hora_inicio = rs.getTimestamp("hora_inicio");
+                    java.sql.Timestamp hora_fin = rs.getTimestamp("hora_fin");
+
+                  // samuel corrija
+                }
+            }
+        }
+
+        return horarios;
     }
 }

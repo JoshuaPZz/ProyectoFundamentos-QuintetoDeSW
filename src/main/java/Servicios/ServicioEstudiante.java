@@ -2,7 +2,10 @@ package Servicios;
 import Entidades.Curso;
 import Entidades.Estudiante;
 import Entidades.Materia;
+import RepositorioBD.CursoRepositorio;
+import RepositorioBD.EstudianteRepositorio;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -61,23 +64,36 @@ public class ServicioEstudiante {
         return false;
     }
 
-    // Método para ver el horario ya inscrito del estudiante
-    public List<String> verHorario(Estudiante estudiante) {
-        if (estudiante != null && estudiante.getCursos() != null) {
+
+    public List<String> verHorario(Estudiante estudiante,EstudianteRepositorio repositorioEstudiante, CursoRepositorio repositorioCurso) {
+        if (estudiante != null) {
             List<String> detallesMaterias = new ArrayList<>();
-            for (Curso curso : estudiante.getCursos()) {
-                String materiaNombre = curso.getMateria().getNombre();
-                List<Date> horarios = curso.getHorarios();
-                StringBuilder detallesCurso = new StringBuilder(materiaNombre + " - Horarios: ");
-                for (Date horario : horarios) {
-                    detallesCurso.append(horario.toString()).append(" ");
+            try {
+                // Obtener la lista de cursos del repositorio
+                List<Curso> cursos = repositorioEstudiante.obtenerHorarios(String.valueOf(estudiante.getId()));
+
+                for (Curso curso : cursos) {
+                    String materiaNombre = curso.getMateria().getNombre();
+
+                    // Obtener horarios del curso desde el repositorio
+                    List<Date> horarios = repositorioCurso.obtenerHorarios(curso.getiD());
+
+                    StringBuilder detallesCurso = new StringBuilder(materiaNombre + " - Horarios: ");
+
+                    for (Date horario : horarios) {
+                        detallesCurso.append(horario.toString()).append(" ");
+                    }
+                    detallesMaterias.add(detallesCurso.toString());
                 }
-                detallesMaterias.add(detallesCurso.toString());
+            } catch (SQLException e) {
+                System.out.println("Error al obtener los cursos del estudiante: " + e.getMessage());
             }
             return detallesMaterias;
         }
         return null;
     }
+
+
 
     // Método para inscribir una materia del carrito al horario del estudiante
     public boolean inscribirCurso(Estudiante estudiante, Curso cursoAInscribir) {

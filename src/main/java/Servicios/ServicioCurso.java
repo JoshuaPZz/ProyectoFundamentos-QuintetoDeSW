@@ -4,7 +4,9 @@ import Entidades.Curso;
 import Entidades.Estudiante;
 import Entidades.Materia;
 import Entidades.Profesor;
+import RepositorioBD.CursoRepositorio;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -21,34 +23,43 @@ public class ServicioCurso {
         return "Curso no encontrado.";
     }
 
-    // Método para ver los estudiantes de un curso
-    public List<Estudiante> verEstudiantes(Curso curso) {
+    // Ver la lista de estudiantes de un curso usando RepositorioCurso
+    public List<Estudiante> verEstudiantes(Curso curso, CursoRepositorio repositorioCurso) {
         if (curso != null) {
-            return curso.getEstudiantes();
+            try {
+                return repositorioCurso.obtenerEstudiantes(curso.getiD());
+            } catch (SQLException e) {
+                System.out.println("Error al obtener los estudiantes del curso: " + e.getMessage());
+            }
         }
         return new ArrayList<>();
     }
 
-    // Método para ver el profesor principal de un curso
-    public Profesor verProfesor(Curso curso) {
-        if (curso != null && !curso.getProfesores().isEmpty()) {
-            return curso.getProfesores().get(0);  // Suponemos que el primer profesor es el principal
-        }
-        return null;
-    }
-
-    // Buscar curso por ID en una lista de cursos
-    public Curso buscarCursoPorID(String idCurso, List<Curso> listaCursos) {
-        if (listaCursos != null) {
-            for (Curso curso : listaCursos) {
-                if (curso.getiD().equalsIgnoreCase(idCurso)) {
-                    return curso;
+    // Ver el profesor principal de un curso usando RepositorioCurso
+    public Profesor verProfesor(Curso curso, CursoRepositorio repositorioCurso) {
+        if (curso != null) {
+            try {
+                List<Profesor> profesores = repositorioCurso.obtenerProfesores(curso.getiD());
+                if (!profesores.isEmpty()) {
+                    return profesores.get(0);  // Suponemos que el primer profesor es el principal
                 }
+            } catch (SQLException e) {
+                System.out.println("Error al obtener profesores del curso: " + e.getMessage());
             }
         }
-        System.out.println("No se encontró un curso con el ID proporcionado: " + idCurso);
         return null;
     }
+    // Buscar un curso por su ID usando RepositorioCurso
+    public Curso buscarCursoPorID(String idCurso, CursoRepositorio repositorioCurso) {
+        try {
+            return repositorioCurso.obtenerCursoPorId(idCurso);
+        } catch (SQLException e) {
+            System.out.println("Error al buscar el curso con ID " + idCurso + ": " + e.getMessage());
+            return null;
+        }
+    }
+
+
 
     // Crear los horarios del curso
     public static Date crearHorario(int year, int month, int day, int hourOfDay) {

@@ -47,20 +47,21 @@ public class CursoRepositorio{
                     curso.setMateria(materia);
                     curso.setSalas(new ArrayList<>()); // La lista de salas podría llenarse posteriormente
                     curso.getSalas().add(sala);
-                    curso.setHorarios(obtenerHorarios(idCurso, conexion));
-                    curso.setProfesores(obtenerProfesores(idCurso, conexion));
-                    curso.setEstudiantes(obtenerEstudiantes(idCurso, conexion));
+                    curso.setHorarios(obtenerHorarios(idCurso));
+                    curso.setProfesores(obtenerProfesores(idCurso));
+                    curso.setEstudiantes(obtenerEstudiantes(idCurso));
                 }
             }
         }
         return curso;
     }
     // Método para obtener los horarios de un curso
-    private List<Date> obtenerHorarios(String idCurso, Connection conexion) throws SQLException {
+    public List<Date> obtenerHorarios(String idCurso) throws SQLException {
         List<Date> horarios = new ArrayList<>();
         String consulta = "SELECT hora_inicio, hora_fin FROM Horario WHERE curso_id = ?";
 
-        try (PreparedStatement pstmt = conexion.prepareStatement(consulta)) {
+        try (Connection conexion = getConnection();
+             PreparedStatement pstmt = conexion.prepareStatement(consulta)) {
             pstmt.setString(1, idCurso);
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
@@ -76,13 +77,14 @@ public class CursoRepositorio{
         return horarios;
     }
 
-    private List<Profesor> obtenerProfesores(String idCurso, Connection conexion) throws SQLException {
+    public List<Profesor> obtenerProfesores(String idCurso) throws SQLException {
         List<Profesor> profesores = new ArrayList<>();
         String consulta = "SELECT p.id, p.nombre, p.apellido FROM Profesor p " +
                 "JOIN Asignacion a ON p.id = a.profesor_id " +
                 "WHERE a.curso_id = ?";
 
-        try (PreparedStatement pstmt = conexion.prepareStatement(consulta)) {
+        try (Connection conexion = getConnection();
+             PreparedStatement pstmt = conexion.prepareStatement(consulta)) {
             pstmt.setString(1, idCurso);
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
@@ -98,13 +100,14 @@ public class CursoRepositorio{
     }
 
     // Método para obtener los estudiantes de un curso
-    private List<Estudiante> obtenerEstudiantes(String idCurso, Connection conexion) throws SQLException {
+    public List<Estudiante> obtenerEstudiantes(String idCurso) throws SQLException {
         List<Estudiante> estudiantes = new ArrayList<>();
         String consulta = "SELECT e.id, e.nombre FROM Estudiante e " +
                 "JOIN Inscripcion i ON e.id = i.estudiante_id " +
                 "WHERE i.curso_id = ?";
 
-        try (PreparedStatement pstmt = conexion.prepareStatement(consulta)) {
+        try (Connection conexion = getConnection();
+             PreparedStatement pstmt = conexion.prepareStatement(consulta)) {
             pstmt.setString(1, idCurso);
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
