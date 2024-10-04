@@ -6,13 +6,13 @@ import Entidades.Materia;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 public class ServicioEstudiante {
     private ServicioCurso servicioCurso;
-    private List<Estudiante> estudiantes;
 
+    // Constructor
     public ServicioEstudiante(ServicioCurso servicioCurso) {
         this.servicioCurso = servicioCurso;
-        this.estudiantes = new ArrayList<>();
     }
 
     // Agregar un curso dado al carrito del estudiante
@@ -38,12 +38,12 @@ public class ServicioEstudiante {
         return false;
     }
 
-    // Ver las materias que se encuetran actualmente en el carrito
+    // Ver las materias que se encuentran actualmente en el carrito
     public List<Materia> verCarrito(Estudiante estudiante) {
         if (estudiante != null && estudiante.getCarrito() != null) {
             List<Materia> materias = new ArrayList<>();
             for (Curso curso : estudiante.getCarrito()) {
-                System.out.println(curso.getMateria().getNombre() + " " + curso.getiD()); // Mostrar lista de materias en carrito
+                System.out.println(curso.getMateria().getNombre() + " " + curso.getiD());
                 materias.add(curso.getMateria());
             }
             return materias;
@@ -61,25 +61,25 @@ public class ServicioEstudiante {
         return false;
     }
 
-    // Metodo para ver el horario ya inscrito del estudiante
+    // Método para ver el horario ya inscrito del estudiante
     public List<String> verHorario(Estudiante estudiante) {
         if (estudiante != null && estudiante.getCursos() != null) {
             List<String> detallesMaterias = new ArrayList<>();
             for (Curso curso : estudiante.getCursos()) {
-                String materiaNombre = curso.getMateria().getNombre();  // Obtenemos el nombre de la materia
-                List<Date> horarios = curso.getHorarios();  // Obtenemos la lista de horarios
+                String materiaNombre = curso.getMateria().getNombre();
+                List<Date> horarios = curso.getHorarios();
                 StringBuilder detallesCurso = new StringBuilder(materiaNombre + " - Horarios: ");
                 for (Date horario : horarios) {
-                    detallesCurso.append(horario.toString()).append(" ");  // Agregamos cada horario a la cadena
+                    detallesCurso.append(horario.toString()).append(" ");
                 }
-                detallesMaterias.add(detallesCurso.toString());  // Añadimos la información del curso a la lista
+                detallesMaterias.add(detallesCurso.toString());
             }
             return detallesMaterias;
         }
         return null;
     }
 
-    // Metodo para inscribir ya una materia del carrito al horario
+    // Método para inscribir una materia del carrito al horario del estudiante
     public boolean inscribirCurso(Estudiante estudiante, Curso cursoAInscribir) {
         if (estudiante != null && estudiante.getCarrito() != null) {
             List<Curso> carrito = estudiante.getCarrito();
@@ -111,10 +111,11 @@ public class ServicioEstudiante {
                 return false;
             }
 
+            // Verificar pre-requisitos y co-requisitos
             if (!servicioCurso.cumpleRequisitos(estudiante, cursoAInscribir)) {
                 System.out.println("No cumple con los pre-requisitos o co-requisitos del curso: " + cursoAInscribir.getiD());
                 return false;
-            } // Verificar pre-requisitos y co-requisitos
+            }
 
             // Verificar que no haya cruce de horarios
             if (servicioCurso.hayCruceHorarios(cursoAInscribir, estudiante.getCursos())) {
@@ -124,10 +125,9 @@ public class ServicioEstudiante {
 
             // Verificar la capacidad del curso
             if (cursoAInscribir.getEstudiantes().size() < cursoAInscribir.getCapacidad()) {
-                // Inscribir al estudiante en el curso
                 cursoAInscribir.getEstudiantes().add(estudiante);
                 estudiante.getCursos().add(cursoAInscribir);
-                carrito.remove(cursoAInscribir); // Remover el curso del carrito
+                carrito.remove(cursoAInscribir);
                 System.out.println("Inscripción exitosa del curso: " + cursoAInscribir.getiD());
                 return true;
             } else {
@@ -137,6 +137,4 @@ public class ServicioEstudiante {
         }
         return false;
     }
-
-
 }
