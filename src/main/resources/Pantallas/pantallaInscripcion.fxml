@@ -11,7 +11,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="820.0" prefWidth="1160.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controladores.ControladorEstudiante">
+<AnchorPane prefHeight="820.0" prefWidth="1160.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controladores.ControladorEstudiante">
    <children>
       <Pane fx:id="topPanel" prefHeight="58.0" prefWidth="1160.0" stylesheets="@../CssStyle/LoginStyle.css">
          <children>
@@ -63,10 +63,19 @@
          <children>
             <Pane layoutX="31.0" layoutY="23.0" prefHeight="485.0" prefWidth="670.0">
                <children>
-                  <Label fx:id="labelInscritas" layoutX="-12.0" layoutY="49.0" prefHeight="436.0" prefWidth="310.0" />
-                  <Label fx:id="labelCarrito" layoutX="360.0" layoutY="42.0" prefHeight="436.0" prefWidth="310.0" />
+                  <Label fx:id="labelInscritas" layoutY="50.0" prefHeight="436.0" prefWidth="319.5" />
+                  <Label fx:id="labelCarrito" layoutX="350.0" layoutY="50.0" prefHeight="436.0" prefWidth="319.5" />
+                  <Label fx:id="labelInscritasTitle" layoutY="8.0" prefHeight="47.0" prefWidth="320.0" text="MIS CLASES INSCRITAS" textAlignment="CENTER">
+                     <font>
+                        <Font size="32.0" />
+                     </font></Label>
+                  <Label fx:id="labelCarritoTitle" layoutX="350.0" layoutY="8.0" prefHeight="47.0" prefWidth="320.0" text="MI CARRITO DE COMPRAS" textAlignment="CENTER">
+                     <font>
+                        <Font size="32.0" />
+                     </font></Label>
                </children>
             </Pane>
-         </children></Pane>
+         </children>
+      </Pane>
    </children>
 </AnchorPane>

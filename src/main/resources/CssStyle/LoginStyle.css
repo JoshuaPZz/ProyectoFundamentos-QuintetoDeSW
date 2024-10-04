@@ -59,6 +59,7 @@
     -fx-background-size: cover; /* or contain depending on the desired effect */
     -fx-background-position: center center; /* Center the image */
     -fx-background-repeat: no-repeat;
+    -fx-opacity: 0.7;
 }
 #labelInscritas {
     -fx-background-color: white;
@@ -66,3 +67,17 @@
 #labelCarrito {
     -fx-background-color: white;
 }
+#labelCarritoTitle{
+    -fx-font-family: 'League Gothic';
+    -fx-font-size: 32px;
+    -fx-text-fill: white;
+    -fx-alignment: center;
+}
+#labelInscritasTitle{
+    -fx-font-family: 'League Gothic';
+    -fx-font-size: 32px;
+    -fx-text-fill: white;
+    -fx-alignment: center;
+}
+
+
