@@ -28,10 +28,14 @@ public class SceneManager {
         Parent root = loader.load();
         Scene scene = new Scene(root);
 
+
         if (cssPath != null && !cssPath.isEmpty()) {
             scene.getStylesheets().add(getClass().getResource(cssPath).toExternalForm());
         }
 
         primaryStage.setScene(scene);
+        if(fxmlPath != "/Pantallas/pantallaLogin.fxml" && !primaryStage.isMaximized())
+            primaryStage.setMaximized(true);
+
     }
 }
