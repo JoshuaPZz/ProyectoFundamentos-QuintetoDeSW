@@ -9,6 +9,8 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
 
 public class Principal extends Application {
     @Override
@@ -29,7 +31,7 @@ public class Principal extends Application {
         stage.show();
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         //launch();
         // Crear instancia de ServicioCurso
         CursoRepositorio cursoRepositorio = new CursoRepositorio();
@@ -42,16 +44,40 @@ public class Principal extends Application {
         curso.setiD("1");  // Asignar ID ficticio al curso
 
         // Simulación de un Estudiante para las pruebas
-        Estudiante estudiante = new Estudiante();
-        estudiante.setId(1);  // Asignar ID ficticio al estudiante
+        //Estudiante estudiante = new Estudiante();
+        //estudiante.setId(1);  // Asignar ID ficticio al estudiante
 
         // 1. Consultar un curso
+        /*
         Curso consultado = servicioCurso.consultarCurso(curso);
         if (consultado != null) {
             System.out.println("Curso consultado: ID " + consultado.getiD() + " Materia: " + consultado.getMateria().getNombre());
         } else {
             System.out.println("No se encontró el curso.");
         }
+
+         */
+
+        
+
+        try {
+            List<Estudiante> listaEstudiantes = estudianteRepositorio.listaEstudiante();
+
+            // Imprimir los datos de los estudiantes
+            for (Estudiante estudiante : listaEstudiantes) {
+                System.out.println("ID: " + estudiante.getId());
+                System.out.println("Nombre: " + estudiante.getNombre());
+                System.out.println("Documento: " + estudiante.getDocumento());
+                System.out.println("Correo: " + estudiante.getCorreo());
+                System.out.println("Cursos Actuales: " + estudiante.getCursos().size());
+                System.out.println("Cursos Vistos: " + estudiante.getCursosVistos().size());
+                System.out.println("Carrito: " + estudiante.getCarrito().size());
+                System.out.println("------");
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al obtener la lista de estudiantes: " + e.getMessage());
+        }
+    }
 
 /*
         // 2. Ver la lista de estudiantes de un curso
@@ -101,5 +127,4 @@ public class Principal extends Application {
     }
 
  */
-    }
 }
