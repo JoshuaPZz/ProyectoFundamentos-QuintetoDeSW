@@ -38,7 +38,7 @@
     -fx-font-size: 14px;
 }
 
-#topPanel{
+#hboxTop{
     -fx-background-color: #f0bc14;
 }
 
@@ -120,7 +120,6 @@
     -fx-font-family: "League Gothic";
     -fx-text-fill: white;
     -fx-font-size: 50px;
-    -fx-spacing: 52px;
 }
 
 #darBajaPane {

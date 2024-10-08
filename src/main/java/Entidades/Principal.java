@@ -18,7 +18,7 @@ public class Principal extends Application {
         Font.loadFont(getClass().getResourceAsStream("/fonts/LeagueGothic.ttf"), 10);
         // Set stage properties
         stage.setTitle("Bienvenido......");
-        stage.setResizable(false);
+        stage.setResizable(true);
 
         // Switch to the login scene using SceneManager
         SceneManager.getInstance().switchScene("/Pantallas/pantallaLogin.fxml", "/CssStyle/LoginStyle.css");
