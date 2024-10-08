@@ -4,9 +4,11 @@ import Entidades.Curso;
 import Entidades.Estudiante;
 import Entidades.Materia;
 import Entidades.Profesor;
+<<<<<<< HEAD
 import RepositorioBD.CursoRepositorio;
+=======
+>>>>>>> parent of d650de3 (Solucion Error)
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -23,6 +25,7 @@ public class ServicioCurso {
         return "Curso no encontrado.";
     }
 
+<<<<<<< HEAD
     // Ver la lista de estudiantes de un curso usando RepositorioCurso
     public List<Estudiante> verEstudiantes(Curso curso, CursoRepositorio repositorioCurso) {
         if (curso != null) {
@@ -31,10 +34,17 @@ public class ServicioCurso {
             } catch (SQLException e) {
                 System.out.println("Error al obtener los estudiantes del curso: " + e.getMessage());
             }
+=======
+    // Método para ver los estudiantes de un curso
+    public List<Estudiante> verEstudiantes(Curso curso) {
+        if (curso != null) {
+            return curso.getEstudiantes();
+>>>>>>> parent of d650de3 (Solucion Error)
         }
         return new ArrayList<>();
     }
 
+<<<<<<< HEAD
     // Ver el profesor principal de un curso usando RepositorioCurso
     public Profesor verProfesor(Curso curso, CursoRepositorio repositorioCurso) {
         if (curso != null) {
@@ -56,11 +66,34 @@ public class ServicioCurso {
         } catch (SQLException e) {
             System.out.println("Error al buscar el curso con ID " + idCurso + ": " + e.getMessage());
             return null;
+=======
+    // Método para ver el profesor principal de un curso
+    public Profesor verProfesor(Curso curso) {
+        if (curso != null && !curso.getProfesores().isEmpty()) {
+            return curso.getProfesores().get(0);  // Suponemos que el primer profesor es el principal
         }
+        return null;
     }
 
+    // Buscar curso por ID en una lista de cursos
+    public Curso buscarCursoPorID(String idCurso, List<Curso> listaCursos) {
+        if (listaCursos != null) {
+            for (Curso curso : listaCursos) {
+                if (curso.getiD().equalsIgnoreCase(idCurso)) {
+                    return curso;
+                }
+            }
+>>>>>>> parent of d650de3 (Solucion Error)
+        }
+        System.out.println("No se encontró un curso con el ID proporcionado: " + idCurso);
+        return null;
+    }
+
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> parent of d650de3 (Solucion Error)
     // Crear los horarios del curso
     public static Date crearHorario(int year, int month, int day, int hourOfDay) {
         Calendar calendar = Calendar.getInstance();

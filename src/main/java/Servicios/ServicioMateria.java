@@ -1,9 +1,7 @@
 package Servicios;
 
 import Entidades.Materia;
-import RepositorioBD.MateriaRepositorio;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public class ServicioMateria {
@@ -46,6 +44,7 @@ public class ServicioMateria {
     }
 
     // Método para buscar una materia por su ID en una lista dada
+<<<<<<< HEAD
     public Materia buscarMateriaPorID(String id, MateriaRepositorio repositorioMateria) {
         Materia materia = null;
         try {
@@ -53,15 +52,22 @@ public class ServicioMateria {
             materia = repositorioMateria.obtenerMateriaPorId(Integer.parseInt(id));
             if (materia != null) {
                 return materia; // Devuelve la materia si se encuentra
+=======
+    public Materia buscarMateriaPorID(String id, List<Materia> listaMaterias) {
+        if (listaMaterias != null) {
+            for (Materia materia : listaMaterias) {
+                if (materia.getiD().equals(id)) {
+                    return materia; // Devuelve la materia si se encuentra
+                }
+>>>>>>> parent of d650de3 (Solucion Error)
             }
-        } catch (SQLException e) {
-            System.out.println("Error al buscar materia por ID: " + e.getMessage());
-        } catch (NumberFormatException e) {
-            System.out.println("ID de materia inválido: " + id);
         }
         System.out.println("Materia no encontrada con ID: " + id);
         return null; // Devuelve null si no se encuentra la materia
     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> parent of d650de3 (Solucion Error)
 }
 

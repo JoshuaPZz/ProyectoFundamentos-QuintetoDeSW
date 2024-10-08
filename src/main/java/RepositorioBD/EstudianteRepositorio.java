@@ -1,7 +1,6 @@
 package RepositorioBD;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import Entidades.Curso;
@@ -123,6 +122,7 @@ public class EstudianteRepositorio {
 
         return new Curso(cursoId, materia, capacidad, horarios, salas, 0);
     }
+<<<<<<< HEAD
 
     public List<Curso> obtenerHorarios(String idCurso) throws SQLException {
         List<Curso> horarios = new ArrayList<>();
@@ -143,4 +143,6 @@ public class EstudianteRepositorio {
 
         return horarios;
     }
+=======
+>>>>>>> parent of d650de3 (Solucion Error)
 }
