@@ -2,6 +2,7 @@ package Controladores;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import java.sql.Connection;
@@ -21,10 +22,13 @@ public class ControladorLogIn {
     private TextField textUser;
 
     @FXML
+    private Label labelError;
+
+    @FXML
     void logInButtonPressed(ActionEvent event) {
 
         if (textPass.getText().isEmpty() || textUser.getText().isEmpty()) {
-            System.out.println("Por favor ingrese su usuario y contraseña.");
+            labelError.setText("Por favor ingrese su usuario y contraseña.");
             return;
         }
 
@@ -42,7 +46,7 @@ public class ControladorLogIn {
                 System.err.println("Error al cambiar de escena: " + e.getMessage());
             }
         } else {
-            System.out.println("Usuario y/o Contraseña Incorrecto!");
+            labelError.setText("Usuario y/o Contraseña Incorrecto!");
         }
     }
 
