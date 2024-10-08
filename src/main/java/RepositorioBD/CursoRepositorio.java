@@ -145,6 +145,44 @@ public class CursoRepositorio{
         return false;
     }
 
+    public Curso buscarPorId(String id) {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        Curso curso = null;
+
+        try {
+            // Obtener la conexión a la base de datos
+            connection = ConexionBaseDeDatos.getConnection();
+
+            // Preparar la consulta SQL
+            String sql = "SELECT * FROM Curso WHERE id = ?";
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, id);
+
+            // Ejecutar la consulta
+            resultSet = statement.executeQuery();
+
+            // Procesar el resultado
+            if (resultSet.next()) {
+                curso = new Curso();
+                curso.setiD(resultSet.getString("id"));
+                curso.setCapacidad(resultSet.getInt("capacidad"));
+                // Cargar más campos según lo que tengas en la tabla Curso
+                // También podrías buscar la Materia relacionada con el curso
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            // Cerrar recursos
+            try { if (resultSet != null) resultSet.close(); } catch (SQLException e) { e.printStackTrace(); }
+            try { if (statement != null) statement.close(); } catch (SQLException e) { e.printStackTrace(); }
+            try { if (connection != null) connection.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
+
+        return curso; // Retorna null si no se encuentra el curso
+    }
+
 
 }
 
