@@ -1,18 +1,21 @@
 package Servicios;
 
 import Entidades.Sala;
+import RepositorioBD.SalaRepositorio;
+
+import java.sql.SQLException;
 
 public class ServicioSala {
 
     // Método para crear una sala
-    public Sala crearSala(String ID, String ubicacion, int capacidad, String tipo) {
-        Sala nuevaSala = new Sala();
-        nuevaSala.setiD(ID);
-        nuevaSala.setUbicacion(ubicacion);
-        nuevaSala.setCapacidad(capacidad);
-        nuevaSala.setTipo(tipo);
-        System.out.println("Sala " + ID + " creada correctamente.");
-        return nuevaSala;
+    public void agregarSala(Sala sala) {
+        SalaRepositorio repositorio = new SalaRepositorio();
+        try {
+            repositorio.insertarSala(sala);
+        } catch (SQLException e) {
+            System.out.println("Error al agregar sala: " + e.getMessage());
+        }
+
     }
 
     // Método para consultar los detalles de una sala
