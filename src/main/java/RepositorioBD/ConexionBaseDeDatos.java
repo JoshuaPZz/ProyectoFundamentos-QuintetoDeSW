@@ -43,7 +43,9 @@ public class ConexionBaseDeDatos {
             }
         }
     }
-    /*public static void main(String[] args) {
+}
+/*
+    public static void main(String[] args) {
 
         ProfesorRepositorio profesorRepo = new ProfesorRepositorio();
 
@@ -56,7 +58,6 @@ public class ConexionBaseDeDatos {
             profesor.setCorreo("joshua.perez@ejemplo.com");
             profesor.setClave("clavew23");
 
-            profesorRepo.insertarProfesor(profesor);
 
             // Obtener y mostrar la lista de profesores
             List<Profesor> profesores = profesorRepo.obtenerProfesores();
@@ -69,6 +70,7 @@ public class ConexionBaseDeDatos {
             e.printStackTrace();
         }
     }
+}
         /*
         try {
             MateriaRepositorio materiaRepo = new MateriaRepositorio();
@@ -190,6 +192,4 @@ public class ConexionBaseDeDatos {
         // Asegurarse de cerrar la conexión
         cerrarConexion();  // Asegúrate de que el método cerrarConexion esté implementado correctamente.
     }
-
-         */
-}
+*/

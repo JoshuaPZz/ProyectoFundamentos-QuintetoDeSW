@@ -2,18 +2,16 @@ package Servicios;
 import Entidades.Curso;
 import Entidades.Estudiante;
 import Entidades.Materia;
+import RepositorioBD.CursoRepositorio;
+import RepositorioBD.EstudianteRepositorio;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 public class ServicioEstudiante {
-    private ServicioCurso servicioCurso;
-
-    // Constructor
-    public ServicioEstudiante(ServicioCurso servicioCurso) {
-        this.servicioCurso = servicioCurso;
-    }
 
     // Agregar un curso dado al carrito del estudiante
     public boolean agregarCursoAlCarrito(Estudiante estudiante, Curso curso) {
@@ -61,23 +59,20 @@ public class ServicioEstudiante {
         return false;
     }
 
-    // Método para ver el horario ya inscrito del estudiante
-    public List<String> verHorario(Estudiante estudiante) {
-        if (estudiante != null && estudiante.getCursos() != null) {
-            List<String> detallesMaterias = new ArrayList<>();
-            for (Curso curso : estudiante.getCursos()) {
-                String materiaNombre = curso.getMateria().getNombre();
-                List<Date> horarios = curso.getHorarios();
-                StringBuilder detallesCurso = new StringBuilder(materiaNombre + " - Horarios: ");
-                for (Date horario : horarios) {
-                    detallesCurso.append(horario.toString()).append(" ");
-                }
-                detallesMaterias.add(detallesCurso.toString());
+
+    public List<Curso> obtenerCursosEstudiante(Estudiante estudiante) {
+        if (estudiante != null) {
+            EstudianteRepositorio estudianteRepositorio = new EstudianteRepositorio();
+            try {
+                return estudianteRepositorio.obtenerCursosPorEstudiante(estudiante.getId());
+            } catch (SQLException e) {
+                System.out.println("Error al obtener los cursos del estudiante: " + e.getMessage());
             }
-            return detallesMaterias;
         }
-        return null;
+        return Collections.emptyList();
     }
+
+
 
     // Método para inscribir una materia del carrito al horario del estudiante
     public boolean inscribirCurso(Estudiante estudiante, Curso cursoAInscribir) {
@@ -112,13 +107,14 @@ public class ServicioEstudiante {
             }
 
             // Verificar pre-requisitos y co-requisitos
+            ServicioCurso servicioCurso = new ServicioCurso();
             if (!servicioCurso.cumpleRequisitos(estudiante, cursoAInscribir)) {
                 System.out.println("No cumple con los pre-requisitos o co-requisitos del curso: " + cursoAInscribir.getiD());
                 return false;
             }
 
             // Verificar que no haya cruce de horarios
-            if (servicioCurso.hayCruceHorarios(cursoAInscribir, estudiante.getCursos())) {
+            if (servicioCurso.hayCruceHorarios(cursoAInscribir, estudiante)) {
                 System.out.println("El curso " + cursoAInscribir.getiD() + " tiene cruce de horarios.");
                 return false;
             }
