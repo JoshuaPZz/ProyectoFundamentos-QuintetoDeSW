@@ -90,7 +90,7 @@ public class EstudianteRepositorio {
     private Connection getConnection2() throws SQLException {
         Connection connection = null;
         Connection conexion;
-        String conexionURL = "jdbc:sqlserver://SAMUEL\\SQLEXPRESS;databaseName=Prueba;user=sa;password=farito94;encrypt=true;trustServerCertificate=true;";
+        String conexionURL = "jdbc:sqlserver://MSI\\SQLEXPRESS;databaseName=master;user=sa;password=gaturro26;encrypt=true;trustServerCertificate=true;";
         if (connection == null || connection.isClosed()) {
             try {
                 connection = DriverManager.getConnection(conexionURL);
