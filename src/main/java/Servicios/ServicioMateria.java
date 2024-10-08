@@ -46,8 +46,7 @@ public class ServicioMateria {
     }
 
     // Método para buscar una materia por su ID en una lista dada
-    public Materia buscarMateriaPorID(String id) {
-        MateriaRepositorio repositorioMateria = new MateriaRepositorio();
+    public Materia buscarMateriaPorID(String id, MateriaRepositorio repositorioMateria) {
         Materia materia = null;
         try {
             // Llamar al método del repositorio para obtener la materia por ID
@@ -62,15 +61,6 @@ public class ServicioMateria {
         }
         System.out.println("Materia no encontrada con ID: " + id);
         return null; // Devuelve null si no se encuentra la materia
-    }
-
-    public void agregarMateria(Materia materia) {
-        MateriaRepositorio repositorioMateria = new MateriaRepositorio();
-        try {
-            repositorioMateria.agregarMateria(materia);
-        } catch (SQLException e) {
-            System.out.println("Error al agregar materia: " + e.getMessage());
-        }
     }
 
 }

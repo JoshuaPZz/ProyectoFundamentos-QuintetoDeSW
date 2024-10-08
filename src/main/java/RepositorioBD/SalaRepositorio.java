@@ -18,7 +18,6 @@ public class SalaRepositorio {
             ps.setInt(2, sala.getCapacidad());
             ps.setString(3, sala.getTipo());
             ps.executeUpdate();
-            System.out.println("Sala agregada: " + sala.getUbicacion());
         }
     }
 

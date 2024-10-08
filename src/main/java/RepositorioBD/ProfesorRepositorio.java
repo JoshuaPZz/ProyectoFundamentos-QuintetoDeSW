@@ -27,7 +27,7 @@ public class ProfesorRepositorio {
                 profesor.setDocumento(rs.getString("documento"));
                 profesor.setCorreo(rs.getString("correo"));
                 profesor.setClave(rs.getString("clave"));
-                profesor.setCursos(obtenerCursosPorProfesor(profesor.getId()));
+                profesor.setCursos(obtenerCursosPorProfesor(profesor.getId(), conexion));
 
                 profesores.add(profesor);
             }
@@ -53,14 +53,13 @@ public class ProfesorRepositorio {
     }
 
     // Método para obtener los cursos asignados a un profesor
-    public List<Curso> obtenerCursosPorProfesor(int profesorId) throws SQLException {
+    private List<Curso> obtenerCursosPorProfesor(int profesorId, Connection conexion) throws SQLException {
         List<Curso> cursos = new ArrayList<>();
         String consulta = "SELECT c.id,/* c.cupos,*/ c.capacidad FROM Curso c " +
                 "JOIN Asignacion a ON c.id = a.curso_id " +
                 "WHERE a.profesor_id = ?";
 
-        try (Connection conexion = getConnection();
-                PreparedStatement pstmt = conexion.prepareStatement(consulta)) {
+        try (PreparedStatement pstmt = conexion.prepareStatement(consulta)) {
             pstmt.setInt(1, profesorId);
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
