@@ -7,16 +7,11 @@ import RepositorioBD.EstudianteRepositorio;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 public class ServicioEstudiante {
-    private ServicioCurso servicioCurso;
-
-    // Constructor
-    public ServicioEstudiante(ServicioCurso servicioCurso) {
-        this.servicioCurso = servicioCurso;
-    }
 
     // Agregar un curso dado al carrito del estudiante
     public boolean agregarCursoAlCarrito(Estudiante estudiante, Curso curso) {
@@ -65,32 +60,16 @@ public class ServicioEstudiante {
     }
 
 
-    public List<String> verHorario(Estudiante estudiante,EstudianteRepositorio repositorioEstudiante, CursoRepositorio repositorioCurso) {
+    public List<Curso> obtenerCursosEstudiante(Estudiante estudiante) {
         if (estudiante != null) {
-            List<String> detallesMaterias = new ArrayList<>();
+            EstudianteRepositorio estudianteRepositorio = new EstudianteRepositorio();
             try {
-                // Obtener la lista de cursos del repositorio
-                List<Curso> cursos = repositorioEstudiante.obtenerHorarios(String.valueOf(estudiante.getId()));
-
-                for (Curso curso : cursos) {
-                    String materiaNombre = curso.getMateria().getNombre();
-
-                    // Obtener horarios del curso desde el repositorio
-                    List<Date> horarios = repositorioCurso.obtenerHorarios(curso.getiD());
-
-                    StringBuilder detallesCurso = new StringBuilder(materiaNombre + " - Horarios: ");
-
-                    for (Date horario : horarios) {
-                        detallesCurso.append(horario.toString()).append(" ");
-                    }
-                    detallesMaterias.add(detallesCurso.toString());
-                }
+                return estudianteRepositorio.obtenerCursosPorEstudiante(estudiante.getId());
             } catch (SQLException e) {
                 System.out.println("Error al obtener los cursos del estudiante: " + e.getMessage());
             }
-            return detallesMaterias;
         }
-        return null;
+        return Collections.emptyList();
     }
 
 
@@ -128,13 +107,14 @@ public class ServicioEstudiante {
             }
 
             // Verificar pre-requisitos y co-requisitos
+            ServicioCurso servicioCurso = new ServicioCurso();
             if (!servicioCurso.cumpleRequisitos(estudiante, cursoAInscribir)) {
                 System.out.println("No cumple con los pre-requisitos o co-requisitos del curso: " + cursoAInscribir.getiD());
                 return false;
             }
 
             // Verificar que no haya cruce de horarios
-            if (servicioCurso.hayCruceHorarios(cursoAInscribir, estudiante.getCursos())) {
+            if (servicioCurso.hayCruceHorarios(cursoAInscribir, estudiante)) {
                 System.out.println("El curso " + cursoAInscribir.getiD() + " tiene cruce de horarios.");
                 return false;
             }
