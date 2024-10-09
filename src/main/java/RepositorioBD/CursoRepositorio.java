@@ -6,6 +6,9 @@ import Entidades.Profesor;
 import Entidades.Estudiante;
 
 import java.sql.*;
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
@@ -169,6 +172,40 @@ public class CursoRepositorio{
         }
 
         return curso;
+    }
+
+    public List<String> obtenerCursosPorMateria(String materiaId) throws SQLException {
+        List<String> cursos = new ArrayList<>();
+
+        // Consulta SQL
+        String query = "SELECT c.id, m.nombre, d.nombre AS dia_nombre, h.hora_inicio, h.hora_fin " +
+                "FROM Curso c " +
+                "JOIN Materia m ON c.materia_id = m.id " +
+                "JOIN Horario h ON c.id = h.curso_id " +
+                "JOIN DiasSemana d ON h.dia_semana_id = d.id " +
+                "WHERE m.id = ?";
+
+        try (Connection conexion = getConnection();
+             PreparedStatement ps = conexion.prepareStatement(query)) {
+
+            ps.setString(1, materiaId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    String cursoId = rs.getString("id");
+                    String materiaNombre = rs.getString("nombre");
+                    String diaSemana = rs.getString("dia_nombre");
+                    LocalDateTime horaInicio = rs.getTimestamp("hora_inicio").toLocalDateTime();
+                    LocalDateTime horaFin = rs.getTimestamp("hora_fin").toLocalDateTime();
+
+                    DateTimeFormatter formatterHora = DateTimeFormatter.ofPattern("HH:mm");
+                    String horarioFormateado = horaInicio.format(formatterHora) + " - " + horaFin.format(formatterHora);
+
+                    String infoCurso = "Materia: " + materiaNombre + ", Curso ID: " + cursoId + ", Horario: " + diaSemana + " " + horarioFormateado;
+                    cursos.add(infoCurso);
+                }
+            }
+        }
+        return cursos;
     }
 
 

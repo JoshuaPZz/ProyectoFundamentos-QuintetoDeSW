@@ -35,7 +35,8 @@ public class Principal extends Application {
     }
 
     public static void main(String[] args) throws SQLException {
-        //launch();
+        launch();
+        /*
         Scanner scanner = new Scanner(System.in);
         ServicioEstudiante servicioEstudiante = new ServicioEstudiante();
         EstudianteRepositorio estudianteRepositorio = new EstudianteRepositorio();
@@ -58,7 +59,8 @@ public class Principal extends Application {
                 System.out.println("\n--- MENÚ ---");
                 System.out.println("1. Agregar curso al carrito");
                 System.out.println("2. Inscribir cursos del carrito");
-                System.out.println("3. Salir");
+                System.out.println("3. Mostrar cursos de una materia");
+                System.out.println("4. Salir");
                 System.out.print("Selecciona una opción: ");
                 int opcion = scanner.nextInt();
 
@@ -94,6 +96,21 @@ public class Principal extends Application {
                         break;
 
                     case 3:
+                        System.out.print("\nIntroduce el ID de la materia: ");
+                        String materiaId = scanner.next();
+                        List<String> cursos = cursoRepositorio.obtenerCursosPorMateria(materiaId);
+
+                        if (!cursos.isEmpty()) {
+                            System.out.println("\n--- Cursos de la materia con ID: " + materiaId + " ---");
+                            for (String cursoInfo : cursos) {
+                                System.out.println(cursoInfo);
+                            }
+                        } else {
+                            System.out.println("No se encontraron cursos para la materia con ID: " + materiaId);
+                        }
+                        break;
+
+                    case 4:
                         salir = true;
                         System.out.println("Saliendo del programa.");
                         break;
@@ -107,5 +124,8 @@ public class Principal extends Application {
         } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
         }
+    }
+
+         */
     }
 }
