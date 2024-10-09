@@ -13,11 +13,12 @@ public class SalaRepositorio {
     public void insertarSala(Sala sala) throws SQLException {
         String query = "INSERT INTO Sala (ubicacion, capacidad, tipo) VALUES (?, ?, ?)";
         try (Connection conexion = getConnection();
-            PreparedStatement ps = conexion.prepareStatement(query)) {
+             PreparedStatement ps = conexion.prepareStatement(query)) {
             ps.setString(1, sala.getUbicacion());
             ps.setInt(2, sala.getCapacidad());
             ps.setString(3, sala.getTipo());
             ps.executeUpdate();
+            System.out.println("Sala agregada: " + sala.getUbicacion());
         }
     }
 

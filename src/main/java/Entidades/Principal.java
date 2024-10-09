@@ -1,11 +1,19 @@
 package Entidades;
 
 import Controladores.SceneManager;
+import RepositorioBD.CursoRepositorio;
+import RepositorioBD.EstudianteRepositorio;
+import Servicios.ServicioCurso;
+import Servicios.ServicioEstudiante;
 import javafx.application.Application;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 public class Principal extends Application {
     @Override
@@ -26,7 +34,98 @@ public class Principal extends Application {
         stage.show();
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         launch();
+        /*
+        Scanner scanner = new Scanner(System.in);
+        ServicioEstudiante servicioEstudiante = new ServicioEstudiante();
+        EstudianteRepositorio estudianteRepositorio = new EstudianteRepositorio();
+        CursoRepositorio cursoRepositorio = new CursoRepositorio();
+
+        Estudiante estudiante = null;
+
+        try {
+            System.out.print("Introduce el ID del estudiante: ");
+            int estudianteId = scanner.nextInt();
+            estudiante = estudianteRepositorio.buscarPorId(estudianteId);
+            if (estudiante == null) {
+                System.out.println("Estudiante no encontrado. Terminando programa.");
+                return;
+            }
+            System.out.println("Estudiante encontrado: " + estudiante.getNombre());
+
+            boolean salir = false;
+            while (!salir) {
+                System.out.println("\n--- MENÚ ---");
+                System.out.println("1. Agregar curso al carrito");
+                System.out.println("2. Inscribir cursos del carrito");
+                System.out.println("3. Mostrar cursos de una materia");
+                System.out.println("4. Salir");
+                System.out.print("Selecciona una opción: ");
+                int opcion = scanner.nextInt();
+
+                switch (opcion) {
+                    case 1:
+                        System.out.print("\nIntroduce el ID del curso a agregar: ");
+                        String cursoId = scanner.next();
+                        Curso curso = cursoRepositorio.obtenerCursoPorId(String.valueOf(cursoId));
+
+                        if (curso != null) {
+                            boolean agregado = servicioEstudiante.agregarCursoAlCarrito(estudiante, curso);
+                            if (agregado) {
+                                System.out.println("Curso agregado al carrito " + cursoId);
+                            } else {
+                                System.out.println("No se pudo agregar el curso.");
+                            }
+                        } else {
+                            System.out.println("Curso no encontrado.");
+                        }
+                        break;
+
+                    case 2:
+                        System.out.println("\n--- Inscribiendo cursos del carrito ---");
+                        List<Curso> carritoCopia = new ArrayList<>(estudiante.getCarrito());
+                        for (Curso cursoEnCarrito : carritoCopia) {
+                            boolean inscrito = servicioEstudiante.inscribirCurso(estudiante, cursoEnCarrito);
+                            if (inscrito) {
+                                System.out.println("Curso inscrito exitosamente: " + cursoEnCarrito.getMateria().getNombre());
+                            } else {
+                                System.out.println("No se pudo inscribir el curso: " + cursoEnCarrito.getMateria().getNombre());
+                            }
+                        }
+                        break;
+
+                    case 3:
+                        System.out.print("\nIntroduce el ID de la materia: ");
+                        String materiaId = scanner.next();
+                        List<String> cursos = cursoRepositorio.obtenerCursosPorMateria(materiaId);
+
+                        if (!cursos.isEmpty()) {
+                            System.out.println("\n--- Cursos de la materia con ID: " + materiaId + " ---");
+                            for (String cursoInfo : cursos) {
+                                System.out.println(cursoInfo);
+                            }
+                        } else {
+                            System.out.println("No se encontraron cursos para la materia con ID: " + materiaId);
+                        }
+                        break;
+
+                    case 4:
+                        salir = true;
+                        System.out.println("Saliendo del programa.");
+                        break;
+
+                    default:
+                        System.out.println("Opción no válida. Inténtalo de nuevo.");
+                        break;
+                }
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+         */
     }
 }

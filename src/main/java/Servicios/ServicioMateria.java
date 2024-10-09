@@ -8,7 +8,7 @@ import java.util.List;
 
 public class ServicioMateria {
 
-    // Método para consultar información de una materia
+    //Método para consultar información de una materia
     public String consultarMateria(Materia materia) {
         if (materia != null) {
             return "Materia: " + materia.getNombre() + ", ID: " + materia.getiD() +
@@ -17,7 +17,7 @@ public class ServicioMateria {
         return "Materia no encontrada.";
     }
 
-    // Método para verificar si una materia cumple con los prerrequisitos
+    //Método para verificar si una materia cumple con los prerrequisitos
     public boolean cumplePrerequisitos(Materia materia, List<Materia> materiasCursadas) {
         if (materia != null && materiasCursadas != null) {
             for (Materia prerequisito : materia.getPrerequisitos()) {
@@ -31,7 +31,7 @@ public class ServicioMateria {
         return false;
     }
 
-    // Método para verificar si una materia tiene los corequisitos cursados
+    //Método para verificar si una materia tiene los corequisitos cursados
     public boolean cumpleCorequisitos(Materia materia, List<Materia> materiasInscritas) {
         if (materia != null && materiasInscritas != null) {
             for (Materia corequisito : materia.getCorequisitos()) {
@@ -45,22 +45,31 @@ public class ServicioMateria {
         return false;
     }
 
-    // Método para buscar una materia por su ID en una lista dada
-    public Materia buscarMateriaPorID(String id, MateriaRepositorio repositorioMateria) {
+    //Método para buscar una materia por su ID en una lista dada
+    public Materia buscarMateriaPorID(String id) {
+        MateriaRepositorio repositorioMateria = new MateriaRepositorio();
         Materia materia = null;
         try {
-            // Llamar al método del repositorio para obtener la materia por ID
             materia = repositorioMateria.obtenerMateriaPorId(Integer.parseInt(id));
             if (materia != null) {
-                return materia; // Devuelve la materia si se encuentra
+                return materia;
             }
         } catch (SQLException e) {
             System.out.println("Error al buscar materia por ID: " + e.getMessage());
         } catch (NumberFormatException e) {
             System.out.println("ID de materia inválido: " + id);
         }
-        System.out.println("Materia no encontrada con ID: " + id);
-        return null; // Devuelve null si no se encuentra la materia
+        System.out.println("Materia con ID: " + id + " no encontrada.");
+        return null;
+    }
+
+    public void agregarMateria(Materia materia) {
+        MateriaRepositorio repositorioMateria = new MateriaRepositorio();
+        try {
+            repositorioMateria.agregarMateria(materia);
+        } catch (SQLException e) {
+            System.out.println("Error al agregar materia: " + e.getMessage());
+        }
     }
 
 }

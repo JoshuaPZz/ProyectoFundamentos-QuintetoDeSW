@@ -13,7 +13,7 @@ import java.util.List;
 public class ConexionBaseDeDatos {
 
     private Connection conexion;
-    private static String conexionURL = "jdbc:sqlserver://MSI\\SQLEXPRESS;databaseName=master;user=sa;password=gaturro26;encrypt=true;trustServerCertificate=true;";
+    private static String conexionURL = "jdbc:sqlserver://SAMUEL\\SQLEXPRESS;databaseName=master;user=sa;password=farito94;encrypt=true;trustServerCertificate=true;";
 
     private static Connection connection;
 
@@ -24,7 +24,7 @@ public class ConexionBaseDeDatos {
         if (connection == null || connection.isClosed()) {
             try {
                 connection = DriverManager.getConnection(conexionURL);
-                System.out.println("Conexión establecida correctamente.");
+                //System.out.println("Conexión establecida correctamente.");
             } catch (SQLException e) {
                 System.out.println("Error al conectar a la base de datos: " + e.getMessage());
                 throw e;
