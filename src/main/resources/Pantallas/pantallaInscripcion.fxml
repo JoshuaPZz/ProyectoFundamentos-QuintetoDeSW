@@ -95,7 +95,7 @@
                      <children>
                         <AnchorPane fx:id="buscarMateriaPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="156.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                            <children>
-                              <Button fx:id="botonBuscar" layoutX="224.0" layoutY="35.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="200.0" prefWidth="200.0" text="BUSCAR UNA MATERIA" textAlignment="CENTER" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="0.0">
+                              <Button fx:id="botonBuscar" layoutX="224.0" layoutY="35.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#botonBuscarPressed" prefHeight="200.0" prefWidth="200.0" text="BUSCAR UNA MATERIA" textAlignment="CENTER" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="0.0">
                                  <cursor>
                                     <Cursor fx:constant="OPEN_HAND" />
                                  </cursor>
@@ -137,9 +137,9 @@
                                     </HBox>
                                     <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" nodeOrientation="LEFT_TO_RIGHT" prefHeight="329.0" prefWidth="657.0" VBox.vgrow="ALWAYS">
                                        <children>
-                                          <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: white;" HBox.hgrow="ALWAYS" />
+                                          <Label fx:id="labelInscritas" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: white;" HBox.hgrow="ALWAYS" />
                                           <Pane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="255.0" prefWidth="15.0" />
-                                          <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: white;" HBox.hgrow="ALWAYS" />
+                                          <Label fx:id="labelCarrito" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: white;" HBox.hgrow="ALWAYS" />
                                        </children>
                                     </HBox>
                                  </children>

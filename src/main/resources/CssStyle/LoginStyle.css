@@ -151,3 +151,29 @@
     -fx-spacing: 52px;
 }
 
+#botonBuscarId {
+    -fx-background-color: white;
+    -fx-border-style: solid;
+    -fx-border-color: black;
+    -fx-border-radius: 5px;
+    -fx-font-size: 22px;
+    -fx-font-family: "League Gothic";
+}
+#botonAgregar {
+    -fx-background-color: white;
+    -fx-border-style: solid;
+    -fx-border-color: black;
+    -fx-border-radius: 5px;
+    -fx-font-size: 22px;
+    -fx-font-family: "League Gothic";
+}
+#botonFinalizar {
+    -fx-background-color: white;
+    -fx-border-style: solid;
+    -fx-border-color: black;
+    -fx-border-radius: 5px;
+    -fx-font-size: 22px;
+    -fx-font-family: "League Gothic";
+}
+
+
