@@ -20,24 +20,16 @@ public class EstudianteRepositorio {
         Estudiante estudiante = null;
 
         try {
-            // Obtener la conexión a la base de datos
             connection = ConexionBaseDeDatos.getConnection();
-
-            // Preparar la consulta SQL
             String sql = "SELECT * FROM Estudiante WHERE id = ?";
             statement = connection.prepareStatement(sql);
             statement.setInt(1, id);
-
-            // Ejecutar la consulta
             resultSet = statement.executeQuery();
-
-            // Procesar el resultado
             if (resultSet.next()) {
                 estudiante = new Estudiante();
                 estudiante.setId(resultSet.getInt("id"));
                 estudiante.setNombre(resultSet.getString("nombre"));
                 estudiante.setCreditosmax(resultSet.getInt("creditos_max"));
-                // Cargar más campos según lo que tengas en la tabla Estudiante
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -69,8 +61,6 @@ public class EstudianteRepositorio {
                 estudiante.setCursos(new ArrayList<>());
                 estudiante.setCursosVistos(new ArrayList<>());
                 estudiante.setCarrito(new ArrayList<>());
-
-                // Obtener cursos activos y vistos con conexiones separadas
                 obtenerCursosActivos(estudiante);
                 obtenerCursosVistos(estudiante);
 
@@ -127,7 +117,7 @@ public class EstudianteRepositorio {
     private Connection getConnection2() throws SQLException {
         Connection connection = null;
         Connection conexion;
-        String conexionURL = "jdbc:sqlserver://MSI\\SQLEXPRESS;databaseName=master;user=sa;password=gaturro26;encrypt=true;trustServerCertificate=true;";
+        String conexionURL = "jdbc:sqlserver://SAMUEL\\SQLEXPRESS;databaseName=master;user=sa;password=farito94;encrypt=true;trustServerCertificate=true;";
         if (connection == null || connection.isClosed()) {
             try {
                 connection = DriverManager.getConnection(conexionURL);
@@ -224,26 +214,18 @@ public class EstudianteRepositorio {
         try (Connection conexion = getConnection2();
              PreparedStatement pstmt = conexion.prepareStatement(consulta)) {
 
-            pstmt.setInt(1, estudianteId); // Usar el ID del estudiante en la consulta
+            pstmt.setInt(1, estudianteId);
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
-                    // Crear un objeto Curso y asignar valores obtenidos del ResultSet
                     Curso curso = new Curso();
-
                     curso.setiD(rs.getString("id"));
                     curso.getMateria().setNombre(rs.getString("nombre"));
                     curso.getMateria().setCreditos(rs.getInt("creditos"));
-
-                    // Asignar horarios (hora_inicio y hora_fin) a la lista de horarios del curso
                     Timestamp horaInicio = rs.getTimestamp("hora_inicio");
                     Timestamp horaFin = rs.getTimestamp("hora_fin");
-
-                    // Si ya tienes una lista de horarios en el curso, añadimos ambas fechas
                     curso.getHorarios().add(new Date(horaInicio.getTime()));
                     curso.getHorarios().add(new Date(horaFin.getTime()));
-
-                    // Añadir el curso a la lista de cursos
                     cursos.add(curso);
                 }
             }
@@ -314,34 +296,16 @@ public class EstudianteRepositorio {
         return materiasVistas;
     }
 
-    // Método para inscribir un curso al estudiante en la base de datos
-    public boolean inscribirCursoAlEstudiante(Estudiante estudiante, Curso curso) {
-        if (estudiante == null || curso == null) {
-            System.out.println("Estudiante o curso no válidos.");
-            return false;
-        }
-
-        // Consulta SQL para insertar la inscripción en la tabla 'Inscripcion'
-        String sql = "INSERT INTO Inscripcion (estudiante_id, curso_id) VALUES (?, ?)";
-
-        try (Connection conexion = getConnection2();
-             PreparedStatement stmt = conexion.prepareStatement(sql)) {
-            stmt.setInt(1, estudiante.getId());  // Asignar el ID del estudiante
-            stmt.setString(2, curso.getiD());       // Asignar el ID del curso
-
-            int filasAfectadas = stmt.executeUpdate();  // Ejecutar la inserción
-
-            if (filasAfectadas > 0) {
-                System.out.println("Inscripción en la base de datos completada para el curso: " + curso.getMateria().getNombre());
-                return true;
-            } else {
-                System.out.println("No se pudo insertar la inscripción en la base de datos.");
-                return false;
-            }
+    public void inscribirCurso(int estudianteId, String cursoId) throws SQLException {
+        String sql = "INSERT INTO Inscripcion (estudiante_id, curso_id, ha_aprobado) VALUES (?, ?, 0)";
+        try (Connection connection = getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, estudianteId);
+            ps.setString(2, cursoId);
+            ps.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("Error al inscribir el curso en la base de datos: " + e.getMessage());
-            return false;
+            System.out.println("Error al inscribir el curso: " + e.getMessage());
+            throw e;
         }
     }
 }

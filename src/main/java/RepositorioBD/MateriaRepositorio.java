@@ -22,11 +22,7 @@ public class MateriaRepositorio {
                     materia.setNombre(rs.getString("nombre"));
                     materia.setDescripcion(rs.getString("descripcion"));
                     materia.setCreditos(rs.getInt("creditos"));
-
-                    // Cargar prerrequisitos
                     materia.setPrerequisitos(obtenerPrerrequisitos(id, conexion));
-
-                    // Cargar correquisitos
                     materia.setCorequisitos(obtenerCorrequisitos(id, conexion));
                 }
             }
@@ -101,16 +97,11 @@ public class MateriaRepositorio {
         String insertSQL = "INSERT INTO Materia (nombre, descripcion, creditos) VALUES (?, ?, ?)";
         try (Connection conexion = getConnection();
              PreparedStatement pstmt = conexion.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS)) {
-
-            // Establecemos los parámetros
             pstmt.setString(1, materia.getNombre());
             pstmt.setString(2, materia.getDescripcion());
             pstmt.setInt(3, materia.getCreditos());
-
-            // Ejecutamos la instrucción
             int affectedRows = pstmt.executeUpdate();
 
-            // Verificamos si se afectaron filas y obtenemos la clave generada
             if (affectedRows > 0) {
                 try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
                     if (generatedKeys.next()) {

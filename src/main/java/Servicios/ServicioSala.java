@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 public class ServicioSala {
 
-    // Método para crear una sala
+    //Método para crear una sala
     public void agregarSala(Sala sala) {
         SalaRepositorio repositorio = new SalaRepositorio();
         try {
@@ -18,7 +18,7 @@ public class ServicioSala {
 
     }
 
-    // Método para consultar los detalles de una sala
+    //Método para consultar los detalles de una sala
     public String consultarSala(Sala sala) {
         if (sala != null) {
             return "Sala: " + sala.getiD() + ", Ubicación: " + sala.getUbicacion() +

@@ -16,7 +16,7 @@ import java.util.List;
 public class ServicioCurso {
 
 
-    // Método para consultar un curso
+    //Método para consultar un curso
     public Curso consultarCurso(Curso curso) {
         if (curso != null) {
             String id = curso.getiD();
@@ -32,7 +32,7 @@ public class ServicioCurso {
 
     }
 
-    // Ver la lista de estudiantes de un curso usando RepositorioCurso
+    //Ver la lista de estudiantes de un curso usando RepositorioCurso
     public List<Estudiante> verEstudiantes(Curso curso) {
         if (curso != null) {
             try {
@@ -45,14 +45,14 @@ public class ServicioCurso {
         return new ArrayList<>();
     }
 
-    // Ver el profesor principal de un curso usando RepositorioCurso
+    //Ver el profesor principal de un curso usando RepositorioCurso
     public Profesor verProfesor(Curso curso) {
         if (curso != null) {
             try {
                 CursoRepositorio repositorioCurso = new CursoRepositorio();
                 List<Profesor> profesores = repositorioCurso.obtenerProfesores(curso.getiD());
                 if (!profesores.isEmpty()) {
-                    return profesores.get(0);  // Suponemos que el primer profesor es el principal
+                    return profesores.get(0);
                 }
             } catch (SQLException e) {
                 System.out.println("Error al obtener profesores del curso: " + e.getMessage());
@@ -61,7 +61,7 @@ public class ServicioCurso {
         return null;
     }
 
-    // Buscar un curso por su ID usando RepositorioCurso
+    //Buscar un curso por su ID usando RepositorioCurso
     public Curso buscarCursoPorID(String idCurso) {
         try {
             CursoRepositorio repositorioCurso = new CursoRepositorio();
@@ -73,7 +73,7 @@ public class ServicioCurso {
     }
 
 
-    // Crear los horarios del curso
+    //Crear los horarios del curso
     public static Date crearHorario(int year, int month, int day, int hourOfDay) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, year);          // Establecer el año
@@ -85,7 +85,7 @@ public class ServicioCurso {
         return calendar.getTime();
     }
 
-    // Verificar cruce de horarios entre los cursos
+    //Verificar cruce de horarios entre los cursos
     public boolean hayCruceHorarios(Curso curso, Estudiante estudiante) {
         CursoRepositorio repositorioCurso = new CursoRepositorio();
         if (curso != null) {
@@ -104,13 +104,11 @@ public class ServicioCurso {
         return false;
     }
 
-    // Verificación de cumplimiento de requisitos pre y co
+    //Verificación de cumplimiento de requisitos pre y co
     public boolean cumpleRequisitos(Estudiante estudiante, Curso curso) {
         EstudianteRepositorio estudianteRepositorio = new EstudianteRepositorio();
         try {
             List<Materia> materiasVistas = estudianteRepositorio.obtenerMateriasVistasPorEstudiante(estudiante.getId());
-
-            // Verificar los pre-requisitos de la materia asociada al curso
             List<Materia> preRequisitos = curso.getMateria().getPrerequisitos();
             for (Materia preRequisito : preRequisitos) {
                 if (!materiasVistas.contains(preRequisito)) {
@@ -119,12 +117,10 @@ public class ServicioCurso {
                 }
             }
 
-            // Verificar los co-requisitos de la materia asociada al curso
             List<Materia> coRequisitos = curso.getMateria().getCorequisitos();
             for (Materia coRequisito : coRequisitos) {
                 boolean coRequisitoCumplido = false;
 
-                // Revisar si el estudiante ya está inscrito en algún curso que tenga esta materia como co-requisito
                 List<Curso> cursosInscritos = estudianteRepositorio.obtenerCursosInscritos(estudiante.getId());
                 for (Curso cursoInscrito : cursosInscritos) {
                     if (cursoInscrito.getMateria().equals(coRequisito)) {
@@ -158,48 +154,3 @@ public class ServicioCurso {
         }
     }
 }
-        /*
-        List<Materia> materiasVistas = new ArrayList<>();
-        materiasVistas = cursoRepositorio.obtenerMateriasVistasPorEstudiante(estudiante.getId());
-
-        // Verificar los pre-requisitos de la materia asociada al curso
-        List<Materia> preRequisitos = curso.getMateria().getPrerequisitos();
-        for (Materia preRequisito : preRequisitos) {
-            if (!materiasVistas.contains(preRequisito)) {
-                System.out.println("Falta el pre-requisito: " + preRequisito.getNombre());
-                return false;
-            }
-        }
-
-        // Verificar los co-requisitos de la materia asociada al curso
-        List<Materia> coRequisitos = curso.getMateria().getCorequisitos();
-        for (Materia coRequisito : coRequisitos) {
-            boolean coRequisitoCumplido = false;
-            // Consultar si el estudiante ya está inscrito en un curso que tenga este co-requisito
-            List<Curso> cursosInscritos = cursoRepositorio.obtenerCursosInscritosPorEstudiante(estudiante.getId());
-            for (Curso cursoInscrito : cursosInscritos) {
-                if (cursoInscrito.getMateria().equals(coRequisito)) {
-                    coRequisitoCumplido = true;
-                    break;
-                }
-            }
-
-            // Si no está inscrito en la materia, verificar si ya la ha visto (usando repositorio)
-            if (!coRequisitoCumplido) {
-                if (materiasVistas.contains(coRequisito)) {
-                    coRequisitoCumplido = true;
-                }
-            }
-
-            // Si no se cumple el co-requisito, mostrar el mensaje y detener la inscripción
-            if (!coRequisitoCumplido) {
-                System.out.println("Falta el co-requisito: " + coRequisito.getNombre());
-                return false;
-            }
-        }
-
-        // Si se cumplieron todos los requisitos, se puede inscribir al curso
-        return true;
-    }
-
-         */

@@ -13,7 +13,7 @@ import java.util.List;
 public class ConexionBaseDeDatos {
 
     private Connection conexion;
-    private static String conexionURL = "jdbc:sqlserver://MSI\\SQLEXPRESS;databaseName=master;user=sa;password=gaturro26;encrypt=true;trustServerCertificate=true;";
+    private static String conexionURL = "jdbc:sqlserver://SAMUEL\\SQLEXPRESS;databaseName=master;user=sa;password=farito94;encrypt=true;trustServerCertificate=true;";
 
     private static Connection connection;
 

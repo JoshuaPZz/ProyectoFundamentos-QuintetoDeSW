@@ -30,23 +30,20 @@ public class CursoRepositorio{
             pstmt.setString(1, idCurso);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    // Construir la materia
                     Materia materia = new Materia();
                     materia.setiD(rs.getString("materia_id"));
                     materia.setNombre(rs.getString("materia_nombre"));
 
-                    // Construir la sala
                     Sala sala = new Sala();
                     sala.setiD(rs.getString("sala_id"));
                     sala.setUbicacion(rs.getString("ubicacion"));
 
-                    // Construir el curso
                     curso = new Curso();
                     curso.setiD(rs.getString("id"));
                     //curso.setCupos(rs.getInt("cupos"));
                     curso.setCapacidad(rs.getInt("capacidad"));
                     curso.setMateria(materia);
-                    curso.setSalas(new ArrayList<>()); // La lista de salas podría llenarse posteriormente
+                    curso.setSalas(new ArrayList<>());
                     curso.getSalas().add(sala);
                     curso.setHorarios(obtenerHorarios(idCurso));
                     curso.setProfesores(obtenerProfesores(idCurso));
@@ -136,7 +133,7 @@ public class CursoRepositorio{
             pstmt.setString(2, cursoId);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    return rs.getInt(1) > 0; // Si hay cruce de horarios
+                    return rs.getInt(1) > 0;
                 }
             }
         }catch (SQLException e) {
@@ -152,35 +149,26 @@ public class CursoRepositorio{
         Curso curso = null;
 
         try {
-            // Obtener la conexión a la base de datos
             connection = ConexionBaseDeDatos.getConnection();
-
-            // Preparar la consulta SQL
             String sql = "SELECT * FROM Curso WHERE id = ?";
             statement = connection.prepareStatement(sql);
             statement.setString(1, id);
-
-            // Ejecutar la consulta
             resultSet = statement.executeQuery();
 
-            // Procesar el resultado
             if (resultSet.next()) {
                 curso = new Curso();
                 curso.setiD(resultSet.getString("id"));
                 curso.setCapacidad(resultSet.getInt("capacidad"));
-                // Cargar más campos según lo que tengas en la tabla Curso
-                // También podrías buscar la Materia relacionada con el curso
             }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            // Cerrar recursos
             try { if (resultSet != null) resultSet.close(); } catch (SQLException e) { e.printStackTrace(); }
             try { if (statement != null) statement.close(); } catch (SQLException e) { e.printStackTrace(); }
             try { if (connection != null) connection.close(); } catch (SQLException e) { e.printStackTrace(); }
         }
 
-        return curso; // Retorna null si no se encuentra el curso
+        return curso;
     }
 
 

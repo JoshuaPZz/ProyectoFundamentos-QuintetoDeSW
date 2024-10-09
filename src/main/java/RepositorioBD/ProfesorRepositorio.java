@@ -68,7 +68,6 @@ public class ProfesorRepositorio {
                     curso.setiD(rs.getString("id"));
                     //curso.setCupos(rs.getInt("cupos"));
                     curso.setCapacidad(rs.getInt("capacidad"));
-                    // Puedes agregar más información si es necesario
                     cursos.add(curso);
                 }
             }

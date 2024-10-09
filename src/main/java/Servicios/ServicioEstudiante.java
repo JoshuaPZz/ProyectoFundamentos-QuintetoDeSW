@@ -13,7 +13,7 @@ import java.util.List;
 
 public class ServicioEstudiante {
 
-    // Agregar un curso dado al carrito del estudiante
+    //Metodo para agregar un curso al carrito del estudiante
     public boolean agregarCursoAlCarrito(Estudiante estudiante, Curso curso) {
         if (estudiante != null && curso != null) {
             List<Curso> cursosInscritos = estudiante.getCursos();
@@ -30,13 +30,12 @@ public class ServicioEstudiante {
             }
 
             carrito.add(curso);
-            System.out.println("Curso agregado al carrito: " + curso.getiD());
             return true;
         }
         return false;
     }
 
-    // Ver las materias que se encuentran actualmente en el carrito
+    //Metodo para ver las materias que se encuentran actualmente en el carrito
     public List<Materia> verCarrito(Estudiante estudiante) {
         if (estudiante != null && estudiante.getCarrito() != null) {
             List<Materia> materias = new ArrayList<>();
@@ -49,7 +48,7 @@ public class ServicioEstudiante {
         return null;
     }
 
-    // Método para remover a un estudiante de un curso
+    //Método para remover a un estudiante de un curso
     public boolean removerCurso(Estudiante estudiante, Curso curso) {
         if (estudiante != null && curso != null && curso.getEstudiantes().contains(estudiante)) {
             curso.getEstudiantes().remove(estudiante);
@@ -59,7 +58,7 @@ public class ServicioEstudiante {
         return false;
     }
 
-
+    //Metodo para obtener los cursos de un estudiante
     public List<Curso> obtenerCursosEstudiante(Estudiante estudiante) {
         if (estudiante != null) {
             EstudianteRepositorio estudianteRepositorio = new EstudianteRepositorio();
@@ -72,26 +71,23 @@ public class ServicioEstudiante {
         return Collections.emptyList();
     }
 
-
-
-    // Método para inscribir una materia del carrito al horario del estudiante
+    //Metodo para inscribir un curso
     public boolean inscribirCurso(Estudiante estudiante, Curso cursoAInscribir) {
         if (estudiante != null && estudiante.getCarrito() != null) {
             List<Curso> carrito = estudiante.getCarrito();
             int totalCreditos = 0;
 
-            // Calcular los créditos de los cursos ya inscritos
             for (Curso cursoInscrito : estudiante.getCursos()) {
                 totalCreditos += cursoInscrito.getMateria().getCreditos();
             }
 
-            // Verificar si el curso está en el carrito
+            //Verificar si el curso está en el carrito
             if (!carrito.contains(cursoAInscribir)) {
                 System.out.println("El curso no está en el carrito.");
                 return false;
             }
 
-            // Verificar si el curso ya fue visto por el estudiante
+            //Verificar si el curso ya fue visto por el estudiante
             for (Curso cursoVisto : estudiante.getCursosVistos()) {
                 if (cursoVisto.getMateria().getiD().equals(cursoAInscribir.getMateria().getiD())) {
                     System.out.println("El estudiante ya ha cursado la materia " + cursoAInscribir.getMateria().getNombre() + " anteriormente.");
@@ -99,33 +95,42 @@ public class ServicioEstudiante {
                 }
             }
 
-            // Verificar que no exceda los créditos máximos permitidos
+            //Verificar que no exceda los créditos máximos permitidos
             int creditosCurso = cursoAInscribir.getMateria().getCreditos();
             if (totalCreditos + creditosCurso > estudiante.getCreditosmax()) {
                 System.out.println("El curso " + cursoAInscribir.getiD() + " excede el límite de créditos permitidos.");
                 return false;
             }
 
-            // Verificar pre-requisitos y co-requisitos
+            //Verificar pre-requisitos y co-requisitos
             ServicioCurso servicioCurso = new ServicioCurso();
             if (!servicioCurso.cumpleRequisitos(estudiante, cursoAInscribir)) {
                 System.out.println("No cumple con los pre-requisitos o co-requisitos del curso: " + cursoAInscribir.getiD());
                 return false;
             }
 
-            // Verificar que no haya cruce de horarios
+            //Verificar que no haya cruce de horarios
             if (servicioCurso.hayCruceHorarios(cursoAInscribir, estudiante)) {
                 System.out.println("El curso " + cursoAInscribir.getiD() + " tiene cruce de horarios.");
                 return false;
             }
 
-            // Verificar la capacidad del curso
+            //Verificar la capacidad del curso
             if (cursoAInscribir.getEstudiantes().size() < cursoAInscribir.getCapacidad()) {
-                cursoAInscribir.getEstudiantes().add(estudiante);
-                estudiante.getCursos().add(cursoAInscribir);
-                carrito.remove(cursoAInscribir);
-                System.out.println("Inscripción exitosa del curso: " + cursoAInscribir.getiD());
-                return true;
+                try {
+                    EstudianteRepositorio estudianteRepositorio = new EstudianteRepositorio();
+                    estudianteRepositorio.inscribirCurso(estudiante.getId(), cursoAInscribir.getiD());
+
+                    cursoAInscribir.getEstudiantes().add(estudiante);
+                    estudiante.getCursos().add(cursoAInscribir);
+                    carrito.remove(cursoAInscribir);
+
+                    System.out.println("Inscripción exitosa del curso: " + cursoAInscribir.getiD());
+                    return true;
+                } catch (SQLException e) {
+                    System.out.println("Error al inscribir el curso en la base de datos: " + e.getMessage());
+                    return false;
+                }
             } else {
                 System.out.println("No hay cupo en el curso: " + cursoAInscribir.getiD());
                 return false;

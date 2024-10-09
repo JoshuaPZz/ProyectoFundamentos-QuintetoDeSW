@@ -10,7 +10,7 @@ import java.util.List;
 
 public class ServicioProfesor {
 
-    // Método para ver el horario de un profesor (lista de cursos asignados)
+    //Método para ver el horario de un profesor (lista de cursos asignados)
     public List<Curso> cursosAsociadosProfesor(Profesor profesor) throws SQLException {
         List<Curso> curso = new ArrayList<>();
         ProfesorRepositorio profesorRepositorio = new ProfesorRepositorio();
@@ -19,7 +19,7 @@ public class ServicioProfesor {
             return curso;
         } else {
             System.out.println("El profesor no tiene cursos asignados o es nulo.");
-            return new ArrayList<>(); // Retorna una lista vacía en caso de error
+            return new ArrayList<>();
         }
     }
 
