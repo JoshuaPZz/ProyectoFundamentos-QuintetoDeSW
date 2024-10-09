@@ -29,7 +29,7 @@ public class Principal extends Application {
         stage.setResizable(true);
 
         // Switch to the login scene using SceneManager
-        SceneManager.getInstance().switchScene("/Pantallas/pantallaInscripcion.fxml", "/CssStyle/LoginStyle.css");
+        SceneManager.getInstance().switchScene("/Pantallas/PantallaLogin.fxml", "/CssStyle/LoginStyle.css");
 
         stage.show();
     }

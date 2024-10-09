@@ -12,18 +12,18 @@
 
 <VBox alignment="CENTER" fillWidth="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controladores.ControladorPantallaCursosEncontrados">
    <children>
-      <VBox prefHeight="338.0" prefWidth="365.0">
+      <VBox prefHeight="338.0" prefWidth="465.0">
          <children>
             <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="40.0" prefWidth="334.0" text="Disponibles">
                <font>
                   <Font name="League Gothic Regular" size="32.0" />
                </font>
             </Label>
-            <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="298.0" prefWidth="342.0" VBox.vgrow="ALWAYS">
+            <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="298.0" prefWidth="419.0" VBox.vgrow="ALWAYS">
                <children>
-                  <ScrollPane prefHeight="324.0" prefWidth="365.0">
+                  <ScrollPane prefHeight="298.0" prefWidth="397.0" HBox.hgrow="ALWAYS">
                      <content>
-                        <Label fx:id="labelDisponibles" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="287.0" prefWidth="331.0" wrapText="true" />
+                        <Label fx:id="labelDisponibles" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="296.0" prefWidth="463.0" wrapText="true" />
                      </content>
                      <HBox.margin>
                         <Insets />

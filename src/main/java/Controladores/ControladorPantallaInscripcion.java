@@ -12,6 +12,8 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -77,6 +79,25 @@ public class ControladorPantallaInscripcion {
 
     void setLabelCarrito(String string) {
         labelCarrito.setText(labelCarrito.getText() + "\n" + string);
+    }
+
+    @FXML
+    void revisarButtonPressed(ActionEvent event) {
+        File archivoPDF = new File("src/main/resources/Images/Plan_Ing_Sistemas_v5.pdf");
+
+        if (archivoPDF.exists()) {
+            if (Desktop.isDesktopSupported()) {
+                try {
+                    Desktop.getDesktop().open(archivoPDF);
+                } catch (IOException e) {
+                    System.out.println("Error al abrir el archivo: " + e.getMessage());
+                }
+            } else {
+                System.out.println("Abrir PDF no soportado en esta plataforma.");
+            }
+        } else {
+            System.out.println("El archivo no existe.");
+        }
     }
 
 }

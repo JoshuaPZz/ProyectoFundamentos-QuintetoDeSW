@@ -1,5 +1,7 @@
     package Controladores;
 
+    import Servicios.ServicioCurso;
+    import Servicios.ServicioEstudiante;
     import javafx.event.ActionEvent;
     import javafx.fxml.FXML;
     import javafx.fxml.FXMLLoader;
@@ -41,6 +43,9 @@
             ControladorPantallaInscripcion controller = (ControladorPantallaInscripcion) inscripcionScene.getUserData();
 
             if (controller != null) {
+                ServicioEstudiante estudiante = new ServicioEstudiante();
+                //estudiante.agregarCursoAlCarrito(estudiante, )
+
                 controller.setLabelCarrito(textIdAgregar.getText());
             }
         }

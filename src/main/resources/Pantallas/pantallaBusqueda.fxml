@@ -22,7 +22,7 @@
       </Text>
       <HBox alignment="CENTER" nodeOrientation="RIGHT_TO_LEFT" prefHeight="61.0" prefWidth="423.0">
          <children>
-            <TextField maxWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="58.0" prefWidth="150.0" HBox.hgrow="ALWAYS" />
+            <TextField fx:id="cursoPorIdLabel" maxWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="58.0" prefWidth="150.0" HBox.hgrow="ALWAYS" />
             <Label prefHeight="57.0" prefWidth="106.0" text="ID Materia" HBox.hgrow="ALWAYS">
                <padding>
                   <Insets left="20.0" />

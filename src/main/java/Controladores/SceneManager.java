@@ -34,8 +34,10 @@ public class SceneManager {
         Scene scene = new Scene(root);
 
         // Get the controller instance and set it as user data for the scene
-        ControladorPantallaInscripcion controller = loader.getController();
-        scene.setUserData(controller);
+        if(fxmlPath == "/Pantallas/pantallaInscripcion.fxml") {
+            ControladorPantallaInscripcion controller = loader.getController();
+            scene.setUserData(controller);
+        }
 
         if (cssPath != null && !cssPath.isEmpty()) {
             scene.getStylesheets().add(getClass().getResource(cssPath).toExternalForm());
