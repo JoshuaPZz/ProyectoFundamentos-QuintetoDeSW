@@ -36,7 +36,7 @@ public class Principal extends Application {
 
     public static void main(String[] args) throws SQLException {
         launch();
-        /*
+/*
         Scanner scanner = new Scanner(System.in);
         ServicioEstudiante servicioEstudiante = new ServicioEstudiante();
         EstudianteRepositorio estudianteRepositorio = new EstudianteRepositorio();
@@ -124,8 +124,8 @@ public class Principal extends Application {
         } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
         }
-    }
 
-         */
+    }
+ */
     }
 }

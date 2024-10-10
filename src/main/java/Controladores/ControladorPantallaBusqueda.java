@@ -43,7 +43,7 @@ public class ControladorPantallaBusqueda {
             for (String cursoInfo : cursos) {
 
                 System.out.println(cursoInfo);
-                cursosEncontrados.setLabelInfo(cursoInfo);
+                cursosEncontrados.setLabelInfo(cursosEncontrados.getLabelInfo().getText() + "\n" + cursoInfo);
             }
         } else {
             System.out.println("No se encontraron cursos para la materia con ID: " + cursoPorIdLabel.getText());

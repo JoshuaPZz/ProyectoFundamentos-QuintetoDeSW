@@ -1,5 +1,7 @@
 package Controladores;
 
+import Entidades.Estudiante;
+import RepositorioBD.EstudianteRepositorio;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -34,9 +36,9 @@ public class ControladorLogIn {
 
         String usuario = textUser.getText();
         String contrasenia = textPass.getText();
-
-        if (validarCredenciales(usuario, contrasenia)) {
-            System.out.println("Usuario autenticado correctamente!");
+        Estudiante estudiante = validarCredenciales(usuario,contrasenia);
+        if (estudiante != null) {
+            System.out.println("Usuario autenticado correctamente! " + estudiante.getNombre());
             try {
                 // Switch to the main application scene
                 SceneManager.getInstance().switchScene("/Pantallas/pantallaInscripcion.fxml", "/CssStyle/LoginStyle.css");
@@ -50,8 +52,9 @@ public class ControladorLogIn {
         }
     }
 
-    private boolean validarCredenciales(String usuario, String contrasenia) {
-        String query = "SELECT COUNT(*) FROM Estudiante WHERE correo = ? AND clave = ?";
+    private Estudiante validarCredenciales(String usuario, String contrasenia) {
+        String query = "SELECT id FROM Estudiante WHERE correo = ? AND clave = ?";
+        int estudianteId=-1;
 
         try (Connection conexion = RepositorioBD.ConexionBaseDeDatos.getConnection();
              PreparedStatement ps = conexion.prepareStatement(query)) {
@@ -59,15 +62,17 @@ public class ControladorLogIn {
             ps.setString(2, contrasenia);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    int count = rs.getInt(1);
-                    return count > 0;  // Si el resultado es mayor a 0, las credenciales son correctas
+                    estudianteId = rs.getInt("id");
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
             System.err.println("Error en la consulta de base de datos: " + e.getMessage());
         }
-        return false;  // Credenciales incorrectas
+        Estudiante estudiante = new Estudiante();
+        EstudianteRepositorio estudianteRepositorio = new EstudianteRepositorio();
+        estudiante = estudianteRepositorio.buscarPorId(estudianteId);
+        return estudiante;  // Credenciales incorrectas
     }
 
 

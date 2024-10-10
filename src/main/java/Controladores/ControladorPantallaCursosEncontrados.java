@@ -33,6 +33,9 @@
         public void setLabelInfo(String disponibles) {
             labelDisponibles.setText(disponibles);
         }
+        public Label getLabelInfo(){
+            return labelDisponibles;
+        }
 
         @FXML
         public void agregarButtonPressed(ActionEvent actionEvent) {
