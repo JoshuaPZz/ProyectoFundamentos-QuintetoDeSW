@@ -23,4 +23,6 @@ public class ServicioProfesor {
         }
     }
 
+    //metodo para crear un curso, llamando el metodo de servicio curso y llama el repositorio para que ese curso se le asigne al profesor
+
 }

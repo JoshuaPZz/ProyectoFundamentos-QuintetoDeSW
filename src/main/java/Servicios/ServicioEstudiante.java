@@ -50,7 +50,9 @@ public class ServicioEstudiante {
 
     //Método para remover a un estudiante de un curso
     public boolean removerCurso(Estudiante estudiante, Curso curso) {
+        EstudianteRepositorio estudianteRepositorio = new EstudianteRepositorio();
         if (estudiante != null && curso != null && curso.getEstudiantes().contains(estudiante)) {
+        //estudianteRepositorio.
             curso.getEstudiantes().remove(estudiante);
             estudiante.getCursos().remove(curso);
             return true;
