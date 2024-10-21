@@ -47,8 +47,8 @@ public class EstudianteRepositorio {
         List<Estudiante> estudiantes = new ArrayList<>();
         String consulta = "SELECT * FROM Estudiante";
 
-        try (Connection conexion = getConnection2();
-             PreparedStatement pstmt = conexion.prepareStatement(consulta);
+        try (Connection connection = ConexionBaseDeDatos.getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(consulta);
              ResultSet rs = pstmt.executeQuery()) {
 
             while (rs.next()) {
@@ -80,7 +80,7 @@ public class EstudianteRepositorio {
                 "JOIN Materia m ON c.materia_id = m.id " +
                 "WHERE i.estudiante_id = ? AND i.ha_aprobado = 0";
 
-        try (Connection conexion = getConnection2();
+        try (Connection conexion = ConexionBaseDeDatos.getConnection();
              PreparedStatement psCurso = conexion.prepareStatement(queryCurso)) {
             psCurso.setInt(1, estudiante.getId());
             try (ResultSet rsCurso = psCurso.executeQuery()) {
@@ -98,7 +98,7 @@ public class EstudianteRepositorio {
                 "JOIN Materia m ON c.materia_id = m.id " +
                 "WHERE i.estudiante_id = ? AND i.ha_aprobado = 1";
 
-        try (Connection conexion = getConnection2();
+        try (Connection conexion = ConexionBaseDeDatos.getConnection();
              PreparedStatement psCursosVisto = conexion.prepareStatement(queryCursosVistos)) {
             psCursosVisto.setInt(1, estudiante.getId());
             try (ResultSet rsCursosVisto = psCursosVisto.executeQuery()) {
@@ -111,23 +111,6 @@ public class EstudianteRepositorio {
                 System.out.println("Estudiante ID: " + estudiante.getId() + " - Cursos Vistos: " + cursosVistos.size());
             }
         }
-    }
-
-    // Asegúrate de que este método siempre devuelve una nueva conexión activa
-    private Connection getConnection2() throws SQLException {
-        Connection connection = null;
-        Connection conexion;
-        String conexionURL = "jdbc:sqlserver://MSI\\SQLEXPRESS;databaseName=master;user=sa;password=gaturro26;encrypt=true;trustServerCertificate=true;";
-        if (connection == null || connection.isClosed()) {
-            try {
-                connection = DriverManager.getConnection(conexionURL);
-                //System.out.println("Conexión establecida correctamente.");
-            } catch (SQLException e) {
-                System.out.println("Error al conectar a la base de datos: " + e.getMessage());
-                throw e;
-            }
-        }
-        return connection;
     }
 
     // Método auxiliar para obtener cursos y evitar código duplicado
@@ -145,7 +128,7 @@ public class EstudianteRepositorio {
         // Obtener horarios del curso
         List<Date> horarios = new ArrayList<>();
         String queryHorarios = "SELECT hora_inicio, hora_fin FROM Horario WHERE curso_id = ?";
-        try (Connection conexion = getConnection2();
+        try (Connection conexion = ConexionBaseDeDatos.getConnection();
              PreparedStatement psHorario = conexion.prepareStatement(queryHorarios)) {
             psHorario.setString(1, cursoId);
             try (ResultSet rsHorario = psHorario.executeQuery()) {
@@ -163,7 +146,7 @@ public class EstudianteRepositorio {
         List<Sala> salas = new ArrayList<>();
         String querySalas = "SELECT s.id, s.ubicacion, s.capacidad FROM Sala s " +
                 "JOIN Curso c ON c.sala_id = s.id WHERE c.id = ?";
-        try (Connection conexion = getConnection2();
+        try (Connection conexion = ConexionBaseDeDatos.getConnection();
              PreparedStatement psSala = conexion.prepareStatement(querySalas)) {
             psSala.setString(1, cursoId);
             try (ResultSet rsSala = psSala.executeQuery()) {
@@ -185,7 +168,7 @@ public class EstudianteRepositorio {
         List<Date> horarios = new ArrayList<>();
         String consulta = "SELECT hora_inicio, hora_fin FROM Horario WHERE curso_id = ?";
 
-        try (Connection conexion = getConnection2();
+        try (Connection conexion = ConexionBaseDeDatos.getConnection();
              PreparedStatement pstmt = conexion.prepareStatement(consulta)) {
             pstmt.setString(1, idCurso);
             try (ResultSet rs = pstmt.executeQuery()) {
@@ -211,7 +194,7 @@ public class EstudianteRepositorio {
                 "JOIN Horario h ON m.id = h.curso_id " +
                 "WHERE i.estudiante_id = ?";
 
-        try (Connection conexion = getConnection2();
+        try (Connection conexion = ConexionBaseDeDatos.getConnection();
              PreparedStatement pstmt = conexion.prepareStatement(consulta)) {
 
             pstmt.setInt(1, estudianteId);
@@ -241,7 +224,7 @@ public class EstudianteRepositorio {
                 "JOIN Inscripcion i ON c.id = i.curso_id " +
                 "JOIN Materia m ON c.materia_id = m.id " +
                 "WHERE i.estudiante_id = ? AND i.ha_aprobado = 0";
-        try (Connection conexion = getConnection2();
+        try (Connection conexion = ConexionBaseDeDatos.getConnection();
              PreparedStatement psCurso = conexion.prepareStatement(queryCurso)) {
             psCurso.setInt(1, estudianteId);
             try (ResultSet rsCurso = psCurso.executeQuery()) {
@@ -261,7 +244,7 @@ public class EstudianteRepositorio {
                 "JOIN Inscripcion i ON c.id = i.curso_id " +
                 "JOIN Materia m ON c.materia_id = m.id " +
                 "WHERE i.estudiante_id = ? AND i.ha_aprobado = 1";
-        try (Connection conexion = getConnection2();
+        try (Connection conexion = ConexionBaseDeDatos.getConnection();
              PreparedStatement psCursosVisto = conexion.prepareStatement(queryCursosVistos)) {
             psCursosVisto.setInt(1, estudianteId);
             try (ResultSet rsCursosVisto = psCursosVisto.executeQuery()) {
@@ -279,7 +262,7 @@ public class EstudianteRepositorio {
         String query = "SELECT m.* FROM Materia m " +
                 "JOIN Inscripcion i ON m.id = i.curso_id " +
                 "WHERE i.estudiante_id = ? AND i.ha_aprobado = 1";
-        try (Connection conexion = getConnection2();
+        try (Connection conexion = ConexionBaseDeDatos.getConnection();
              PreparedStatement ps = conexion.prepareStatement(query)) {
             ps.setInt(1, estudianteId);
             try (ResultSet rs = ps.executeQuery()) {
@@ -298,7 +281,7 @@ public class EstudianteRepositorio {
 
     public void inscribirCurso(int estudianteId, String cursoId) throws SQLException {
         String sql = "INSERT INTO Inscripcion (estudiante_id, curso_id, ha_aprobado) VALUES (?, ?, 0)";
-        try (Connection connection = getConnection();
+        try (Connection connection = ConexionBaseDeDatos.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, estudianteId);
             ps.setString(2, cursoId);

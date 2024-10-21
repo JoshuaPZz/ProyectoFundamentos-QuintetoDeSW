@@ -1,5 +1,9 @@
     package Controladores;
 
+    import Entidades.Curso;
+    import Entidades.Materia;
+    import RepositorioBD.CursoRepositorio;
+    import RepositorioBD.MateriaRepositorio;
     import Servicios.ServicioCurso;
     import Servicios.ServicioEstudiante;
     import javafx.event.ActionEvent;
@@ -14,8 +18,11 @@
 
 
     import java.io.IOException;
+    import java.sql.SQLException;
 
     public class ControladorPantallaCursosEncontrados {
+        MateriaRepositorio repositorio = new MateriaRepositorio(); //Se debe hacer la inyeccion desde principal
+        CursoRepositorio repositorio2 = new CursoRepositorio();
 
         @FXML
         private Button botonAgregar;
@@ -38,7 +45,7 @@
         }
 
         @FXML
-        public void agregarButtonPressed(ActionEvent actionEvent) {
+        public void agregarButtonPressed(ActionEvent actionEvent) throws SQLException {
 
             Stage mainStage = SceneManager.getInstance().getPrimaryStage();
 
@@ -46,10 +53,22 @@
             ControladorPantallaInscripcion controller = (ControladorPantallaInscripcion) inscripcionScene.getUserData();
 
             if (controller != null) {
-                ServicioEstudiante estudiante = new ServicioEstudiante();
+                //ServicioEstudiante estudiante = new ServicioEstudiante();
+                CursoRepositorio repositorio = new CursoRepositorio();
+                try{
+                    Materia materia = repositorio2.obtenerMateriaporCursoID(textIdAgregar.getText());
+                    if (materia != null) {
+                        String infoMateria = "Curso: " + textIdAgregar.getText() + " Materia: " + materia.getNombre();
+                        controller.setLabelCarrito(infoMateria);
+                    }else{
+                        controller.setLabelCarrito("Materia no encontrada");
+                    }
+                }catch (SQLException e){
+                    e.printStackTrace();
+                    controller.setLabelCarrito("Error al encontrar materia");
+                }
+               // Curso curso = repositorio.obtenerCursoPorId(id);
                 //estudiante.agregarCursoAlCarrito(estudiante, )
-
-                controller.setLabelCarrito(textIdAgregar.getText());
             }
         }
         @FXML

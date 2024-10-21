@@ -2,6 +2,8 @@ package RepositorioBD;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
+
 import Entidades.Materia;
 
 public class MateriaRepositorio {
@@ -28,6 +30,17 @@ public class MateriaRepositorio {
             }
         }
         return materia;
+    }
+
+    public String obtenerNombreMateria(String id) {
+        int idCurso = Integer.parseInt(id);
+        try {
+            Materia materia = obtenerMateriaPorId(idCurso);
+            return materia != null ? materia.getNombre() : "Materia no encontrada";
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "Error al obtener materia";
+        }
     }
 
     private List<Materia> obtenerPrerrequisitos(int materiaId, Connection conexion) throws SQLException {
