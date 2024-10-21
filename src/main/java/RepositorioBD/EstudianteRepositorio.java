@@ -291,4 +291,18 @@ public class EstudianteRepositorio {
             throw e;
         }
     }
+
+    public Boolean eliminarInscripcion(int estudianteId, String cursoId) throws SQLException {
+        String sql = "DELETE FROM Inscripcion WHERE estudiante_id = ? and curso_id = ? AND ha_aprobado = 0";
+        try (Connection connection = ConexionBaseDeDatos.getConnection();
+        PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, estudianteId);
+            ps.setString(2, cursoId);
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e){
+            System.out.println("Error al eliminar inscripción: " + e.getMessage());
+            return false;
+        }
+    }
 }
