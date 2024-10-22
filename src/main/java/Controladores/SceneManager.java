@@ -1,15 +1,21 @@
 package Controladores;
 
+import Servicios.*;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SceneManager {
     private static SceneManager instance;
     private Stage primaryStage;
+    private final Map<String, FXMLLoader> loaders = new HashMap<>();
+
+
 
     private SceneManager() {}
 
@@ -20,50 +26,81 @@ public class SceneManager {
         return instance;
     }
 
-    public Stage getPrimaryStage() {
-        return primaryStage;
+    public FXMLLoader findLoader(String controller) {
+        if (loaders.containsKey(controller)) {
+            return loaders.get(controller);
+        }
+
+        FXMLLoader loader = null;
+        String fxmlPath = switch (controller) {
+            case "ControladorPantallaInscripcion" -> "/Pantallas/pantallaInscripcion.fxml";
+            case "ControladorPantallaCursosEncontrados" -> "/Pantallas/pantallaCursosEncontrados.fxml";
+            case "ControladorPantallaBusqueda" -> "/Pantallas/pantallaBusqueda.fxml";
+            case "ControladorLogIn" -> "/Pantallas/PantallaLogin.fxml";
+            default -> null;
+        };
+
+        if (fxmlPath != null) {
+            loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            loaders.put(controller, loader);
+        }
+
+        return loader;
     }
 
     public void setPrimaryStage(Stage stage) {
         this.primaryStage = stage;
     }
+    public Stage getPrimaryStage() {
+        return primaryStage;
+    }
 
-    public void switchScene(Stage stage, String fxmlPath, String cssPath) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+    public <T> T getController(String fxmlPath) throws IOException {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            if (loader.getLocation() == null) {
+                return null;
+            }
+            loader.load();
+            return loader.getController();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    public void switchScene(String controllerName, String cssPath) throws IOException {
+        FXMLLoader loader = loaders.get(controllerName);
+        if (loader == null) {
+            throw new IllegalStateException("No hay loader para el controlador: " + controllerName);
+        }
+
         Parent root = loader.load();
         Scene scene = new Scene(root);
-
-        // Get the controller instance and set it as user data for the scene
-        if(fxmlPath == "/Pantallas/pantallaInscripcion.fxml") {
-            ControladorPantallaInscripcion controller = loader.getController();
-            scene.setUserData(controller);
-        }
+        scene.setUserData(loader.getController());
 
         if (cssPath != null && !cssPath.isEmpty()) {
             scene.getStylesheets().add(getClass().getResource(cssPath).toExternalForm());
         }
 
-        stage.setScene(scene);  // Use the passed stage
+        primaryStage.setScene(scene);
 
-        if(fxmlPath.equals("/Pantallas/pantallaInscripcion.fxml") && !stage.isMaximized())
-            stage.setMaximized(true);
-    }
-
-    // Method for switching scenes only on primary stage
-    public void switchScene(String fxmlPath, String cssPath) throws IOException {
-        switchScene(primaryStage, fxmlPath, cssPath);
-    }
-
-    public Stage openNewWindow(String fxmlPath, String cssPath, String title, boolean isModal) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-        Parent root = loader.load();
-        Scene scene = new Scene(root);
-
-        if (cssPath != null && !cssPath.isEmpty()) {
-            scene.getStylesheets().add(getClass().getResource(cssPath).toExternalForm());
+        if (controllerName.equals("ControladorPantallaInscripcion")) {
+            primaryStage.setMaximized(true);
         }
+    }
 
+    public void cargarServicios(Object controller){
+
+    }
+
+    public Stage openNewWindow(String controllerName, String cssPath, String title, boolean isModal) throws IOException {
         Stage newStage = new Stage();
+        FXMLLoader loader = loaders.get(controllerName);
+        Parent root = loader.load();
+        Scene scene = new Scene(root);
+        scene.setUserData(loader.getController());
+        scene.getStylesheets().add(getClass().getResource("/CssStyle/LoginStyle.css").toExternalForm());
         newStage.setScene(scene);
         newStage.setTitle(title);
 
@@ -71,8 +108,6 @@ public class SceneManager {
             newStage.initModality(Modality.APPLICATION_MODAL);
             newStage.initOwner(primaryStage);
         }
-
         return newStage;
     }
-
 }

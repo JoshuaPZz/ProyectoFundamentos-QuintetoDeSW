@@ -1,6 +1,8 @@
 package Controladores;
 
 import RepositorioBD.CursoRepositorio;
+import Servicios.ServicioCurso;
+import Servicios.ServicioEstudiante;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,6 +19,7 @@ import java.util.List;
 
 public class ControladorPantallaBusqueda {
 
+    ControladorPantallaCursosEncontrados controladorPantallaCursosEncontrados;
     CursoRepositorio repositorio = new CursoRepositorio(); //Se debe hacer la inyeccion desde principal
 
     @FXML
@@ -24,10 +27,16 @@ public class ControladorPantallaBusqueda {
     @FXML
     private TextField cursoPorIdLabel;
 
+    //INYECICON DEL SERVICIO ESTUDIANTE POR MEDIO DE CONSTRUCTOR
+    public ControladorPantallaBusqueda(ControladorPantallaCursosEncontrados controladorPantallaCursosEncontrados) {
+        this.controladorPantallaCursosEncontrados = controladorPantallaCursosEncontrados;
+    }
+
 
     @FXML
     void buscarIdButtonPressed(ActionEvent event) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Pantallas/pantallaCursosEncontrados.fxml"));
+        /*
+         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Pantallas/pantallaCursosEncontrados.fxml"));
         Parent root;
         try {
             root = loader.load();
@@ -35,26 +44,27 @@ public class ControladorPantallaBusqueda {
             e.printStackTrace();
             return;
         }
-
-        ControladorPantallaCursosEncontrados cursosEncontrados = loader.getController();
+        */
         List<String> cursos = repositorio.obtenerCursosPorMateria(cursoPorIdLabel.getText());
         if (!cursos.isEmpty()) {
-            cursosEncontrados.setLabelInfo("\n--- Cursos de la materia con ID: " + cursoPorIdLabel.getText() + " ---");
+            controladorPantallaCursosEncontrados.setLabelInfo("\n--- Cursos de la materia con ID: " + cursoPorIdLabel.getText() + " ---");
             for (String cursoInfo : cursos) {
-
                 System.out.println(cursoInfo);
-                cursosEncontrados.setLabelInfo(cursosEncontrados.getLabelInfo().getText() + "\n" + cursoInfo);
+                controladorPantallaCursosEncontrados.setLabelInfo(controladorPantallaCursosEncontrados.getLabelInfo().getText() + "\n" + cursoInfo);
             }
         } else {
             System.out.println("No se encontraron cursos para la materia con ID: " + cursoPorIdLabel.getText());
         }
 
-
         Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        /*
         Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("/CssStyle/LoginStyle.css").toExternalForm());
 
         currentStage.setScene(scene);
+
+         */
+        SceneManager.getInstance().switchScene("ControladorPantallaCursosEncontrados", "/Pantallas/pantallaCursosEncontrados.fxml");
 /*
         System.out.print("\nIntroduce el ID de la materia: ");
         String materiaId = scanner.next();

@@ -2,13 +2,11 @@ package Servicios;
 import Entidades.Curso;
 import Entidades.Estudiante;
 import Entidades.Materia;
-import RepositorioBD.CursoRepositorio;
 import RepositorioBD.EstudianteRepositorio;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 public class ServicioEstudiante {
@@ -42,6 +40,16 @@ public class ServicioEstudiante {
             for (Curso curso : estudiante.getCarrito()) {
                 System.out.println(curso.getMateria().getNombre() + " " + curso.getiD());
                 materias.add(curso.getMateria());
+            }
+            return materias;
+        }
+        return null;
+    }
+    public ArrayList<String> verCarritoToString(Estudiante estudiante) {
+        if (estudiante != null && estudiante.getCarrito() != null) {
+            ArrayList<String> materias = new ArrayList<>();
+            for (Curso curso : estudiante.getCarrito()) {
+                materias.add(curso.getMateria().getNombre() + " " + curso.getiD());
             }
             return materias;
         }
