@@ -19,7 +19,7 @@ public class ServicioCurso {
         Curso nuevoCurso = new Curso(ID, materia, capacidad, horarios, salas, cupos);
         nuevoCurso.setProfesores(profesores); // Asigna la lista de profesores al nuevo curso
         //el repositorio curso que llame la consulta de crear un curso
-        //c.crearCurso()
+        //c.crearCurso(nuevoCurso)
         return nuevoCurso;
     }
 
