@@ -14,6 +14,12 @@ import java.util.List;
 import java.util.Date;
 
 public class CursoRepositorio{
+    private MateriaRepositorio materiaRepositorio;
+
+    public CursoRepositorio() {
+        this.materiaRepositorio = new MateriaRepositorio(); // Inicializar el repositorio de materia
+    }
+
     private Connection getConnection() throws SQLException {
         return ConexionBaseDeDatos.getConnection();
     }
@@ -22,7 +28,7 @@ public class CursoRepositorio{
 
     public Curso obtenerCursoPorId(String idCurso) throws SQLException {
         Curso curso = null;
-        String consulta = "SELECT c.id,/* c.cupos,*/ c.capacidad, m.id AS materia_id, m.nombre AS materia_nombre, s.id AS sala_id, s.ubicacion " +
+        String consulta = "SELECT c.id,c.cupos,c.capacidad, m.id AS materia_id, m.nombre AS materia_nombre, s.id AS sala_id, s.ubicacion " +
                 "FROM Curso c " +
                 "LEFT JOIN Materia m ON c.materia_id = m.id " +
                 "LEFT JOIN Sala s ON c.sala_id = s.id " +
@@ -43,7 +49,7 @@ public class CursoRepositorio{
 
                     curso = new Curso();
                     curso.setiD(rs.getString("id"));
-                    //curso.setCupos(rs.getInt("cupos"));
+                    curso.setCupos(rs.getInt("cupos"));
                     curso.setCapacidad(rs.getInt("capacidad"));
                     curso.setMateria(materia);
                     curso.setSalas(new ArrayList<>());
@@ -178,12 +184,13 @@ public class CursoRepositorio{
         List<String> cursos = new ArrayList<>();
 
         // Consulta SQL
-        String query = "SELECT c.id, m.nombre, d.nombre AS dia_nombre, h.hora_inicio, h.hora_fin " +
+        String query = "SELECT c.id AS curso_id, c.materia_id, m.nombre AS nombre_materia, STRING_AGG(CONCAT(d.nombre, ' ', CONVERT(varchar, h.hora_inicio, 108), '-', CONVERT(varchar, h.hora_fin, 108)), ', ') AS horarios " +
                 "FROM Curso c " +
                 "JOIN Materia m ON c.materia_id = m.id " +
-                "JOIN Horario h ON c.id = h.curso_id " +
+                "JOIN Horario h ON c.materia_id = h.materia_id " +
                 "JOIN DiasSemana d ON h.dia_semana_id = d.id " +
-                "WHERE m.id = ?";
+                "WHERE m.id = ?" +
+                "GROUP BY c.id, c.materia_id, m.nombre";
 
         try (Connection conexion = getConnection();
              PreparedStatement ps = conexion.prepareStatement(query)) {
@@ -191,21 +198,32 @@ public class CursoRepositorio{
             ps.setString(1, materiaId);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    String cursoId = rs.getString("id");
-                    String materiaNombre = rs.getString("nombre");
-                    String diaSemana = rs.getString("dia_nombre");
-                    LocalDateTime horaInicio = rs.getTimestamp("hora_inicio").toLocalDateTime();
-                    LocalDateTime horaFin = rs.getTimestamp("hora_fin").toLocalDateTime();
-
-                    DateTimeFormatter formatterHora = DateTimeFormatter.ofPattern("HH:mm");
-                    String horarioFormateado = horaInicio.format(formatterHora) + " - " + horaFin.format(formatterHora);
-
-                    String infoCurso = "Materia: " + materiaNombre + ", Curso ID: " + cursoId + ", Horario: " + diaSemana + " " + horarioFormateado;
+                    String cursoId = rs.getString("curso_id");
+                    String materiaNombre = rs.getString("nombre_materia");
+                    String horarios = rs.getString("horarios");
+                    String infoCurso = "Materia: " + materiaNombre + ", Curso ID: " + cursoId + ", Horario: " + horarios;
                     cursos.add(infoCurso);
                 }
             }
         }
         return cursos;
+    }
+
+    public Materia obtenerMateriaporCursoID(String cursoId) throws SQLException {
+        Materia materia = null;
+        String consulta = "SELECT materia_id FROM Curso WHERE id = ?";
+
+        try (Connection conexion = getConnection();
+        PreparedStatement ps = conexion.prepareStatement(consulta)) {
+            ps.setString(1, cursoId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    int materiaId = rs.getInt("materia_id");
+                    materia = materiaRepositorio.obtenerMateriaPorId(materiaId);
+                }
+            }
+        }
+        return materia;
     }
 
 

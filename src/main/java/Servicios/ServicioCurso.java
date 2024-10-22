@@ -1,9 +1,6 @@
 package Servicios;
 
-import Entidades.Curso;
-import Entidades.Estudiante;
-import Entidades.Materia;
-import Entidades.Profesor;
+import Entidades.*;
 import RepositorioBD.CursoRepositorio;
 import RepositorioBD.EstudianteRepositorio;
 
@@ -14,6 +11,18 @@ import java.util.Date;
 import java.util.List;
 
 public class ServicioCurso {
+
+    // Método para crear un curso
+    public Curso crearCurso(String ID, Materia materia, int capacidad, List<Date> horarios, List<Sala> salas, int cupos, List<Profesor> profesores) {
+        CursoRepositorio c = new CursoRepositorio();
+
+        Curso nuevoCurso = new Curso(ID, materia, capacidad, horarios, salas, cupos);
+        nuevoCurso.setProfesores(profesores); // Asigna la lista de profesores al nuevo curso
+        //el repositorio curso que llame la consulta de crear un curso
+        //c.crearCurso(nuevoCurso)
+        return nuevoCurso;
+    }
+
 
 
     //Método para consultar un curso
