@@ -65,7 +65,11 @@ public class CursoRepositorio{
     // Método para obtener los horarios de un curso
     public List<Date> obtenerHorarios(String idCurso) throws SQLException {
         List<Date> horarios = new ArrayList<>();
-        String consulta = "SELECT hora_inicio, hora_fin FROM Horario WHERE curso_id = ?";
+        String consulta = "SELECT h.hora_inicio, h.hora_fin, ds.nombre AS dia, s.ubicacion AS sala " +
+                        "FROM Horario h JOIN DiasSemana ds ON h.dia_semana_id = ds.id " +
+                        "JOIN Curso c ON h.materia_id = c.materia_id " +
+                        "LEFT JOIN Sala s ON h.sala_id = s.id " +
+                        "WHERE c.id = ?";
 
         try (Connection conexion = getConnection();
              PreparedStatement pstmt = conexion.prepareStatement(consulta)) {
@@ -225,6 +229,22 @@ public class CursoRepositorio{
         }
         return materia;
     }
+/*
+    public Curso agregarCurso(Curso curso) throws SQLException {
+        String query = "INSERT INTO Curso (cupos, capacidad, materia_id, sala_id, estado_id) VALUES (?, ?, ?, ?, ?)";
+        try (Connection conexion = getConnection();
+        PreparedStatement ps = conexion.prepareStatement(query)) {
+            ps.setInt(1, curso.getCupos());
+            ps.setInt(2, curso.getCapacidad());
+            ps.setString(3, curso.getMateria().getiD());
+            if (curso.getSalas() != null) {
+                ps.setInt(4, );
+
+            }
+        }
+    }
+
+ */
 
 
 }
