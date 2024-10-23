@@ -64,7 +64,7 @@ public class ControladorPantallaBusqueda {
         currentStage.setScene(scene);
 
          */
-        SceneManager.getInstance().switchScene("ControladorPantallaCursosEncontrados", "/Pantallas/pantallaCursosEncontrados.fxml");
+        SceneManager.getInstance().switchScene("ControladorPantallaCursosEncontrados", "/Pantallas/pantallaCursosEncontrados.fxml", true);
 /*
         System.out.print("\nIntroduce el ID de la materia: ");
         String materiaId = scanner.next();

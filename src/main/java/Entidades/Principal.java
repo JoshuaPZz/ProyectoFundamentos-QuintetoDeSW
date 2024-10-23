@@ -33,12 +33,32 @@ public class Principal extends Application {
 
         loader = SceneManager.getInstance().findLoader("ControladorPantallaCursosEncontrados");
         loader.setController(controladorPantallaCursosEncontrados);
+        try {
+            loader.load(); // Load immediately after setting controller
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         loader = SceneManager.getInstance().findLoader("ControladorLogIn");
         loader.setController(controladorLogIn);
+        try {
+            loader.load(); // Load immediately after setting controller
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         loader = SceneManager.getInstance().findLoader("ControladorPantallaInscripcion");
         loader.setController(controladorPantallaInscripcion);
+        try {
+            loader.load(); // Load immediately after setting controller
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         loader = SceneManager.getInstance().findLoader("ControladorPantallaBusqueda");
         loader.setController(controladorPantallaBusqueda);
+        try {
+            loader.load(); // Load immediately after setting controller
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         // Set the primary stage in SceneManager
         SceneManager.getInstance().setPrimaryStage(stage);
 
@@ -50,7 +70,7 @@ public class Principal extends Application {
         stage.setResizable(true);
 
         // Switch to the login scene using SceneManager
-        SceneManager.getInstance().switchScene("ControladorLogIn", "/CssStyle/LoginStyle.css");
+        SceneManager.getInstance().switchScene("ControladorLogIn", "/CssStyle/LoginStyle.css", false);
 
         stage.show();
     }

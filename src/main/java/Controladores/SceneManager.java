@@ -13,6 +13,7 @@ import java.util.Map;
 public class SceneManager {
     private static SceneManager instance;
     private Stage primaryStage;
+    private Stage secondaryStage;
     private final Map<String, FXMLLoader> loaders = new HashMap<>();
 
 
@@ -69,21 +70,27 @@ public class SceneManager {
         }
     }
 
-    public void switchScene(String controllerName, String cssPath) throws IOException {
+    public void switchScene(String controllerName, String cssPath, boolean secondary) throws IOException {
         FXMLLoader loader = loaders.get(controllerName);
         if (loader == null) {
             throw new IllegalStateException("No hay loader para el controlador: " + controllerName);
         }
 
-        Parent root = loader.load();
+        Parent root = loader.getRoot();
         Scene scene = new Scene(root);
         scene.setUserData(loader.getController());
 
         if (cssPath != null && !cssPath.isEmpty()) {
             scene.getStylesheets().add(getClass().getResource(cssPath).toExternalForm());
         }
+        if(!secondary) {
+            primaryStage.setScene(scene);
+        }
+        else{
+            secondaryStage.setScene(scene);
+        }
 
-        primaryStage.setScene(scene);
+
 
         if (controllerName.equals("ControladorPantallaInscripcion")) {
             primaryStage.setMaximized(true);
@@ -97,7 +104,7 @@ public class SceneManager {
     public Stage openNewWindow(String controllerName, String cssPath, String title, boolean isModal) throws IOException {
         Stage newStage = new Stage();
         FXMLLoader loader = loaders.get(controllerName);
-        Parent root = loader.load();
+        Parent root = loader.getRoot();
         Scene scene = new Scene(root);
         scene.setUserData(loader.getController());
         scene.getStylesheets().add(getClass().getResource("/CssStyle/LoginStyle.css").toExternalForm());
@@ -108,6 +115,7 @@ public class SceneManager {
             newStage.initModality(Modality.APPLICATION_MODAL);
             newStage.initOwner(primaryStage);
         }
+        secondaryStage = newStage;
         return newStage;
     }
 }

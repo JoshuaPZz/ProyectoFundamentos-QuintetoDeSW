@@ -32,6 +32,7 @@ public class ControladorPantallaCursosEncontrados {
 
     @FXML
     private Label labelDisponibles;
+
     @FXML
     private TextField textIdAgregar;
 

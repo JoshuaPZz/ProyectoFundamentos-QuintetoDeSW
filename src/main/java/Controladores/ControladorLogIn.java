@@ -42,7 +42,7 @@ public class ControladorLogIn {
             System.out.println("Usuario autenticado correctamente! " + estudiante.getNombre());
             try {
                 // Switch to the main application scene
-                SceneManager.getInstance().switchScene("ControladorPantallaInscripcion", "/CssStyle/LoginStyle.css");
+                SceneManager.getInstance().switchScene("ControladorPantallaInscripcion", "/CssStyle/LoginStyle.css", false);
             } catch (IOException e) {
                 e.printStackTrace();
                 // Handle the exception (e.g., show an error message to the user)
