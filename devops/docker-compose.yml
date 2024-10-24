@@ -1,0 +1,32 @@
+services:
+   
+    jenkins:
+        build: ./jenkins
+        image: jenkins
+        container_name: jenkins
+        restart: always
+        volumes:
+            # Carpeta base de Jenkins, contiene datos sensibles.
+            # Por ese motivo siempre hay que montarla en un volumen.
+            - jenkins-data:/var/jenkins_home
+            # La misma carpeta de Tomcat, se monta para que Jenkins pueda desplegar
+            # Las aplicaciones directamente
+            - tomcat-data:/deploy
+
+
+        ports:
+            - 8082:8080
+        networks:
+            - devopsnet
+    sqlserver:
+        image: mcr.microsoft.com/mssql/server
+        container_name: sqlserver
+        restart: always
+        ports:
+            - 1433:1433
+networks:
+    devopsnet:
+        driver: bridge
+volumes:
+    tomcat-data:
+    jenkins-data:
