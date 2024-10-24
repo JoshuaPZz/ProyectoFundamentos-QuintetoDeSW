@@ -1,5 +1,7 @@
 package Servicios;
 
+import Entidades.Curso;
+import Entidades.Estudiante;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
