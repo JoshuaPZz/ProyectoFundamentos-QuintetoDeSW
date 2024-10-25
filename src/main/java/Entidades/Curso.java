@@ -80,10 +80,48 @@ public class Curso {
     public void setCupos(int cupos) {this.cupos = cupos;}
 
     public String toStringResumen() {
-        //Realizar la implementacion para la representacion de un curso como String
-        return  getMateria().getNombre();
-    }
+        StringBuilder resumen = new StringBuilder();
+        SimpleDateFormat diaFormat = new SimpleDateFormat("EEEE"); // Formato solo del día
+        SimpleDateFormat horaFormat = new SimpleDateFormat("HH:mm"); // Formato solo de hora
 
+        // Detalles de la materia
+        resumen.append("Materia: ").append(materia.getNombre())
+                .append(", Créditos: ").append(materia.getCreditos())
+                .append(", Descripción: ").append(materia.getDescripcion())
+                .append(", Horario: ");
+
+        // Agrupar horarios por día
+        String ultimoDia = "";
+        String inicioHora = "";
+        String finHora = "";
+
+        for (int i = 0; i < horarios.size(); i++) {
+            Date horario = horarios.get(i);
+            String diaActual = diaFormat.format(horario);
+            String horaActual = horaFormat.format(horario);
+
+            if (!diaActual.equals(ultimoDia)) {
+                if (!ultimoDia.isEmpty()) {
+                    resumen.append(ultimoDia).append(" ").append(inicioHora).append("-").append(finHora).append(", ");
+                }
+                // Nuevo día, reiniciamos intervalo
+                ultimoDia = diaActual;
+                inicioHora = horaActual;
+                finHora = horaActual;
+            } else {
+                finHora = horaActual;
+            }
+        }
+
+        resumen.append(ultimoDia).append(" ").append(inicioHora).append("-").append(finHora);
+
+        resumen.append(", Salas: ");
+        for (Sala sala : salas) {
+            resumen.append(sala.getiD()).append(" ");
+        }
+
+        return resumen.toString().trim();
+    }
     public Curso() {
         this.iD = "";
         this.cupos = 0;
