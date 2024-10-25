@@ -33,32 +33,15 @@ public class Principal extends Application {
 
         loader = SceneManager.getInstance().findLoader("ControladorPantallaCursosEncontrados");
         loader.setController(controladorPantallaCursosEncontrados);
-        try {
-            loader.load(); // Load immediately after setting controller
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         loader = SceneManager.getInstance().findLoader("ControladorLogIn");
         loader.setController(controladorLogIn);
-        try {
-            loader.load(); // Load immediately after setting controller
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         loader = SceneManager.getInstance().findLoader("ControladorPantallaInscripcion");
         loader.setController(controladorPantallaInscripcion);
-        try {
-            loader.load(); // Load immediately after setting controller
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         loader = SceneManager.getInstance().findLoader("ControladorPantallaBusqueda");
         loader.setController(controladorPantallaBusqueda);
-        try {
-            loader.load(); // Load immediately after setting controller
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        //Se cargan todos los controladores
+        SceneManager.getInstance().loadControllers();
+
         // Set the primary stage in SceneManager
         SceneManager.getInstance().setPrimaryStage(stage);
 

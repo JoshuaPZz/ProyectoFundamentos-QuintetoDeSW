@@ -140,7 +140,7 @@
                                        <children>
                                           <Label fx:id="labelInscritas" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: white;" HBox.hgrow="ALWAYS" />
                                           <Pane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="255.0" prefWidth="15.0" />
-                                          <ListView fx:id="listViewCarrito" prefHeight="332.0" prefWidth="332.0" />
+                                          <ListView fx:id="listViewCarrito" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="332.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
                                        </children>
                                     </HBox>
                                  </children>

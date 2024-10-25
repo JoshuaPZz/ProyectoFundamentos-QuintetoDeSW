@@ -56,6 +56,7 @@ public class ControladorPantallaBusqueda {
             System.out.println("No se encontraron cursos para la materia con ID: " + cursoPorIdLabel.getText());
         }
 
+
         Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         /*
         Scene scene = new Scene(root);

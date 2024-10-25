@@ -49,6 +49,7 @@ public class SceneManager {
         return loader;
     }
 
+
     public void setPrimaryStage(Stage stage) {
         this.primaryStage = stage;
     }
@@ -97,9 +98,17 @@ public class SceneManager {
         }
     }
 
-    public void cargarServicios(Object controller){
-
+    public void loadControllers() {
+        for (FXMLLoader loader : loaders.values()) {
+            try {
+                loader.load();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
+
+
 
     public Stage openNewWindow(String controllerName, String cssPath, String title, boolean isModal) throws IOException {
         Stage newStage = new Stage();

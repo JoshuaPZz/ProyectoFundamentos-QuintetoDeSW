@@ -62,11 +62,12 @@ public class ControladorPantallaCursosEncontrados {
         ControladorPantallaInscripcion controller = (ControladorPantallaInscripcion) inscripcionScene.getUserData();
 
         if (controller != null) {
-            //Verificar si se puede agregar el curso al carrito con el estudiante de la sesion
-            //Si es posible agregarlo entonces actualiza la listView en la pantalla de Inscripcion
+            /*
+            Verificar si se puede agregar el curso al carrito con el estudiante de la sesion
+            Si es posible agregarlo entonces actualiza la listView en la pantalla de Inscripcion
+             */
             if(this.servicioEstudiante.agregarCursoAlCarrito(Sesion.getInstancia().getEstudiante(), this.servicioCurso.buscarCursoPorID(textIdAgregar.getText())))
                 controller.setListViewCarrito(servicioEstudiante.verCarritoToString(Sesion.getInstancia().getEstudiante()));
-            //controller.setLabelCarrito(textIdAgregar.getText());
         }
     }
     @FXML

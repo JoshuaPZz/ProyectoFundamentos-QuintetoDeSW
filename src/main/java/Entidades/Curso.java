@@ -1,6 +1,9 @@
 package Entidades;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -75,6 +78,11 @@ public class Curso {
     public int getCupos() {return cupos;}
 
     public void setCupos(int cupos) {this.cupos = cupos;}
+
+    public String toStringResumen() {
+        //Realizar la implementacion para la representacion de un curso como String
+        return  getMateria().getNombre();
+    }
 
     public Curso() {
         this.iD = "";

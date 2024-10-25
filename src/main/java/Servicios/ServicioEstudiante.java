@@ -49,7 +49,7 @@ public class ServicioEstudiante {
         if (estudiante != null && estudiante.getCarrito() != null) {
             ArrayList<String> materias = new ArrayList<>();
             for (Curso curso : estudiante.getCarrito()) {
-                materias.add(curso.getMateria().getNombre() + " " + curso.getiD());
+                materias.add(curso.toStringResumen());
             }
             return materias;
         }
