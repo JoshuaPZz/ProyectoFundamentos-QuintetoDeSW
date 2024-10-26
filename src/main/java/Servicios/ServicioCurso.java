@@ -167,4 +167,28 @@ public class ServicioCurso {
         CursoRepositorio repositorioCurso = new CursoRepositorio();
         return repositorioCurso.obtenerCursosPorMateria(materiaId);
     }
+    public boolean asignarSalaACurso(String idCurso, Sala sala) {
+        CursoRepositorio repositorioCurso = new CursoRepositorio();
+
+        try {
+            Curso curso = repositorioCurso.obtenerCursoPorId(idCurso);
+            if (curso != null) {
+                List<Sala> salas = curso.getSalas();
+                if (!salas.contains(sala)) {
+                    salas.add(sala);
+                    curso.setSalas(salas); // Actualiza la lista de salas en el curso
+                    //repositorioCurso.actualizarCurso(curso); // Actualiza el curso en la base de datos
+                    return true;
+                } else {
+                    System.out.println("La sala ya está asignada a este curso.");
+                }
+            } else {
+                System.out.println("Curso no encontrado con ID: " + idCurso);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al asignar sala al curso: " + e.getMessage());
+        }
+        return false;
+    }
+
 }
