@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,7 +15,7 @@ public class SceneManager {
     private static SceneManager instance;
     private Stage primaryStage;
     private Stage secondaryStage;
-    private final Map<String, FXMLLoader> loaders = new HashMap<>();
+    private final Map<String, Object> controllers = new HashMap<>();
 
 
 
@@ -26,7 +27,10 @@ public class SceneManager {
         }
         return instance;
     }
-
+    public Map<String, Object> getControllers() {
+        return controllers;
+    }
+    /*
     public FXMLLoader findLoader(String controller) {
         if (loaders.containsKey(controller)) {
             return loaders.get(controller);
@@ -48,6 +52,8 @@ public class SceneManager {
 
         return loader;
     }
+
+     */
 
 
     public void setPrimaryStage(Stage stage) {
@@ -71,12 +77,14 @@ public class SceneManager {
         }
     }
 
-    public void switchScene(String controllerName, String cssPath, boolean secondary) throws IOException {
-        FXMLLoader loader = loaders.get(controllerName);
-        if (loader == null) {
-            throw new IllegalStateException("No hay loader para el controlador: " + controllerName);
+    public void switchScene(String fxmlPath, String cssPath, boolean secondary) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+        loader.setController(controllers.get(fxmlPath));
+        try {
+            loader.load();
+        }catch (Exception e){
+            e.printStackTrace();
         }
-
         Parent root = loader.getRoot();
         Scene scene = new Scene(root);
         scene.setUserData(loader.getController());
@@ -88,35 +96,30 @@ public class SceneManager {
             primaryStage.setScene(scene);
         }
         else{
+            System.out.println(loader.getController().getClass().getName());
             secondaryStage.setScene(scene);
         }
 
-
-
-        if (controllerName.equals("ControladorPantallaInscripcion")) {
+        if (fxmlPath.equals("/Pantallas/pantallaInscripcion.fxml")) {
             primaryStage.setMaximized(true);
         }
     }
 
-    public void loadControllers() {
-        for (FXMLLoader loader : loaders.values()) {
-            try {
-                loader.load();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-
-
-    public Stage openNewWindow(String controllerName, String cssPath, String title, boolean isModal) throws IOException {
+    public Stage openNewWindow(String fxmlPath, String cssPath, String title, boolean isModal) throws IOException {
         Stage newStage = new Stage();
-        FXMLLoader loader = loaders.get(controllerName);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+
+        loader.setController(controllers.get(fxmlPath));
+        try {
+            loader.load();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         Parent root = loader.getRoot();
         Scene scene = new Scene(root);
         scene.setUserData(loader.getController());
-        scene.getStylesheets().add(getClass().getResource("/CssStyle/LoginStyle.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource(cssPath).toExternalForm());
         newStage.setScene(scene);
         newStage.setTitle(title);
 
@@ -127,4 +130,5 @@ public class SceneManager {
         secondaryStage = newStage;
         return newStage;
     }
+
 }

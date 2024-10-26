@@ -85,9 +85,9 @@ public class Curso {
         SimpleDateFormat horaFormat = new SimpleDateFormat("HH:mm"); // Formato solo de hora
 
         // Detalles de la materia
-        resumen.append("Materia: ").append(materia.getNombre())
-                .append(", Créditos: ").append(materia.getCreditos())
-                .append(", Descripción: ").append(materia.getDescripcion())
+        resumen.append("Materia: ").append(materia.getNombre()).append("\n")
+                .append(", Créditos: ").append(materia.getCreditos()).append("\n")
+                .append(", Descripción: ").append(materia.getDescripcion()).append("\n")
                 .append(", Horario: ");
 
         // Agrupar horarios por día
@@ -111,9 +111,10 @@ public class Curso {
             } else {
                 finHora = horaActual;
             }
+            resumen.append(ultimoDia).append(" ").append(inicioHora).append("-").append(finHora);
         }
 
-        resumen.append(ultimoDia).append(" ").append(inicioHora).append("-").append(finHora);
+
 
         resumen.append(", Salas: ");
         for (Sala sala : salas) {

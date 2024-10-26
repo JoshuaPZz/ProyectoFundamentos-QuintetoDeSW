@@ -19,7 +19,6 @@ import java.util.List;
 
 public class ControladorPantallaBusqueda {
 
-    ControladorPantallaCursosEncontrados controladorPantallaCursosEncontrados;
     CursoRepositorio repositorio = new CursoRepositorio(); //Se debe hacer la inyeccion desde principal
 
     @FXML
@@ -27,10 +26,7 @@ public class ControladorPantallaBusqueda {
     @FXML
     private TextField cursoPorIdLabel;
 
-    //INYECICON DEL SERVICIO ESTUDIANTE POR MEDIO DE CONSTRUCTOR
-    public ControladorPantallaBusqueda(ControladorPantallaCursosEncontrados controladorPantallaCursosEncontrados) {
-        this.controladorPantallaCursosEncontrados = controladorPantallaCursosEncontrados;
-    }
+    //INYECCION DEL SERVICIO ESTUDIANTE POR MEDIO DE CONSTRUCTOR
 
 
     @FXML
@@ -45,8 +41,11 @@ public class ControladorPantallaBusqueda {
             return;
         }
         */
+
+        SceneManager.getInstance().switchScene("/Pantallas/pantallaCursosEncontrados.fxml", "/CssStyle/LoginStyle.css", true);
         List<String> cursos = repositorio.obtenerCursosPorMateria(cursoPorIdLabel.getText());
         if (!cursos.isEmpty()) {
+            ControladorPantallaCursosEncontrados controladorPantallaCursosEncontrados = (ControladorPantallaCursosEncontrados) SceneManager.getInstance().getControllers().get("/Pantallas/pantallaCursosEncontrados.fxml");
             controladorPantallaCursosEncontrados.setLabelInfo("\n--- Cursos de la materia con ID: " + cursoPorIdLabel.getText() + " ---");
             for (String cursoInfo : cursos) {
                 System.out.println(cursoInfo);
@@ -57,7 +56,6 @@ public class ControladorPantallaBusqueda {
         }
 
 
-        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         /*
         Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("/CssStyle/LoginStyle.css").toExternalForm());
@@ -65,7 +63,7 @@ public class ControladorPantallaBusqueda {
         currentStage.setScene(scene);
 
          */
-        SceneManager.getInstance().switchScene("ControladorPantallaCursosEncontrados", "/Pantallas/pantallaCursosEncontrados.fxml", true);
+
 /*
         System.out.print("\nIntroduce el ID de la materia: ");
         String materiaId = scanner.next();

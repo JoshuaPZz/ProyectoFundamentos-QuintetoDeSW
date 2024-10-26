@@ -26,25 +26,15 @@ public class Principal extends Application {
 
         ControladorLogIn controladorLogIn = new ControladorLogIn();
         ControladorPantallaCursosEncontrados controladorPantallaCursosEncontrados = new ControladorPantallaCursosEncontrados(servicioEstudiante, servicioCurso);
-        ControladorPantallaBusqueda controladorPantallaBusqueda = new ControladorPantallaBusqueda(controladorPantallaCursosEncontrados);
+        ControladorPantallaBusqueda controladorPantallaBusqueda = new ControladorPantallaBusqueda();
         ControladorPantallaInscripcion controladorPantallaInscripcion = new ControladorPantallaInscripcion();
 
-        FXMLLoader loader = null;
-
-        loader = SceneManager.getInstance().findLoader("ControladorPantallaCursosEncontrados");
-        loader.setController(controladorPantallaCursosEncontrados);
-        loader = SceneManager.getInstance().findLoader("ControladorLogIn");
-        loader.setController(controladorLogIn);
-        loader = SceneManager.getInstance().findLoader("ControladorPantallaInscripcion");
-        loader.setController(controladorPantallaInscripcion);
-        loader = SceneManager.getInstance().findLoader("ControladorPantallaBusqueda");
-        loader.setController(controladorPantallaBusqueda);
-        //Se cargan todos los controladores
-        SceneManager.getInstance().loadControllers();
-
+        SceneManager.getInstance().getControllers().put("/Pantallas/PantallaLogin.fxml", controladorLogIn);
+        SceneManager.getInstance().getControllers().put("/Pantallas/pantallaInscripcion.fxml", controladorPantallaInscripcion);
+        SceneManager.getInstance().getControllers().put("/Pantallas/pantallaBusqueda.fxml", controladorPantallaBusqueda);
+        SceneManager.getInstance().getControllers().put("/Pantallas/pantallaCursosEncontrados.fxml", controladorPantallaCursosEncontrados);
         // Set the primary stage in SceneManager
         SceneManager.getInstance().setPrimaryStage(stage);
-
         // Load custom font
         Font.loadFont(getClass().getResourceAsStream("/fonts/Lato-Bold.ttf"), 10);
         Font.loadFont(getClass().getResourceAsStream("/fonts/LeagueGothic.ttf"), 10);
@@ -53,7 +43,8 @@ public class Principal extends Application {
         stage.setResizable(true);
 
         // Switch to the login scene using SceneManager
-        SceneManager.getInstance().switchScene("ControladorLogIn", "/CssStyle/LoginStyle.css", false);
+
+        SceneManager.getInstance().switchScene("/Pantallas/PantallaLogin.fxml", "/CssStyle/LoginStyle.css", false);
 
         stage.show();
     }

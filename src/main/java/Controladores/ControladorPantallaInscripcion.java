@@ -74,7 +74,7 @@ public class ControladorPantallaInscripcion {
     void botonBuscarPressed(ActionEvent event){
 
         try {
-            Stage stageBuscar = SceneManager.getInstance().openNewWindow("ControladorPantallaBusqueda", "/CssStyle/LoginStyle.css", "Buscar", true);
+            Stage stageBuscar = SceneManager.getInstance().openNewWindow("/Pantallas/pantallaBusqueda.fxml", "/CssStyle/LoginStyle.css", "Buscar", true);
             stageBuscar.show();
             stageBuscar.setResizable(false);
         } catch (IOException e) {
