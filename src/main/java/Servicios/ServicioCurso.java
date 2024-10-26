@@ -13,7 +13,7 @@ import java.util.List;
 public class ServicioCurso {
 
     // Método para crear un curso
-    public Curso crearCurso(String ID, Materia materia, int capacidad, List<Date> horarios, List<Sala> salas, int cupos, List<Profesor> profesores) {
+    public Curso crearCurso(String ID, Materia materia, int capacidad, List<Horario> horarios, List<Sala> salas, int cupos, List<Profesor> profesores) {
         CursoRepositorio c = new CursoRepositorio();
 
         Curso nuevoCurso = new Curso(ID, materia, capacidad, horarios, salas, cupos);

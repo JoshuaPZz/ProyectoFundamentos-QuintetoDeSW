@@ -13,7 +13,7 @@ public class Curso {
     private int cupos; //Hace referencia a los cupos maximos
 
     private int capacidad; //la capacidad ocupada actualmente
-    private List<Date> horarios;
+    private List<Horario> horarios;
     private Materia materia;
     private List<Sala> salas;
 
@@ -35,11 +35,11 @@ public class Curso {
         this.capacidad = capacidad;
     }
 
-    public List<Date> getHorarios() {
+    public List<Horario> getHorarios() {
         return horarios;
     }
 
-    public void setHorarios(List<Date> horarios) {
+    public void setHorarios(List<Horario> horarios) {
         this.horarios = horarios;
     }
 
@@ -80,6 +80,7 @@ public class Curso {
     public void setCupos(int cupos) {this.cupos = cupos;}
 
     public String toStringResumen() {
+
         StringBuilder resumen = new StringBuilder();
         SimpleDateFormat diaFormat = new SimpleDateFormat("EEEE"); // Formato solo del día
         SimpleDateFormat horaFormat = new SimpleDateFormat("HH:mm"); // Formato solo de hora
@@ -89,6 +90,21 @@ public class Curso {
                 .append(", Créditos: ").append(materia.getCreditos()).append("\n")
                 .append(", Descripción: ").append(materia.getDescripcion()).append("\n")
                 .append(", Horario: ");
+
+        // Construimos el resumen para cada horario sin agrupar por día
+        for (int i = 0; i < horarios.size(); i++) {
+            Horario horario = horarios.get(i);
+            String dia = horario.getDia();
+            String horaInicio = horaFormat.format(horario.getHoraInicio());
+            String horaFin = horaFormat.format(horario.getHoraFin());
+
+            resumen.append(dia).append(" ").append(horaInicio).append("-").append(horaFin);
+
+            if (i < horarios.size() - 1) {
+                resumen.append(", ");
+            }
+        }
+        /*
 
         // Agrupar horarios por día
         String ultimoDia = "";
@@ -111,10 +127,13 @@ public class Curso {
             } else {
                 finHora = horaActual;
             }
+        }
+        // Para agregar el último bloque de horario acumulado
+        if (!ultimoDia.isEmpty()) {
             resumen.append(ultimoDia).append(" ").append(inicioHora).append("-").append(finHora);
         }
 
-
+         */
 
         resumen.append(", Salas: ");
         for (Sala sala : salas) {
@@ -123,6 +142,7 @@ public class Curso {
 
         return resumen.toString().trim();
     }
+
     public Curso() {
         this.iD = "";
         this.cupos = 0;
@@ -134,7 +154,7 @@ public class Curso {
         this.estudiantes = new ArrayList<>();
     }
 
-    public Curso(String ID, Materia materia, int capacidad, List<Date> horarios, List<Sala> salas, int cupos) {
+    public Curso(String ID, Materia materia, int capacidad, List<Horario> horarios, List<Sala> salas, int cupos) {
         this.iD = ID;
         this.capacidad = capacidad;
         this.horarios = horarios;

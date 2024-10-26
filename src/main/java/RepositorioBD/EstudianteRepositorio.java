@@ -4,10 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import Entidades.Curso;
-import Entidades.Estudiante;
-import Entidades.Materia;
-import Entidades.Sala;
+import Entidades.*;
 
 public class EstudianteRepositorio {
     private Connection getConnection() throws SQLException {
@@ -126,18 +123,17 @@ public class EstudianteRepositorio {
         materia.setNombre(materiaNombre);
 
         // Obtener horarios del curso
-        List<Date> horarios = new ArrayList<>();
+        List<Horario> horarios = new ArrayList<>();
         String queryHorarios = "SELECT hora_inicio, hora_fin FROM Horario WHERE curso_id = ?";
         try (Connection conexion = ConexionBaseDeDatos.getConnection();
              PreparedStatement psHorario = conexion.prepareStatement(queryHorarios)) {
             psHorario.setString(1, cursoId);
             try (ResultSet rsHorario = psHorario.executeQuery()) {
                 while (rsHorario.next()) {
-                    Timestamp hora_inicio = rsHorario.getTimestamp("hora_inicio");
-                    Timestamp hora_fin = rsHorario.getTimestamp("hora_fin");
-
-                    horarios.add(hora_inicio);
-                    horarios.add(hora_fin);
+                    String dia = rsHorario.getString("dia_semana_id");
+                    Date horaInicio = rsHorario.getTimestamp("hora_inicio");
+                    Date horaFin = rsHorario.getTimestamp("hora_fin");
+                    horarios.add(new Horario(dia, horaInicio, horaFin));
                 }
             }
         }
@@ -165,7 +161,7 @@ public class EstudianteRepositorio {
 
     public Curso obtenerHorarios(String idCurso) throws SQLException {
         Curso curso = new Curso();
-        List<Date> horarios = new ArrayList<>();
+        List<Horario> horarios = new ArrayList<>();
         String consulta = "SELECT hora_inicio, hora_fin FROM Horario WHERE curso_id = ?";
 
         try (Connection conexion = ConexionBaseDeDatos.getConnection();
@@ -173,10 +169,10 @@ public class EstudianteRepositorio {
             pstmt.setString(1, idCurso);
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
-                    Timestamp hora_inicio = rs.getTimestamp("hora_inicio");
-                    Timestamp hora_fin = rs.getTimestamp("hora_fin");
-                    horarios.add(hora_inicio);
-                    horarios.add(hora_fin);
+                    String dia = rs.getString("dia_semana_id");
+                    Date horaInicio = rs.getTimestamp("hora_inicio");
+                    Date horaFin = rs.getTimestamp("hora_fin");
+                    horarios.add(new Horario(dia, horaInicio, horaFin));
                 }
             }
         }
@@ -205,10 +201,10 @@ public class EstudianteRepositorio {
                     curso.setiD(rs.getString("id"));
                     curso.getMateria().setNombre(rs.getString("nombre"));
                     curso.getMateria().setCreditos(rs.getInt("creditos"));
-                    Timestamp horaInicio = rs.getTimestamp("hora_inicio");
-                    Timestamp horaFin = rs.getTimestamp("hora_fin");
-                    curso.getHorarios().add(new Date(horaInicio.getTime()));
-                    curso.getHorarios().add(new Date(horaFin.getTime()));
+                    String dia = rs.getString("dia_semana_id");
+                    Date horaInicio = rs.getTimestamp("hora_inicio");
+                    Date horaFin = rs.getTimestamp("hora_fin");
+                    curso.getHorarios().add(new Horario(dia, horaInicio, horaFin));
                     cursos.add(curso);
                 }
             }
