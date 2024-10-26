@@ -135,9 +135,11 @@ public class CursoRepositorio{
     // Método para ver si hay cruses de horario
     public boolean hayCruceHorarios(String cursoId, int estudianteId) throws SQLException {
         String query = "SELECT COUNT(*) FROM Horario h1 " +
-                "JOIN Inscripcion i ON i.curso_id = h1.curso_id " +
+                "JOIN Curso c1 ON h1.materia_id = c1.materia_id " +
+                "JOIN Inscripcion i ON i.curso_id = c1.id " +
                 "JOIN Horario h2 ON h1.dia_semana_id = h2.dia_semana_id " +
-                "AND i.estudiante_id = ? AND h2.curso_id = ? " +
+                "JOIN Curso c2 ON h2.materia_id = c2.materia_id " +
+                "AND i.estudiante_id = ? AND c2.id = ? " +
                 "AND (h1.hora_inicio < h2.hora_fin AND h1.hora_fin > h2.hora_inicio)";
 
         try (Connection conexion = getConnection();

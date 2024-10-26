@@ -22,7 +22,7 @@ public class Principal extends Application {
         ServicioCurso servicioCurso = new ServicioCurso();
         ServicioMateria servicioMateria = new ServicioMateria();
         ServicioProfesor servicioProfesor = new ServicioProfesor();
-        ServicioSala servicioSala =  new ServicioSala();
+        ServicioSala servicioSala = new ServicioSala();
 
         ControladorLogIn controladorLogIn = new ControladorLogIn();
         ControladorPantallaCursosEncontrados controladorPantallaCursosEncontrados = new ControladorPantallaCursosEncontrados(servicioEstudiante, servicioCurso);
@@ -60,10 +60,8 @@ public class Principal extends Application {
 
     public static void main(String[] args) throws SQLException {
         launch();
-
-
-
-
+    }
+}
 
 /*
         Scanner scanner = new Scanner(System.in);
@@ -71,9 +69,31 @@ public class Principal extends Application {
         EstudianteRepositorio estudianteRepositorio = new EstudianteRepositorio();
         CursoRepositorio cursoRepositorio = new CursoRepositorio();
 
-        Estudiante estudiante = null;
+        Estudiante estudiante = estudianteRepositorio.buscarPorId(1);
+        Curso curso = cursoRepositorio.obtenerCursoPorId("1");
+        servicioEstudiante.agregarCursoAlCarrito(estudiante, curso);
+
+        ArrayList<String> materiasCarrito = servicioEstudiante.verCarritoToString(estudiante);
+        if (materiasCarrito != null) {
+            for (String materia : materiasCarrito) {
+                System.out.println(materia); // Aquí mostramos cada curso en el carrito
+            }
+        } else {
+            System.out.println("El carrito está vacío o el estudiante no es válido.");
+        }
+
+
+    }
+}
+
+
 
         try {
+            Scanner scanner = new Scanner(System.in);
+            ServicioEstudiante servicioEstudiante = new ServicioEstudiante();
+            EstudianteRepositorio estudianteRepositorio = new EstudianteRepositorio();
+            CursoRepositorio cursoRepositorio = new CursoRepositorio();
+            Estudiante estudiante = null;
             System.out.print("Introduce el ID del estudiante: ");
             int estudianteId = scanner.nextInt();
             estudiante = estudianteRepositorio.buscarPorId(estudianteId);
@@ -122,6 +142,7 @@ public class Principal extends Application {
                                 System.out.println("No se pudo inscribir el curso: " + cursoEnCarrito.getMateria().getNombre());
                             }
                         }
+
                         break;
 
                     case 3:
@@ -155,6 +176,7 @@ public class Principal extends Application {
         }
 
     }
- */
-    }
+
 }
+
+ */
