@@ -156,4 +156,79 @@ public class ServicioCursoTest {
 
         assertNull(curso, "Debe retornar null ya que no hay conexión a BD");
     }
+
+
+    @Test
+    public void testAsignarSalaACurso_Exito() {
+        ServicioCurso servicioCurso = new ServicioCurso();
+
+        // Crear un curso
+        Curso curso = new Curso();
+        curso.setiD("CURSO1");
+        List<Sala> salas = new ArrayList<>();
+        curso.setSalas(salas); // Inicializa la lista de salas
+
+        // Crear una sala
+        Sala sala = new Sala();
+        sala.setiD("SALA1");
+
+        // Asignar la sala al curso
+        boolean resultado = servicioCurso.asignarSalaACurso("CURSO1", sala);
+
+        assertTrue(resultado, "Debería asignar la sala correctamente al curso");
+        assertTrue(curso.getSalas().contains(sala), "La sala debería estar asignada al curso");
+    }
+
+    @Test
+    public void testAsignarSalaACurso_SalaYaAsignada() {
+        ServicioCurso servicioCurso = new ServicioCurso();
+
+        // Crear un curso
+        Curso curso = new Curso();
+        curso.setiD("CURSO1");
+        List<Sala> salas = new ArrayList<>();
+        curso.setSalas(salas); // Inicializa la lista de salas
+
+        // Crear una sala
+        Sala sala = new Sala();
+        sala.setiD("SALA1");
+
+        // Asignar la sala al curso
+        servicioCurso.asignarSalaACurso("CURSO1", sala); // Primera asignación
+
+        // Intentar asignar la misma sala nuevamente
+        boolean resultado = servicioCurso.asignarSalaACurso("CURSO1", sala);
+
+        assertFalse(resultado, "No debería permitir asignar la misma sala al curso nuevamente");
+        assertEquals(1, curso.getSalas().size(), "Debería haber solo una sala asignada al curso");
+    }
+
+    @Test
+    public void testAsignarSalaACurso_CursoNoExistente() {
+        ServicioCurso servicioCurso = new ServicioCurso();
+
+        // Crear una sala
+        Sala sala = new Sala();
+        sala.setiD("SALA1");
+
+        // Intentar asignar la sala a un curso que no existe
+        boolean resultado = servicioCurso.asignarSalaACurso("CURSO_INEXISTENTE", sala);
+
+        assertFalse(resultado, "Debería devolver false ya que el curso no existe");
+    }
+
+    @Test
+    public void testAsignarSalaACurso_CursoNull() {
+        ServicioCurso servicioCurso = new ServicioCurso();
+
+        // Crear una sala
+        Sala sala = new Sala();
+        sala.setiD("SALA1");
+
+        // Intentar asignar la sala a un curso nulo
+        boolean resultado = servicioCurso.asignarSalaACurso(null, sala);
+
+        assertFalse(resultado, "Debería devolver false si el curso es null");
+    }
+
 }
