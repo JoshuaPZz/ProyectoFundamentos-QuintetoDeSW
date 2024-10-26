@@ -1,11 +1,11 @@
 package Entidades;
 
-import Controladores.SceneManager;
+import Controladores.*;
 import RepositorioBD.CursoRepositorio;
 import RepositorioBD.EstudianteRepositorio;
-import Servicios.ServicioCurso;
-import Servicios.ServicioEstudiante;
+import Servicios.*;
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
@@ -18,6 +18,30 @@ import java.util.Scanner;
 public class Principal extends Application {
     @Override
     public void start(Stage stage) throws IOException {
+        ServicioEstudiante servicioEstudiante = new ServicioEstudiante();
+        ServicioCurso servicioCurso = new ServicioCurso();
+        ServicioMateria servicioMateria = new ServicioMateria();
+        ServicioProfesor servicioProfesor = new ServicioProfesor();
+        ServicioSala servicioSala = new ServicioSala();
+
+        ControladorLogIn controladorLogIn = new ControladorLogIn();
+        ControladorPantallaCursosEncontrados controladorPantallaCursosEncontrados = new ControladorPantallaCursosEncontrados(servicioEstudiante, servicioCurso);
+        ControladorPantallaBusqueda controladorPantallaBusqueda = new ControladorPantallaBusqueda(controladorPantallaCursosEncontrados);
+        ControladorPantallaInscripcion controladorPantallaInscripcion = new ControladorPantallaInscripcion();
+
+        FXMLLoader loader = null;
+
+        loader = SceneManager.getInstance().findLoader("ControladorPantallaCursosEncontrados");
+        loader.setController(controladorPantallaCursosEncontrados);
+        loader = SceneManager.getInstance().findLoader("ControladorLogIn");
+        loader.setController(controladorLogIn);
+        loader = SceneManager.getInstance().findLoader("ControladorPantallaInscripcion");
+        loader.setController(controladorPantallaInscripcion);
+        loader = SceneManager.getInstance().findLoader("ControladorPantallaBusqueda");
+        loader.setController(controladorPantallaBusqueda);
+        //Se cargan todos los controladores
+        SceneManager.getInstance().loadControllers();
+
         // Set the primary stage in SceneManager
         SceneManager.getInstance().setPrimaryStage(stage);
 
@@ -29,22 +53,47 @@ public class Principal extends Application {
         stage.setResizable(true);
 
         // Switch to the login scene using SceneManager
-        SceneManager.getInstance().switchScene("/Pantallas/PantallaLogin.fxml", "/CssStyle/LoginStyle.css");
+        SceneManager.getInstance().switchScene("ControladorLogIn", "/CssStyle/LoginStyle.css", false);
 
         stage.show();
     }
 
     public static void main(String[] args) throws SQLException {
         launch();
+    }
+}
+
 /*
         Scanner scanner = new Scanner(System.in);
         ServicioEstudiante servicioEstudiante = new ServicioEstudiante();
         EstudianteRepositorio estudianteRepositorio = new EstudianteRepositorio();
         CursoRepositorio cursoRepositorio = new CursoRepositorio();
 
-        Estudiante estudiante = null;
+        Estudiante estudiante = estudianteRepositorio.buscarPorId(1);
+        Curso curso = cursoRepositorio.obtenerCursoPorId("1");
+        servicioEstudiante.agregarCursoAlCarrito(estudiante, curso);
+
+        ArrayList<String> materiasCarrito = servicioEstudiante.verCarritoToString(estudiante);
+        if (materiasCarrito != null) {
+            for (String materia : materiasCarrito) {
+                System.out.println(materia); // Aquí mostramos cada curso en el carrito
+            }
+        } else {
+            System.out.println("El carrito está vacío o el estudiante no es válido.");
+        }
+
+
+    }
+}
+
+
 
         try {
+            Scanner scanner = new Scanner(System.in);
+            ServicioEstudiante servicioEstudiante = new ServicioEstudiante();
+            EstudianteRepositorio estudianteRepositorio = new EstudianteRepositorio();
+            CursoRepositorio cursoRepositorio = new CursoRepositorio();
+            Estudiante estudiante = null;
             System.out.print("Introduce el ID del estudiante: ");
             int estudianteId = scanner.nextInt();
             estudiante = estudianteRepositorio.buscarPorId(estudianteId);
@@ -93,6 +142,7 @@ public class Principal extends Application {
                                 System.out.println("No se pudo inscribir el curso: " + cursoEnCarrito.getMateria().getNombre());
                             }
                         }
+
                         break;
 
                     case 3:
@@ -126,6 +176,7 @@ public class Principal extends Application {
         }
 
     }
- */
-    }
+
 }
+
+ */

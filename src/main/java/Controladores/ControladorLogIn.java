@@ -1,6 +1,7 @@
 package Controladores;
 
 import Entidades.Estudiante;
+import Entidades.Sesion;
 import RepositorioBD.EstudianteRepositorio;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -41,7 +42,7 @@ public class ControladorLogIn {
             System.out.println("Usuario autenticado correctamente! " + estudiante.getNombre());
             try {
                 // Switch to the main application scene
-                SceneManager.getInstance().switchScene("/Pantallas/pantallaInscripcion.fxml", "/CssStyle/LoginStyle.css");
+                SceneManager.getInstance().switchScene("ControladorPantallaInscripcion", "/CssStyle/LoginStyle.css", false);
             } catch (IOException e) {
                 e.printStackTrace();
                 // Handle the exception (e.g., show an error message to the user)
@@ -72,6 +73,7 @@ public class ControladorLogIn {
         Estudiante estudiante = new Estudiante();
         EstudianteRepositorio estudianteRepositorio = new EstudianteRepositorio();
         estudiante = estudianteRepositorio.buscarPorId(estudianteId);
+        Sesion.getInstancia().setEstudiante(estudiante);
         return estudiante;  // Credenciales incorrectas
     }
 

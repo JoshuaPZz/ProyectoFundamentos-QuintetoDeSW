@@ -65,7 +65,11 @@ public class CursoRepositorio{
     // Método para obtener los horarios de un curso
     public List<Date> obtenerHorarios(String idCurso) throws SQLException {
         List<Date> horarios = new ArrayList<>();
-        String consulta = "SELECT hora_inicio, hora_fin FROM Horario WHERE curso_id = ?";
+        String consulta = "SELECT h.hora_inicio, h.hora_fin, ds.nombre AS dia, s.ubicacion AS sala " +
+                        "FROM Horario h JOIN DiasSemana ds ON h.dia_semana_id = ds.id " +
+                        "JOIN Curso c ON h.materia_id = c.materia_id " +
+                        "LEFT JOIN Sala s ON h.sala_id = s.id " +
+                        "WHERE c.id = ?";
 
         try (Connection conexion = getConnection();
              PreparedStatement pstmt = conexion.prepareStatement(consulta)) {
@@ -131,9 +135,11 @@ public class CursoRepositorio{
     // Método para ver si hay cruses de horario
     public boolean hayCruceHorarios(String cursoId, int estudianteId) throws SQLException {
         String query = "SELECT COUNT(*) FROM Horario h1 " +
-                "JOIN Inscripcion i ON i.curso_id = h1.curso_id " +
+                "JOIN Curso c1 ON h1.materia_id = c1.materia_id " +
+                "JOIN Inscripcion i ON i.curso_id = c1.id " +
                 "JOIN Horario h2 ON h1.dia_semana_id = h2.dia_semana_id " +
-                "AND i.estudiante_id = ? AND h2.curso_id = ? " +
+                "JOIN Curso c2 ON h2.materia_id = c2.materia_id " +
+                "AND i.estudiante_id = ? AND c2.id = ? " +
                 "AND (h1.hora_inicio < h2.hora_fin AND h1.hora_fin > h2.hora_inicio)";
 
         try (Connection conexion = getConnection();
@@ -225,6 +231,22 @@ public class CursoRepositorio{
         }
         return materia;
     }
+/*
+    public Curso agregarCurso(Curso curso) throws SQLException {
+        String query = "INSERT INTO Curso (cupos, capacidad, materia_id, sala_id, estado_id) VALUES (?, ?, ?, ?, ?)";
+        try (Connection conexion = getConnection();
+        PreparedStatement ps = conexion.prepareStatement(query)) {
+            ps.setInt(1, curso.getCupos());
+            ps.setInt(2, curso.getCapacidad());
+            ps.setString(3, curso.getMateria().getiD());
+            if (curso.getSalas() != null) {
+                ps.setInt(4, );
+
+            }
+        }
+    }
+
+ */
 
 
 }

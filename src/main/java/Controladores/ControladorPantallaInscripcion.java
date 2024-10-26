@@ -1,5 +1,7 @@
 package Controladores;
 
+import Entidades.Curso;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,11 +13,13 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
+import javafx.scene.control.ListView;
 import java.awt.*;
+import javafx.collections.ObservableList;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class ControladorPantallaInscripcion {
@@ -64,11 +68,13 @@ public class ControladorPantallaInscripcion {
     private Label labelCarrito;
 
     @FXML
+    private ListView<String> listViewCarrito;
+
+    @FXML
     void botonBuscarPressed(ActionEvent event){
 
-
         try {
-            Stage stageBuscar = SceneManager.getInstance().openNewWindow("/Pantallas/pantallaBusqueda.fxml", "/CssStyle/LoginStyle.css", "Buscar", true);
+            Stage stageBuscar = SceneManager.getInstance().openNewWindow("ControladorPantallaBusqueda", "/CssStyle/LoginStyle.css", "Buscar", true);
             stageBuscar.show();
             stageBuscar.setResizable(false);
         } catch (IOException e) {
@@ -80,6 +86,11 @@ public class ControladorPantallaInscripcion {
     void setLabelCarrito(String string) {
         labelCarrito.setText(labelCarrito.getText() + "\n" + string);
     }
+    void setListViewCarrito(ArrayList<String> materias) {
+        ObservableList<String> observableMaterias = FXCollections.observableArrayList(materias);
+        listViewCarrito.setItems(observableMaterias);
+    }
+
 
     @FXML
     void revisarButtonPressed(ActionEvent event) {
