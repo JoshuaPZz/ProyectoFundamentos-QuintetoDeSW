@@ -60,6 +60,10 @@ public class Materia {
 
     @Override
     public String toString() {
-        return nombre;
+        StringBuilder sb = new StringBuilder();
+        sb.append("Materia: ").append(nombre).append('\'');
+        sb.append(", creditos=").append(creditos);
+        sb.append(", descripcion='").append(descripcion).append('\'');
+        return sb.toString();
     }
 }

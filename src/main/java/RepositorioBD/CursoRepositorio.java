@@ -1,9 +1,5 @@
 package RepositorioBD;
-import Entidades.Curso;
-import Entidades.Materia;
-import Entidades.Sala;
-import Entidades.Profesor;
-import Entidades.Estudiante;
+import Entidades.*;
 
 import java.sql.*;
 import java.time.DayOfWeek;
@@ -28,7 +24,8 @@ public class CursoRepositorio{
 
     public Curso obtenerCursoPorId(String idCurso) throws SQLException {
         Curso curso = null;
-        String consulta = "SELECT c.id,c.cupos,c.capacidad, m.id AS materia_id, m.nombre AS materia_nombre, s.id AS sala_id, s.ubicacion " +
+        String consulta = "SELECT c.id,c.cupos,c.capacidad, m.id AS materia_id, m.nombre AS materia_nombre, " +
+                "m.creditos, m.descripcion, s.id AS sala_id, s.ubicacion " +
                 "FROM Curso c " +
                 "LEFT JOIN Materia m ON c.materia_id = m.id " +
                 "LEFT JOIN Sala s ON c.sala_id = s.id " +
@@ -42,6 +39,8 @@ public class CursoRepositorio{
                     Materia materia = new Materia();
                     materia.setiD(rs.getString("materia_id"));
                     materia.setNombre(rs.getString("materia_nombre"));
+                    materia.setCreditos(rs.getInt("creditos"));
+                    materia.setDescripcion(rs.getString("descripcion"));
 
                     Sala sala = new Sala();
                     sala.setiD(rs.getString("sala_id"));
@@ -63,9 +62,9 @@ public class CursoRepositorio{
         return curso;
     }
     // Método para obtener los horarios de un curso
-    public List<Date> obtenerHorarios(String idCurso) throws SQLException {
-        List<Date> horarios = new ArrayList<>();
-        String consulta = "SELECT h.hora_inicio, h.hora_fin, ds.nombre AS dia, s.ubicacion AS sala " +
+    public List<Horario> obtenerHorarios(String idCurso) throws SQLException {
+        List<Horario> horarios = new ArrayList<>();
+        String consulta = "SELECT DISTINCT h.hora_inicio, h.hora_fin, ds.nombre AS dia, s.ubicacion AS sala " +
                         "FROM Horario h JOIN DiasSemana ds ON h.dia_semana_id = ds.id " +
                         "JOIN Curso c ON h.materia_id = c.materia_id " +
                         "LEFT JOIN Sala s ON h.sala_id = s.id " +
@@ -76,11 +75,15 @@ public class CursoRepositorio{
             pstmt.setString(1, idCurso);
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
+                    String dia = rs.getString("dia");
+                    java.sql.Timestamp horaInicio = rs.getTimestamp("hora_inicio");
+                    java.sql.Timestamp horaFin = rs.getTimestamp("hora_fin");
+                    /*
                     java.sql.Timestamp hora_inicio = rs.getTimestamp("hora_inicio");
                     java.sql.Timestamp hora_fin = rs.getTimestamp("hora_fin");
-
-                    horarios.add(hora_inicio);
-                    horarios.add(hora_fin);
+                     */
+                    Horario horario = new Horario(dia, horaInicio, horaFin);
+                    horarios.add(horario);
                 }
             }
         }
