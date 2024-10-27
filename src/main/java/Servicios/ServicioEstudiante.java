@@ -34,14 +34,13 @@ public class ServicioEstudiante {
     }
 
     //Metodo para ver las materias que se encuentran actualmente en el carrito
-    public List<Materia> verCarrito(Estudiante estudiante) {
+    public ArrayList<Curso> verCarrito(Estudiante estudiante) {
         if (estudiante != null && estudiante.getCarrito() != null) {
-            List<Materia> materias = new ArrayList<>();
+            ArrayList<Curso> cursos = new ArrayList<>();
             for (Curso curso : estudiante.getCarrito()) {
-                System.out.println(curso.getMateria().getNombre() + " " + curso.getiD());
-                materias.add(curso.getMateria());
+                cursos.add(curso);
             }
-            return materias;
+            return cursos;
         }
         return null;
     }
@@ -49,7 +48,7 @@ public class ServicioEstudiante {
         if (estudiante != null && estudiante.getCarrito() != null) {
             ArrayList<String> materias = new ArrayList<>();
             for (Curso curso : estudiante.getCarrito()) {
-                materias.add(curso.toStringResumen());
+                materias.add(curso.toString());
             }
             return materias;
         }

@@ -79,7 +79,8 @@ public class Curso {
 
     public void setCupos(int cupos) {this.cupos = cupos;}
 
-    public String toStringResumen() {
+    @Override
+    public String toString() {
 
         StringBuilder resumen = new StringBuilder();
         SimpleDateFormat diaFormat = new SimpleDateFormat("EEEE"); // Formato solo del día
@@ -87,9 +88,9 @@ public class Curso {
 
         // Detalles de la materia
         resumen.append("Materia: ").append(materia.getNombre()).append("\n")
-                .append(", Créditos: ").append(materia.getCreditos()).append("\n")
-                .append(", Descripción: ").append(materia.getDescripcion()).append("\n")
-                .append(", Horario: ");
+                .append("Créditos: ").append(materia.getCreditos()).append("\n")
+                .append("Descripción: ").append(materia.getDescripcion()).append("\n")
+                .append("Horario: ");
 
         // Construimos el resumen para cada horario sin agrupar por día
         for (int i = 0; i < horarios.size(); i++) {
@@ -104,43 +105,13 @@ public class Curso {
                 resumen.append(", ");
             }
         }
-        /*
-
-        // Agrupar horarios por día
-        String ultimoDia = "";
-        String inicioHora = "";
-        String finHora = "";
-
-        for (int i = 0; i < horarios.size(); i++) {
-            Date horario = horarios.get(i);
-            String diaActual = diaFormat.format(horario);
-            String horaActual = horaFormat.format(horario);
-
-            if (!diaActual.equals(ultimoDia)) {
-                if (!ultimoDia.isEmpty()) {
-                    resumen.append(ultimoDia).append(" ").append(inicioHora).append("-").append(finHora).append(", ");
-                }
-                // Nuevo día, reiniciamos intervalo
-                ultimoDia = diaActual;
-                inicioHora = horaActual;
-                finHora = horaActual;
-            } else {
-                finHora = horaActual;
-            }
-        }
-        // Para agregar el último bloque de horario acumulado
-        if (!ultimoDia.isEmpty()) {
-            resumen.append(ultimoDia).append(" ").append(inicioHora).append("-").append(finHora);
-        }
-
-         */
-
-        resumen.append(", Salas: ");
+        resumen.append("\n" + "Salas: ");
         for (Sala sala : salas) {
-            resumen.append(sala.getiD()).append(" ");
+            resumen.append(sala.getUbicacion()).append(" ");
         }
 
         return resumen.toString().trim();
+
     }
 
     public Curso() {

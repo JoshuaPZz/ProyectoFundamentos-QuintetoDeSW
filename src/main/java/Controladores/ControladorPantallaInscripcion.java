@@ -1,6 +1,7 @@
 package Controladores;
 
 import Entidades.Curso;
+import Entidades.Materia;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -68,7 +69,7 @@ public class ControladorPantallaInscripcion {
     private Label labelCarrito;
 
     @FXML
-    private ListView<String> listViewCarrito;
+    private ListView<Curso> listViewCarrito;
 
     @FXML
     void botonBuscarPressed(ActionEvent event){
@@ -86,9 +87,12 @@ public class ControladorPantallaInscripcion {
     void setLabelCarrito(String string) {
         labelCarrito.setText(labelCarrito.getText() + "\n" + string);
     }
-    void setListViewCarrito(ArrayList<String> materias) {
-        ObservableList<String> observableMaterias = FXCollections.observableArrayList(materias);
-        listViewCarrito.setItems(observableMaterias);
+    ListView getListViewCarrito() {
+        return listViewCarrito;
+    }
+    void setListViewCarrito(ArrayList<Curso> cursos) {
+        ObservableList<Curso> observableCursos = FXCollections.observableArrayList(cursos);
+        listViewCarrito.setItems(observableCursos);
     }
 
 

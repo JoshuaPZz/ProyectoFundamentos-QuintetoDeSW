@@ -67,7 +67,7 @@ public class ControladorPantallaCursosEncontrados {
             Si es posible agregarlo entonces actualiza la listView en la pantalla de Inscripcion
             */
             if(this.servicioEstudiante.agregarCursoAlCarrito(Sesion.getInstancia().getEstudiante(), this.servicioCurso.buscarCursoPorID(textIdAgregar.getText())))
-                controller.setListViewCarrito(servicioEstudiante.verCarritoToString(Sesion.getInstancia().getEstudiante()));
+                controller.setListViewCarrito(servicioEstudiante.verCarrito(Sesion.getInstancia().getEstudiante()));
         }
     }
     @FXML
