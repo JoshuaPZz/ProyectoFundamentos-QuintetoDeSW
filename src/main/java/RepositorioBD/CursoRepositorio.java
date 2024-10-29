@@ -193,7 +193,12 @@ public class CursoRepositorio{
         List<String> cursos = new ArrayList<>();
 
         // Consulta SQL
-        String query = "SELECT c.id AS curso_id, c.materia_id, m.nombre AS nombre_materia, STRING_AGG(CONCAT(d.nombre, ' ', CONVERT(varchar, h.hora_inicio, 108), '-', CONVERT(varchar, h.hora_fin, 108)), ', ') AS horarios " +
+        String query = "SELECT c.id AS curso_id, c.materia_id, m.nombre AS nombre_materia, LISTAGG(\n" +
+                "        d.nombre || ' ' || \n" +
+                "        FORMATDATETIME(h.hora_inicio, 'HH:mm') || '-' || \n" +
+                "        FORMATDATETIME(h.hora_fin, 'HH:mm'),\n" +
+                "        ', '\n" +
+                "    ) AS horarios " +
                 "FROM Curso c " +
                 "JOIN Materia m ON c.materia_id = m.id " +
                 "JOIN Horario h ON c.materia_id = h.materia_id " +
