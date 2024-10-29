@@ -83,14 +83,16 @@ public class ServicioCurso {
 
 
     //Crear los horarios del curso
-    public static Date crearHorario(int year, int month, int day, int hourOfDay) {
+    public static Date crearHorario(int year, int month, int day, int hour) {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, 2024);          // Establecer el año
-        calendar.set(Calendar.MONTH, month);        // Establecer el mes (0=enero, 1=febrero, ..., 11=diciembre)
-        calendar.set(Calendar.DAY_OF_MONTH, day);   // Establecer el día del mes
-        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay); // Establecer la hora (formato 24 horas)
-        calendar.set(Calendar.SECOND, 0);           // Establecer los segundos en 0
-        calendar.set(Calendar.MILLISECOND, 0);      // Establecer los milisegundos en 0
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.DAY_OF_MONTH, day);
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
         return calendar.getTime();
     }
 
@@ -167,6 +169,8 @@ public class ServicioCurso {
         CursoRepositorio repositorioCurso = new CursoRepositorio();
         return repositorioCurso.obtenerCursosPorMateria(materiaId);
     }
+
+
 
     public boolean asignarSalaACurso(String idCurso, Sala sala) {
         CursoRepositorio repositorioCurso = new CursoRepositorio();
