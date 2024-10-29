@@ -51,13 +51,18 @@ public class ServicioEstudiante {
     //Método para remover a un estudiante de un curso
     public boolean removerCurso(Estudiante estudiante, Curso curso) throws SQLException {
         EstudianteRepositorio estudianteRepositorio = new EstudianteRepositorio();
-        if (estudiante != null && curso != null && curso.getEstudiantes().contains(estudiante)) {
-        estudianteRepositorio.eliminarInscripcion(estudiante.getId(), curso.getiD());
-            curso.getEstudiantes().remove(estudiante);
-            estudiante.getCursos().remove(curso);
-            return true;
+        try {
+            if (estudiante != null && curso != null && curso.getEstudiantes().contains(estudiante)) {
+                estudianteRepositorio.eliminarInscripcion(estudiante.getId(), curso.getiD());
+                curso.getEstudiantes().remove(estudiante);
+                estudiante.getCursos().remove(curso);
+                return true;
+            }
+            return false;
+        } catch (SQLException e) {
+            System.err.println("Error al eliminar la inscripción: " + e.getMessage());
+            throw e; // Re-lanzamos la excepción para que sea manejada por el llamador
         }
-        return false;
     }
 
     //Metodo para obtener los cursos de un estudiante
