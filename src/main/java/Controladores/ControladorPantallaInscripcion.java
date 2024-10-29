@@ -114,5 +114,15 @@ public class ControladorPantallaInscripcion {
             System.out.println("El archivo no existe.");
         }
     }
+    @FXML
+    void botonInscribirPressed(ActionEvent event) {
+        try {
+            Stage stageBuscar = SceneManager.getInstance().openNewWindow("/Pantallas/pantallaInscribirCurso.fxml", "/CssStyle/LoginStyle.css", "Inscribir Curso", true);
+            stageBuscar.show();
+            stageBuscar.setResizable(false);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 }
