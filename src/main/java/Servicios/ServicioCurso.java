@@ -14,15 +14,19 @@ public class ServicioCurso {
 
     // Método para crear un curso
     public Curso crearCurso(String ID, Materia materia, int capacidad, List<Horario> horarios, List<Sala> salas, int cupos, List<Profesor> profesores) {
-        CursoRepositorio c = new CursoRepositorio();
-
+        CursoRepositorio cursoRepositorio = new CursoRepositorio();
         Curso nuevoCurso = new Curso(ID, materia, capacidad, horarios, salas, cupos);
         nuevoCurso.setProfesores(profesores); // Asigna la lista de profesores al nuevo curso
-        //el repositorio curso que llame la consulta de crear un curso
-        //c.crearCurso(nuevoCurso)
+        // Llamada al repositorio para almacenar el curso en la base de datos
+        try {
+            //cursoRepositorio.crearCurso(nuevoCurso);   Falta el método en repositorio: Guarda el curso en el repositorio
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error al guardar el curso en la base de datos.");
+        }
+
         return nuevoCurso;
     }
-
 
 
     //Método para consultar un curso
