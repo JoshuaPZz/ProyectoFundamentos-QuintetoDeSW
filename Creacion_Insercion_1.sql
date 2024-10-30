@@ -20,119 +20,119 @@ DROP TABLE IF EXISTS EstadoCurso;
 
 -- Tabla para los días de la semana
 CREATE TABLE DiasSemana (
-    id INT PRIMARY KEY IDENTITY(1,1),
-    nombre VARCHAR(20) NOT NULL
+                            id INT PRIMARY KEY AUTO_INCREMENT,
+                            nombre VARCHAR(20) NOT NULL
 );
 
 -- Tabla para los estados de los cursos
 CREATE TABLE EstadoCurso (
-    id INT PRIMARY KEY IDENTITY(1,1),
-    estado VARCHAR(50) NOT NULL
+                             id INT PRIMARY KEY AUTO_INCREMENT,
+                             estado VARCHAR(50) NOT NULL
 );
 
 -- TABLAS PRINCIPALES
 
 -- Tabla Estudiante
 CREATE TABLE Estudiante (
-    id INT PRIMARY KEY IDENTITY(1,1),
-    nombre VARCHAR(100) NOT NULL,
-    documento VARCHAR(50) NOT NULL UNIQUE,
-    correo VARCHAR(100) NOT NULL UNIQUE,
-    clave VARCHAR(100) NOT NULL,
-	creditos_max INT NOT NULL,
+                            id INT PRIMARY KEY AUTO_INCREMENT,
+                            nombre VARCHAR(100) NOT NULL,
+                            documento VARCHAR(50) NOT NULL UNIQUE,
+                            correo VARCHAR(100) NOT NULL UNIQUE,
+                            clave VARCHAR(100) NOT NULL,
+                            creditos_max INT NOT NULL
 );
 
 -- Tabla Profesor
 CREATE TABLE Profesor (
-    id INT PRIMARY KEY IDENTITY(1,1),
-    nombre VARCHAR(100) NOT NULL,
-    apellido VARCHAR(100) NOT NULL,
-    documento VARCHAR(50) NOT NULL UNIQUE,
-    correo VARCHAR(100) NOT NULL UNIQUE,
-    clave VARCHAR(100) NOT NULL
+                          id INT PRIMARY KEY AUTO_INCREMENT,
+                          nombre VARCHAR(100) NOT NULL,
+                          apellido VARCHAR(100) NOT NULL,
+                          documento VARCHAR(50) NOT NULL UNIQUE,
+                          correo VARCHAR(100) NOT NULL UNIQUE,
+                          clave VARCHAR(100) NOT NULL
 );
 
 -- Tabla Materia (sin claves foráneas de prerrequisito y corequisito)
 CREATE TABLE Materia (
-    id INT PRIMARY KEY IDENTITY(1,1),
-    nombre VARCHAR(100) NOT NULL,
-    descripcion TEXT,
-    creditos INT NOT NULL
+                         id INT PRIMARY KEY AUTO_INCREMENT,
+                         nombre VARCHAR(100) NOT NULL,
+                         descripcion TEXT,
+                         creditos INT NOT NULL
 );
 
 -- Tabla Sala
 CREATE TABLE Sala (
-    id INT PRIMARY KEY IDENTITY(1,1),
-    ubicacion VARCHAR(100) NOT NULL,
-    capacidad INT NOT NULL,
-    tipo VARCHAR(50)
+                      id INT PRIMARY KEY AUTO_INCREMENT,
+                      ubicacion VARCHAR(100) NOT NULL,
+                      capacidad INT NOT NULL,
+                      tipo VARCHAR(50)
 );
 
 -- Tabla Curso
 CREATE TABLE Curso (
-    id INT PRIMARY KEY IDENTITY(1,1),
-	cupos INT NOT NULL,
-    capacidad INT NOT NULL,
-    materia_id INT NOT NULL,
-    sala_id INT NULL, -- Cambiado para permitir valores nulos
-    estado_id INT NOT NULL,
-    FOREIGN KEY (materia_id) REFERENCES Materia(id) ON DELETE CASCADE,
-    FOREIGN KEY (sala_id) REFERENCES Sala(id) ON DELETE SET NULL, -- Acción ON DELETE SET NULL ahora es válida
-    FOREIGN KEY (estado_id) REFERENCES EstadoCurso(id)
+                       id INT PRIMARY KEY AUTO_INCREMENT,
+                       cupos INT NOT NULL,
+                       capacidad INT NOT NULL,
+                       materia_id INT NOT NULL,
+                       sala_id INT NULL, -- Cambiado para permitir valores nulos
+                       estado_id INT NOT NULL,
+                       FOREIGN KEY (materia_id) REFERENCES Materia(id) ON DELETE CASCADE,
+                       FOREIGN KEY (sala_id) REFERENCES Sala(id) ON DELETE SET NULL, -- Acción ON DELETE SET NULL ahora es válida
+                       FOREIGN KEY (estado_id) REFERENCES EstadoCurso(id)
 );
-
 
 -- Relación entre Curso y Estudiante (Inscripciones)
 CREATE TABLE Inscripcion (
-    id INT PRIMARY KEY IDENTITY(1,1),
-    estudiante_id INT NOT NULL,
-    curso_id INT NOT NULL,
-    ha_aprobado BIT DEFAULT 0,
-    FOREIGN KEY (estudiante_id) REFERENCES Estudiante(id) ON DELETE CASCADE,
-    FOREIGN KEY (curso_id) REFERENCES Curso(id) ON DELETE CASCADE,
-    UNIQUE(estudiante_id, curso_id)
+                             id INT PRIMARY KEY AUTO_INCREMENT,
+                             estudiante_id INT NOT NULL,
+                             curso_id INT NOT NULL,
+                             ha_aprobado BOOLEAN DEFAULT FALSE,
+                             FOREIGN KEY (estudiante_id) REFERENCES Estudiante(id) ON DELETE CASCADE,
+                             FOREIGN KEY (curso_id) REFERENCES Curso(id) ON DELETE CASCADE,
+                             UNIQUE(estudiante_id, curso_id)
 );
 
 -- Tabla Prerrequisito
 CREATE TABLE Prerrequisito (
-    MateriaID INT,
-    PrerrequisitoID INT,
-    FOREIGN KEY (MateriaID) REFERENCES Materia(ID) ON DELETE CASCADE,
-    FOREIGN KEY (PrerrequisitoID) REFERENCES Materia(ID) ON DELETE NO ACTION,
-    PRIMARY KEY (MateriaID, PrerrequisitoID)
+                               MateriaID INT,
+                               PrerrequisitoID INT,
+                               FOREIGN KEY (MateriaID) REFERENCES Materia(id) ON DELETE CASCADE,
+                               FOREIGN KEY (PrerrequisitoID) REFERENCES Materia(id) ON DELETE NO ACTION,
+                               PRIMARY KEY (MateriaID, PrerrequisitoID)
 );
 
 -- Tabla Correquisito
 CREATE TABLE Correquisito (
-    MateriaID INT,
-    CorrequisitoID INT,
-    FOREIGN KEY (MateriaID) REFERENCES Materia(ID) ON DELETE CASCADE,
-    FOREIGN KEY (CorrequisitoID) REFERENCES Materia(ID) ON DELETE NO ACTION,
-    PRIMARY KEY (MateriaID, CorrequisitoID)
+                              MateriaID INT,
+                              CorrequisitoID INT,
+                              FOREIGN KEY (MateriaID) REFERENCES Materia(id) ON DELETE CASCADE,
+                              FOREIGN KEY (CorrequisitoID) REFERENCES Materia(id) ON DELETE NO ACTION,
+                              PRIMARY KEY (MateriaID, CorrequisitoID)
 );
 
 -- Relación entre Curso y Profesor (Asignaciones)
 CREATE TABLE Asignacion (
-    id INT PRIMARY KEY IDENTITY(1,1),
-    profesor_id INT NOT NULL,
-    curso_id INT NOT NULL,
-    FOREIGN KEY (profesor_id) REFERENCES Profesor(id) ON DELETE CASCADE,
-    FOREIGN KEY (curso_id) REFERENCES Curso(id) ON DELETE CASCADE,
-    UNIQUE(profesor_id, curso_id)
+                            id INT PRIMARY KEY AUTO_INCREMENT,
+                            profesor_id INT NOT NULL,
+                            curso_id INT NOT NULL,
+                            FOREIGN KEY (profesor_id) REFERENCES Profesor(id) ON DELETE CASCADE,
+                            FOREIGN KEY (curso_id) REFERENCES Curso(id) ON DELETE CASCADE,
+                            UNIQUE(profesor_id, curso_id)
 );
 
 -- Horarios de los cursos
 CREATE TABLE Horario (
-    id INT PRIMARY KEY IDENTITY(1,1),
-    hora_inicio TIME NOT NULL,
-    hora_fin TIME NOT NULL,
-    dia_semana_id INT NOT NULL,
-    materia_id INT NOT NULL,
-    sala_id INT NULL,
-    FOREIGN KEY (dia_semana_id) REFERENCES DiasSemana(id),
-    FOREIGN KEY (materia_id) REFERENCES Materia(id) ON DELETE CASCADE,
-    FOREIGN KEY (sala_id) REFERENCES Sala(id) ON DELETE SET NULL -- Evitar ciclos
+                         id INT PRIMARY KEY AUTO_INCREMENT,
+                         hora_inicio TIME NOT NULL,
+                         hora_fin TIME NOT NULL,
+                         dia_semana_id INT NOT NULL,
+                         materia_id INT NOT NULL,
+                         sala_id INT NULL,
+                         FOREIGN KEY (dia_semana_id) REFERENCES DiasSemana(id),
+                         FOREIGN KEY (materia_id) REFERENCES Materia(id) ON DELETE CASCADE,
+                         FOREIGN KEY (sala_id) REFERENCES Sala(id) ON DELETE SET NULL -- Evitar ciclos
 );
+
 
 
 -- Inserciones en las tablas auxiliares
@@ -581,164 +581,3 @@ INSERT INTO Horario (hora_inicio, hora_fin, dia_semana_id, materia_id, sala_id) 
 ('10:00', '12:00', 2, 40, 4), -- Materia 40, Martes
 ('08:00', '10:00', 1, 41, 1), -- Materia 41, Lunes
 ('10:00', '12:00', 3, 42, 2); -- Materia 42, Miércoles
-/*
-SELECT * FROM dbo.Inscripcion
-SELECT COLUMN_NAME
-FROM INFORMATION_SCHEMA.COLUMNS
-WHERE TABLE_NAME = 'Estudiante'
-
-SELECT c.id AS curso_id, m.nombre AS nombre_materia, i.ha_aprobado
-FROM Inscripcion i
-JOIN Curso c ON i.curso_id = c.id
-JOIN Materia m ON c.materia_id = m.id
-WHERE i.estudiante_id = '2'
-ORDER BY i.ha_aprobado, m.nombre;
-
-SELECT e.id, e.nombre, e.creditos_max FROM Estudiante e WHERE e.id = 1;
-
-
-SELECT COUNT(*) FROM Estudiante WHERE correo = 'juan.pe4rez@email.com' AND clave = 'claveSegura1'
-
-SELECT c.id, c.capacidad, m.id AS materia_id, m.nombre AS materia_nombre
-FROM Curso c
-JOIN Inscripcion i ON c.id = i.curso_id
-JOIN Materia m ON c.materia_id = m.id
-WHERE i.estudiante_id = 1 AND i.ha_aprobado = 0
-
-SELECT c.id, c.capacidad, m.id AS materia_id, m.nombre AS materia_nombre
-FROM Curso c
-JOIN Inscripcion i ON c.id = i.curso_id
-JOIN Materia m ON c.materia_id = m.id
-WHERE i.estudiante_id = 1 AND i.ha_aprobado = 1
-
-use master;
-
-SELECT * FROM dbo.Sala
-SELECT * FROM Profesor
-SELECT * FROM Estudiante
-SELECT * FROM Inscripcion
-SELECT * FROM Curso
-
-ROLLBACK
-
-SELECT h.hora_inicio, h.hora_fin FROM Horario h WHERE h.materia_id = 1;
-
-SELECT c.id AS curso_id, 
-       c.materia_id, 
-       m.nombre AS nombre_materia,
-       STRING_AGG(CONCAT(d.nombre, ' ', FORMAT(h.hora_inicio, 'HH:mm'), '-', FORMAT(h.hora_fin, 'HH:mm')), ', ') AS horarios
-FROM Curso c 
-JOIN Materia m ON c.materia_id = m.id 
-JOIN Horario h ON c.materia_id = h.materia_id 
-JOIN DiasSemana d ON h.dia_semana_id = d.id
-WHERE m.id = 1
-GROUP BY c.id, c.materia_id, m.nombre;
-
-
-SELECT h.hora_inicio, h.hora_fin
-FROM Horario h
-JOIN Curso c ON h.materia_id = c.materia_id
-WHERE c.id = 1
-
-SELECT * FROM Curso WHERE id = 47
-
-
-
-
-
-/*SELECT id, nombre, correo, creditos_max FROM Estudiante;
-
-
-
-SELECT COLUMN_NAME 
-FROM INFORMATION_SCHEMA.COLUMNS 
-WHERE TABLE_NAME = 'Materia';
-
-
-
-
-SELECT c.id, c.cupos, c.capacidad, m.id AS materia_id, m.nombre AS materia_nombre
-FROM Curso c
-JOIN Inscripcion i ON c.id = i.curso_id	
-JOIN Materia m ON c.materia_id = m.id
-WHERE i.estudiante_id = 1 AND i.ha_aprobado = 0;
-
-SELECT hora_inicio, hora_fin
-FROM Horario
-WHERE curso_id = 1
-
-SELECT s.id, s.ubicacion, s.capacidad
-FROM Sala s
-JOIN Curso c
-ON c.sala_id = s.id
-WHERE c.id =1
-
-SELECT c.id, c.capacidad, c.cupos, m.id AS materia_id, m.nombre AS materia_nombre
-FROM Curso c
-JOIN Inscripcion i ON c.id = i.curso_id
-JOIN Materia m ON c.materia_id = m.id
-WHERE i.estudiante_id = 1 AND i.ha_aprobado = 1
-
-SELECT i.estudiante_id, c.id AS curso_id 
-FROM Inscripcion i
-JOIN Curso c ON i.curso_id = c.id
-WHERE i.ha_aprobado = 1;
-
-SELECT c.id, c.cupos, c.capacidad, m.id AS materia_id, m.nombre AS materia_nombre, s.id AS sala_id, s.ubicacion
-FROM Curso c
-LEFT JOIN Materia m ON c.materia_id = m.id
-LEFT JOIN Sala s ON c.sala_id = s.id
-WHERE c.id = 1
-
-SELECT p.id, p.nombre, p.apellido FROM Profesor p
-JOIN Asignacion a ON p.id = a.profesor_id
-WHERE a.curso_id = 1
-
-SELECT e.id, e.nombre FROM Estudiante e
-JOIN Inscripcion i ON e.id = i.estudiante_id
-WHERE i.curso_id = 2
-
-SELECT * FROM Materia WHERE id=48
-SELECT m.* FROM Materia m JOIN Prerrequisito p ON m.id = p.PrerrequisitoID WHERE p.MateriaID = 11
-SELECT m.* FROM Materia m JOIN Correquisito c ON m.id = c.CorrequisitoID WHERE c.MateriaID =15
-
-SELECT * FROM Profesor
-SELECT * FROM Materia
-SELECT m.id, m.nombre, m.descripcion, m.creditos,
-       pr.nombre AS PreRequisito,
-       cr.nombre AS CoRequisito
-FROM dbo.Materia m
-LEFT JOIN dbo.Prerrequisito p ON m.id = p.MateriaID
-LEFT JOIN dbo.Materia pr ON p.PrerrequisitoID = pr.id
-LEFT JOIN dbo.Correquisito c ON m.id = c.MateriaID
-LEFT JOIN dbo.Materia cr ON c.CorrequisitoID = cr.id;
-
-
-
-SELECT * FROM dbo.Asignacion
-SELECT * FROM dbo.Curso
-SELECT * FROM dbo.DiasSemana
-SELECT * FROM dbo.EstadoCurso
-SELECT * FROM dbo.Estudiante
-SELECT * FROM dbo.Horario
-SELECT * FROM dbo.Inscripcion
-SELECT * FROM dbo.Prerrequisito
-SELECT * FROM dbo.Correquisito
-SELECT * FROM dbo.Materia
-SELECT * FROM dbo.Profesor
-SELECT * FROM dbo.Sala
-
-SELECT 
-    fk.name AS FK_name, 
-    tp.name AS Parent_table, 
-    tr.name AS Referenced_table
-FROM sys.foreign_keys AS fk
-INNER JOIN sys.tables AS tp ON fk.parent_object_id = tp.object_id
-INNER JOIN sys.tables AS tr ON fk.referenced_object_id = tr.object_id
-WHERE tr.name = 'Materia';
-
--- Eliminar las restricciones de claves foráneas que hacen referencia a Materia
-ALTER TABLE Materia DROP CONSTRAINT FK__Materia__corequi__18D6A699;
-ALTER TABLE Prerrequisito DROP CONSTRAINT FK__Prerrequi__Mater__2818EA29;
-ALTER TABLE Prerrequisito DROP CONSTRAINT FK__Prerrequi__Prerr__290D0E62;
-*/
