@@ -3,6 +3,7 @@ package Entidades;
 import Controladores.*;
 import RepositorioBD.CursoRepositorio;
 import RepositorioBD.EstudianteRepositorio;
+import RepositorioBD.ProfesorRepositorio;
 import Servicios.*;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -21,10 +22,12 @@ import java.util.Scanner;
 public class Principal extends Application {
     @Override
     public void start(Stage stage) throws IOException {
+        ProfesorRepositorio profesorRepositorio = new ProfesorRepositorio();
+
         ServicioEstudiante servicioEstudiante = new ServicioEstudiante();
         ServicioCurso servicioCurso = new ServicioCurso();
         ServicioMateria servicioMateria = new ServicioMateria();
-        ServicioProfesor servicioProfesor = new ServicioProfesor();
+        ServicioProfesor servicioProfesor = new ServicioProfesor(profesorRepositorio);
         ServicioSala servicioSala = new ServicioSala();
 
         ControladorLogIn controladorLogIn = new ControladorLogIn();
