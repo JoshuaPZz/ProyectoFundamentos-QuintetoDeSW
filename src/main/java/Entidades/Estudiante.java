@@ -1,5 +1,8 @@
 package Entidades;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,9 +13,9 @@ public class Estudiante {
     private String correo;
     private String clave;
     private int creditosmax;
-    private List<Curso> cursos;
-    private List<Curso> cursosVistos;
-    private List<Curso> carrito;
+    private ObservableList<Curso> cursos;
+    private ObservableList<Curso> cursosVistos;
+    private ObservableList<Curso>  carrito;
 
     public int getId() {return id;}
 
@@ -54,16 +57,22 @@ public class Estudiante {
         return cursos;
     }
 
+    public ObservableList<Curso> getCursosObservable() {
+        return cursos ; // Wraps the existing list in an ObservableList
+    }
     public void setCursos(List<Curso> cursos) {
-        this.cursos = cursos;
+        this.cursos.addAll(cursos);
     }
 
     public List<Curso> getCursosvistos() {
         return cursosVistos;
     }
+    public ObservableList<Curso> getCursosObservableVistos() {
+        return cursosVistos;
+    }
 
     public void setCursosvistos(List<Curso> cursosVistos) {
-        this.cursosVistos = cursosVistos;
+        this.cursosVistos.setAll(cursosVistos);
     }
 
     public int getCreditosmax() {
@@ -79,20 +88,25 @@ public class Estudiante {
     }
 
     public void setCursosVistos(List<Curso> cursosVistos) {
-        this.cursosVistos = cursosVistos;
+        this.cursosVistos.setAll(cursosVistos);
     }
 
     public void setCarrito(List<Curso> carrito) {
-        this.carrito = carrito;
+        this.carrito.setAll(carrito);
     }
 
     public List<Curso> getCarrito() { return carrito; }
 
+    public ObservableList<Curso> getCarritosObservable() {
+        return this.carrito;
+    }
+
 
     public Estudiante() {
-        this.cursos = new ArrayList<>();
-        this.carrito = new ArrayList<>();
-        this.cursosVistos=new ArrayList<>();
+        this.cursos = FXCollections.observableArrayList();
+        this.carrito = FXCollections.observableArrayList();
+        this.cursosVistos = FXCollections.observableArrayList();
+
     }
 
 }

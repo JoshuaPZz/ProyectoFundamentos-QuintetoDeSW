@@ -10,11 +10,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ControladorPantallaInscribirCurso {
 
 
     private ServicioEstudiante servicioEstudiante;
+
     @FXML
     private Button botonInscribirCurso;
 
@@ -23,7 +25,11 @@ public class ControladorPantallaInscribirCurso {
 
     @FXML
     void botonInscribirPressed(ActionEvent event) {
-
+        ControladorPantallaInscripcion controladorPantallaInscripcion = (ControladorPantallaInscripcion) SceneManager.getInstance().getControllers().get("/Pantallas/pantallaInscripcion.fxml");
+        List<Curso> cursos = listCursoInscripcion.getSelectionModel().getSelectedItems();
+        for(Curso curso : cursos){
+            servicioEstudiante.inscribirCurso(Sesion.getInstancia().getEstudiante(), curso);
+        }
     }
     public ControladorPantallaInscribirCurso(ServicioEstudiante servicioEstudiante){
         this.servicioEstudiante = servicioEstudiante;
@@ -31,9 +37,6 @@ public class ControladorPantallaInscribirCurso {
 
     @FXML
     public void initialize() {
-        ArrayList<Curso>  cursos = servicioEstudiante.verCarrito(Sesion.getInstancia().getEstudiante());
-        ObservableList<Curso> observableCursos = FXCollections.observableArrayList(cursos);
-
-        this.listCursoInscripcion.setItems(observableCursos);
+        this.listCursoInscripcion.setItems(Sesion.getInstancia().getEstudiante().getCarritosObservable());
     }
 }

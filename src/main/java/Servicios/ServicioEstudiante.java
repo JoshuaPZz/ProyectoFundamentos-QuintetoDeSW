@@ -34,6 +34,7 @@ public class ServicioEstudiante {
     }
 
     //Metodo para ver las materias que se encuentran actualmente en el carrito
+    /*
     public ArrayList<Curso> verCarrito(Estudiante estudiante) {
         if (estudiante != null && estudiante.getCarrito() != null) {
             ArrayList<Curso> cursos = new ArrayList<>();
@@ -44,6 +45,8 @@ public class ServicioEstudiante {
         }
         return null;
     }
+
+     */
     public ArrayList<String> verCarritoToString(Estudiante estudiante) {
         if (estudiante != null && estudiante.getCarrito() != null) {
             ArrayList<String> materias = new ArrayList<>();
@@ -119,16 +122,22 @@ public class ServicioEstudiante {
             }
 
             //Verificar que no haya cruce de horarios
+
             if (servicioCurso.hayCruceHorarios(cursoAInscribir, estudiante)) {
                 System.out.println("El curso " + cursoAInscribir.getiD() + " tiene cruce de horarios.");
                 return false;
             }
 
+
+
             //Verificar la capacidad del curso
             if (cursoAInscribir.getEstudiantes().size() < cursoAInscribir.getCapacidad()) {
                 try {
+                    /*
                     EstudianteRepositorio estudianteRepositorio = new EstudianteRepositorio();
                     estudianteRepositorio.inscribirCurso(estudiante.getId(), cursoAInscribir.getiD());
+
+                     */
 
                     cursoAInscribir.getEstudiantes().add(estudiante);
                     estudiante.getCursos().add(cursoAInscribir);
@@ -136,7 +145,7 @@ public class ServicioEstudiante {
 
                     System.out.println("Inscripción exitosa del curso: " + cursoAInscribir.getiD());
                     return true;
-                } catch (SQLException e) {
+                } catch (Exception e) {
                     System.out.println("Error al inscribir el curso en la base de datos: " + e.getMessage());
                     return false;
                 }
