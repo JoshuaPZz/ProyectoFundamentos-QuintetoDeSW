@@ -2,6 +2,7 @@ package Controladores;
 
 import Entidades.Curso;
 import Entidades.Materia;
+import Entidades.Sesion;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -63,13 +64,12 @@ public class ControladorPantallaInscripcion {
 
     @FXML
     private AnchorPane revisarPlanPane;
-    @FXML
-    private Label labelInscritas;
-    @FXML
-    private Label labelCarrito;
 
     @FXML
     private ListView<Curso> listViewCarrito;
+
+    @FXML
+    private ListView<Curso> listViewInscritas;
 
     @FXML
     void botonBuscarPressed(ActionEvent event){
@@ -84,16 +84,22 @@ public class ControladorPantallaInscripcion {
 
     }
 
-    void setLabelCarrito(String string) {
-        labelCarrito.setText(labelCarrito.getText() + "\n" + string);
-    }
     ListView getListViewCarrito() {
         return listViewCarrito;
     }
+
+
+    ListView getListViewInscritas() {
+        return listViewInscritas;
+    }
+
+
     void setListViewCarrito(ArrayList<Curso> cursos) {
         ObservableList<Curso> observableCursos = FXCollections.observableArrayList(cursos);
         listViewCarrito.setItems(observableCursos);
     }
+
+
 
 
     @FXML
@@ -114,5 +120,20 @@ public class ControladorPantallaInscripcion {
             System.out.println("El archivo no existe.");
         }
     }
-
+    @FXML
+    void botonInscribirPressed(ActionEvent event) {
+        try {
+            Stage stageBuscar = SceneManager.getInstance().openNewWindow("/Pantallas/pantallaInscribirCurso.fxml", "/CssStyle/LoginStyle.css", "Inscribir Curso", true);
+            stageBuscar.show();
+            stageBuscar.setResizable(false);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    public void initialize() {
+        this.listViewInscritas.setItems(Sesion.getInstancia().getEstudiante().getCursosObservable());
+        this.listViewCarrito.setItems(Sesion.getInstancia().getEstudiante().getCarritosObservable());
+    }
 }
+

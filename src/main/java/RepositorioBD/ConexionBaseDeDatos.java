@@ -13,9 +13,11 @@ import java.util.List;
 public class ConexionBaseDeDatos {
 
     private Connection conexion;
+
     private static String conexionURL = "jdbc:h2:~/test";
     private static String username = "sa";
     private static String password = "123";
+
 
     private static Connection connection;
 

@@ -56,19 +56,8 @@ public class ControladorPantallaCursosEncontrados {
     @FXML
     public void agregarButtonPressed(ActionEvent actionEvent) {
 
-        Stage mainStage = SceneManager.getInstance().getPrimaryStage();
+        this.servicioEstudiante.agregarCursoAlCarrito(Sesion.getInstancia().getEstudiante(), this.servicioCurso.buscarCursoPorID(textIdAgregar.getText()));
 
-        Scene inscripcionScene = mainStage.getScene();
-        ControladorPantallaInscripcion controller = (ControladorPantallaInscripcion) inscripcionScene.getUserData();
-
-        if (controller != null) {
-            /*
-            Verificar si se puede agregar el curso al carrito con el estudiante de la sesion
-            Si es posible agregarlo entonces actualiza la listView en la pantalla de Inscripcion
-            */
-            if(this.servicioEstudiante.agregarCursoAlCarrito(Sesion.getInstancia().getEstudiante(), this.servicioCurso.buscarCursoPorID(textIdAgregar.getText())))
-                controller.setListViewCarrito(servicioEstudiante.verCarrito(Sesion.getInstancia().getEstudiante()));
-        }
     }
     @FXML
     public void finalizarButtonPressed(ActionEvent actionEvent) {
