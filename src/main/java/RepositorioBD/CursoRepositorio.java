@@ -78,10 +78,6 @@ public class CursoRepositorio{
                     String dia = rs.getString("dia");
                     java.sql.Timestamp horaInicio = rs.getTimestamp("hora_inicio");
                     java.sql.Timestamp horaFin = rs.getTimestamp("hora_fin");
-                    /*
-                    java.sql.Timestamp hora_inicio = rs.getTimestamp("hora_inicio");
-                    java.sql.Timestamp hora_fin = rs.getTimestamp("hora_fin");
-                     */
                     Horario horario = new Horario(dia, horaInicio, horaFin);
                     horarios.add(horario);
                 }
@@ -238,6 +234,39 @@ public class CursoRepositorio{
             }
         }
         return materia;
+    }
+
+    public void     crearCurso(Curso nuevoCurso) throws SQLException {
+        String consulta = "INSERT INTO Curso (cupos, capacidad, materia_id, sala_id, estado_id) VALUES (?, ?, ?, ?, ?)";
+
+        try (Connection connection = ConexionBaseDeDatos.getConnection();
+             PreparedStatement ps = connection.prepareStatement(consulta, Statement.RETURN_GENERATED_KEYS)) {
+
+            ps.setInt(1, nuevoCurso.getCupos());
+            ps.setInt(2, nuevoCurso.getCapacidad());
+            ps.setInt(3, Integer.parseInt(nuevoCurso.getMateria().getiD()));
+            if (nuevoCurso.getSalas() != null && !nuevoCurso.getSalas().isEmpty()) {
+                ps.setInt(4, Integer.parseInt(nuevoCurso.getSalas().get(0).getiD()));
+            } else {
+                ps.setNull(4, java.sql.Types.INTEGER);
+            }
+            ps.setInt(5, 1);
+
+
+            int filasInsertadas = ps.executeUpdate();
+            if (filasInsertadas > 0) {
+                try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        nuevoCurso.setiD(String.valueOf(generatedKeys.getInt(1))); // Asigna el ID generado al objeto `curso`
+                    }
+                }
+            } else {
+                System.out.println("No se pudo crear el curso.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al crear el curso: " + e.getMessage());
+            throw e;
+        }
     }
 /*
     public Curso agregarCurso(Curso curso) throws SQLException {

@@ -11,7 +11,10 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
@@ -52,9 +55,58 @@ public class Principal extends Application {
     public static void main(String[] args) throws SQLException {
         launch();
     }
+
+
 }
 
 /*
+
+        try {
+            // Crear instancias de Profesor y Materia
+            Profesor profesor = new Profesor(); // Asegúrate de que esta clase tenga al menos el método setId() o similar
+            profesor.setId(30); // Suponiendo que el profesor con ID 1 ya existe en la base de datos
+            Materia materia = new Materia();
+            materia.setiD("1"); // Asegúrate de que la materia con ID 1 ya exista
+
+            // Crear lista de Horarios (asume que tienes una clase Horario y sus métodos)
+            SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+            Date horaInicio = dateFormat.parse("12:00"); // Ejemplo de hora de inicio
+            Date horaFin = dateFormat.parse("13:00"); // Ejemplo de hora de fin
+            List<Horario> horarios = new ArrayList<>();
+            Horario horario1 = new Horario("Sabado", horaInicio, horaFin);
+            horarios.add(horario1);
+
+            // Crear lista de Salas (asume que tienes una clase Sala y sus métodos)
+            List<Sala> salas = new ArrayList<>();
+            Sala sala1 = new Sala();
+            sala1.setiD("14"); // Asegúrate de que esta sala exista en la base de datos
+            salas.add(sala1);
+
+            // Capacidad y cupos del curso
+            int capacidad = 30;
+            int cupos = 25;
+
+            // Crear instancia del servicio y ejecutar la función
+            ServicioProfesor servicioProfesor = new ServicioProfesor();
+            Curso nuevoCurso = servicioProfesor.crearYAsignarCurso(
+                    profesor, "81", materia, capacidad, horarios, salas, cupos
+            );
+
+            if (nuevoCurso != null) {
+                System.out.println("Curso creado y asignado con éxito:");
+                System.out.println("ID del curso: " + nuevoCurso.getiD());
+                System.out.println("Materia: " + nuevoCurso.getMateria().getiD());
+                System.out.println("Profesor asignado: " + profesor.getId());
+            } else {
+                System.out.println("Error al crear o asignar el curso.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error de SQL: " + e.getMessage());
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
         Scanner scanner = new Scanner(System.in);
         ServicioEstudiante servicioEstudiante = new ServicioEstudiante();
         EstudianteRepositorio estudianteRepositorio = new EstudianteRepositorio();

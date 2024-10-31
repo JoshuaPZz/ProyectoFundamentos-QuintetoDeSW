@@ -74,4 +74,26 @@ public class ProfesorRepositorio {
         }
         return cursos;
     }
+
+    public void asignarCursoAProfesor(Profesor profesor, Curso nuevoCurso) {
+        String consulta = "INSERT INTO Asignacion (profesor_id, curso_id) VALUES (?, ?)";
+        try (Connection conexion = ConexionBaseDeDatos.getConnection();
+             PreparedStatement ps = conexion.prepareStatement(consulta)) {
+
+            // Configuración de los parámetros de la consulta
+            ps.setInt(1, profesor.getId());
+            ps.setInt(2, Integer.parseInt(nuevoCurso.getiD()));
+
+            // Ejecuta la inserción
+            int filasInsertadas = ps.executeUpdate();
+            if (filasInsertadas > 0) {
+                System.out.println("Curso asignado exitosamente al profesor.");
+            } else {
+                System.out.println("No se pudo asignar el curso al profesor.");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error al asignar el curso al profesor: " + e.getMessage());
+        }
+    }
 }

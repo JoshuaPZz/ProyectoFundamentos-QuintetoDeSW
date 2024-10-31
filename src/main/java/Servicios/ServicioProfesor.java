@@ -38,11 +38,11 @@ public class ServicioProfesor {
         List<Profesor> profesores = new ArrayList<>();
         profesores.add(profesor);
         // Llamada al método crearCurso en ServicioCurso
-        Curso nuevoCurso = servicioCurso.crearCurso(cursoID, materia, capacidad, horarios, salas, cupos, profesores);
+        Curso nuevoCurso = servicioCurso.crearCurso(materia, capacidad, horarios, salas, cupos, profesores);
         CursoRepositorio cursoRepositorio = new CursoRepositorio();
-        //cursoRepositorio.crearCurso(nuevoCurso);  // Falta método en repositorio: Guardar el curso en el repositorio de cursos
+        cursoRepositorio.crearCurso(nuevoCurso);  // Falta método en repositorio: Guardar el curso en el repositorio de cursos
         ProfesorRepositorio profesorRepositorio = new ProfesorRepositorio();
-        //profesorRepositorio.asignarCursoAProfesor(profesor, nuevoCurso);  // Falta método en repositorio: Asignar el curso al profesor
+        profesorRepositorio.asignarCursoAProfesor(profesor, nuevoCurso);  // Falta método en repositorio: Asignar el curso al profesor
         System.out.println("Curso creado y asignado exitosamente al profesor.");
         return nuevoCurso;
     }

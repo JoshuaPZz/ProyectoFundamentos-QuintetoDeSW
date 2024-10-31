@@ -136,5 +136,15 @@ public class Curso {
         this.cupos = cupos;
     }
 
+    public Curso(Materia materia, int capacidad, List<Horario> horarios, List<Sala> salas, int cupos) {
+        this.capacidad = capacidad;
+        this.horarios = horarios;
+        this.materia = materia;
+        this.salas = salas;
+        this.profesores = new ArrayList<>();
+        this.estudiantes = new ArrayList<>();
+        this.cupos = cupos;
+    }
+
 }
 
