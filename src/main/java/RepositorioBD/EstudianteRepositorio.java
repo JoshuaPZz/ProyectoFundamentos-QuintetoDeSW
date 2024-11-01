@@ -257,7 +257,7 @@ public class EstudianteRepositorio {
         List<Materia> materiasVistas = new ArrayList<>();
         String query = "SELECT m.* FROM Materia m " +
                 "JOIN Inscripcion i ON m.id = i.curso_id " +
-                "WHERE i.estudiante_id = ? AND i.ha_aprobado = 1";
+                "WHERE i.estudiante_id = ? AND i.ha_aprobado = true";
         try (Connection conexion = ConexionBaseDeDatos.getConnection();
              PreparedStatement ps = conexion.prepareStatement(query)) {
             ps.setInt(1, estudianteId);

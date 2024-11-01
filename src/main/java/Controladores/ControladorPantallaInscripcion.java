@@ -132,8 +132,8 @@ public class ControladorPantallaInscripcion {
     }
     @FXML
     public void initialize() {
-        this.listViewInscritas.setItems(Sesion.getInstancia().getEstudiante().getCursosObservable());
         this.listViewCarrito.setItems(Sesion.getInstancia().getEstudiante().getCarritosObservable());
+        this.listViewInscritas.setItems(Sesion.getInstancia().getEstudiante().getCursosObservable());
     }
 }
 
