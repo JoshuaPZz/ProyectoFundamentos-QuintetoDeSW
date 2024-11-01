@@ -26,11 +26,11 @@ public class Principal extends Application {
         CursoRepositorio cursoRepositorio = new CursoRepositorio();
         EstudianteRepositorio estudianteRepositorio = new EstudianteRepositorio();
 
-        ServicioEstudiante servicioEstudiante = new ServicioEstudiante();
         ServicioCurso servicioCurso = new ServicioCurso(cursoRepositorio, estudianteRepositorio);
         ServicioMateria servicioMateria = new ServicioMateria();
         ServicioProfesor servicioProfesor = new ServicioProfesor(profesorRepositorio, servicioCurso);
         ServicioSala servicioSala = new ServicioSala();
+        ServicioEstudiante servicioEstudiante = new ServicioEstudiante(servicioCurso, estudianteRepositorio);
 
         ControladorLogIn controladorLogIn = new ControladorLogIn();
         ControladorPantallaCursosEncontrados controladorPantallaCursosEncontrados = new ControladorPantallaCursosEncontrados(servicioEstudiante, servicioCurso);

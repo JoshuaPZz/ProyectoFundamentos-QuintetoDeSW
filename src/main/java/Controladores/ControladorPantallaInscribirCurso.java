@@ -26,10 +26,7 @@ public class ControladorPantallaInscribirCurso {
     @FXML
     void botonInscribirPressed(ActionEvent event) {
         ControladorPantallaInscripcion controladorPantallaInscripcion = (ControladorPantallaInscripcion) SceneManager.getInstance().getControllers().get("/Pantallas/pantallaInscripcion.fxml");
-        List<Curso> cursos = listCursoInscripcion.getSelectionModel().getSelectedItems();
-        for(Curso curso : cursos){
-            servicioEstudiante.inscribirCurso(Sesion.getInstancia().getEstudiante(), curso);
-        }
+        servicioEstudiante.inscribirCurso(Sesion.getInstancia().getEstudiante(), listCursoInscripcion.getSelectionModel().getSelectedItem());
     }
     public ControladorPantallaInscribirCurso(ServicioEstudiante servicioEstudiante){
         this.servicioEstudiante = servicioEstudiante;

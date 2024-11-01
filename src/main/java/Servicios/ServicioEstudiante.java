@@ -11,6 +11,14 @@ import java.util.List;
 
 public class ServicioEstudiante {
 
+    private ServicioCurso servicioCurso;
+    private EstudianteRepositorio estudianteRepositorio;
+    public ServicioEstudiante(ServicioCurso servicioCurso, EstudianteRepositorio estudianteRepositorio) {
+        this.servicioCurso = servicioCurso;
+        this.estudianteRepositorio = estudianteRepositorio;
+
+    }
+
     //Metodo para agregar un curso al carrito del estudiante
     public boolean agregarCursoAlCarrito(Estudiante estudiante, Curso curso) {
         if (estudiante != null && curso != null) {
@@ -60,7 +68,6 @@ public class ServicioEstudiante {
 
     //Método para remover a un estudiante de un curso
     public boolean removerCurso(Estudiante estudiante, Curso curso) throws SQLException {
-        EstudianteRepositorio estudianteRepositorio = new EstudianteRepositorio();
         if (estudiante != null && curso != null && curso.getEstudiantes().contains(estudiante)) {
         estudianteRepositorio.eliminarInscripcion(estudiante.getId(), curso.getiD());
             curso.getEstudiantes().remove(estudiante);
@@ -73,7 +80,6 @@ public class ServicioEstudiante {
     //Metodo para obtener los cursos de un estudiante
     public List<Curso> obtenerCursosEstudiante(Estudiante estudiante) {
         if (estudiante != null) {
-            EstudianteRepositorio estudianteRepositorio = new EstudianteRepositorio();
             try {
                 return estudianteRepositorio.obtenerCursosPorEstudiante(estudiante.getId());
             } catch (SQLException e) {
@@ -113,32 +119,25 @@ public class ServicioEstudiante {
                 System.out.println("El curso " + cursoAInscribir.getiD() + " excede el límite de créditos permitidos.");
                 return false;
             }
-
             //Verificar pre-requisitos y co-requisitos
-            ServicioCurso servicioCurso = new ServicioCurso();
             if (!servicioCurso.cumpleRequisitos(estudiante, cursoAInscribir)) {
                 System.out.println("No cumple con los pre-requisitos o co-requisitos del curso: " + cursoAInscribir.getiD());
                 return false;
             }
 
+
             //Verificar que no haya cruce de horarios
+
 
             if (servicioCurso.hayCruceHorarios(cursoAInscribir, estudiante)) {
                 System.out.println("El curso " + cursoAInscribir.getiD() + " tiene cruce de horarios.");
                 return false;
             }
 
-
-
             //Verificar la capacidad del curso
             if (cursoAInscribir.getEstudiantes().size() < cursoAInscribir.getCapacidad()) {
                 try {
-                    /*
-                    EstudianteRepositorio estudianteRepositorio = new EstudianteRepositorio();
                     estudianteRepositorio.inscribirCurso(estudiante.getId(), cursoAInscribir.getiD());
-
-                     */
-
                     cursoAInscribir.getEstudiantes().add(estudiante);
                     estudiante.getCursos().add(cursoAInscribir);
                     carrito.remove(cursoAInscribir);

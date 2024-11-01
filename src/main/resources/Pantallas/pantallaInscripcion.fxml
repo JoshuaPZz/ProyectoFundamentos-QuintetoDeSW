@@ -132,14 +132,14 @@
                                     <HBox maxHeight="50.0" maxWidth="1.7976931348623157E308" nodeOrientation="LEFT_TO_RIGHT" prefHeight="0.0" prefWidth="657.0" VBox.vgrow="ALWAYS">
                                        <children>
                                           <Label fx:id="labelInscritasTitle" alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="50.0" prefWidth="249.0" text="MIS CLASES INSCRITAS" textAlignment="CENTER" HBox.hgrow="ALWAYS" />
-                                          <Pane maxHeight="1.7976931348623157E308" maxWidth="70.0" minWidth="13.0" prefHeight="50.0" prefWidth="13.0" HBox.hgrow="NEVER" />
+                                          <Pane maxHeight="1.7976931348623157E308" maxWidth="70.0" minWidth="13.0" prefHeight="50.0" prefWidth="30.0" HBox.hgrow="NEVER" />
                                           <Label fx:id="labelCarritoTitle" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="50.0" prefWidth="250.0" text="MI CARRITO DE COMPRAS" HBox.hgrow="ALWAYS" />
                                        </children>
                                     </HBox>
                                     <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" nodeOrientation="LEFT_TO_RIGHT" prefHeight="329.0" prefWidth="657.0" VBox.vgrow="ALWAYS">
                                        <children>
-                                          <Label fx:id="labelInscritas" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: white;" HBox.hgrow="ALWAYS" />
-                                          <Pane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="255.0" prefWidth="15.0" />
+                                          <ListView fx:id="listViewInscritas" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="332.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
+                                          <Pane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="255.0" prefWidth="30.0" HBox.hgrow="NEVER" />
                                           <ListView fx:id="listViewCarrito" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="332.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
                                        </children>
                                     </HBox>
