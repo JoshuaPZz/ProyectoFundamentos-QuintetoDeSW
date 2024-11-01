@@ -23,11 +23,13 @@ public class Principal extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         ProfesorRepositorio profesorRepositorio = new ProfesorRepositorio();
+        CursoRepositorio cursoRepositorio = new CursoRepositorio();
+        EstudianteRepositorio estudianteRepositorio = new EstudianteRepositorio();
 
         ServicioEstudiante servicioEstudiante = new ServicioEstudiante();
-        ServicioCurso servicioCurso = new ServicioCurso();
+        ServicioCurso servicioCurso = new ServicioCurso(cursoRepositorio, estudianteRepositorio);
         ServicioMateria servicioMateria = new ServicioMateria();
-        ServicioProfesor servicioProfesor = new ServicioProfesor(profesorRepositorio);
+        ServicioProfesor servicioProfesor = new ServicioProfesor(profesorRepositorio, servicioCurso);
         ServicioSala servicioSala = new ServicioSala();
 
         ControladorLogIn controladorLogIn = new ControladorLogIn();

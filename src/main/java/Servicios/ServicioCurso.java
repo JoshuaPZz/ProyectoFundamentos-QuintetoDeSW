@@ -11,10 +11,16 @@ import java.util.Date;
 import java.util.List;
 
 public class ServicioCurso {
+    private final CursoRepositorio cursoRepositorio;
+    private final EstudianteRepositorio estudianteRepositorio;
+
+    public ServicioCurso(CursoRepositorio cursoRepositorio, EstudianteRepositorio estudianteRepositorio) {
+        this.cursoRepositorio = cursoRepositorio;
+        this.estudianteRepositorio = estudianteRepositorio;
+    }
 
     // Método para crear un curso
     public Curso crearCurso(Materia materia, int capacidad, List<Horario> horarios, List<Sala> salas, int cupos, List<Profesor> profesores) {
-        CursoRepositorio cursoRepositorio = new CursoRepositorio();
         Curso nuevoCurso = new Curso(materia, capacidad, horarios, salas, cupos);
         nuevoCurso.setProfesores(profesores); // Asigna la lista de profesores al nuevo curso
         // Llamada al repositorio para almacenar el curso en la base de datos
@@ -33,9 +39,7 @@ public class ServicioCurso {
         if (curso != null) {
             String id = curso.getiD();
             try {
-                CursoRepositorio repositorioCurso = new CursoRepositorio();
-                return repositorioCurso.obtenerCursoPorId(id);
-
+                return cursoRepositorio.obtenerCursoPorId(id);
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -48,8 +52,7 @@ public class ServicioCurso {
     public List<Estudiante> verEstudiantes(Curso curso) {
         if (curso != null) {
             try {
-                CursoRepositorio repositorioCurso = new CursoRepositorio();
-                return repositorioCurso.obtenerEstudiantes(curso.getiD());
+                return cursoRepositorio.obtenerEstudiantes(curso.getiD());
             } catch (SQLException e) {
                 System.out.println("Error al obtener los estudiantes del curso: " + e.getMessage());
             }
@@ -61,8 +64,7 @@ public class ServicioCurso {
     public Profesor verProfesor(Curso curso) {
         if (curso != null) {
             try {
-                CursoRepositorio repositorioCurso = new CursoRepositorio();
-                List<Profesor> profesores = repositorioCurso.obtenerProfesores(curso.getiD());
+                List<Profesor> profesores = cursoRepositorio.obtenerProfesores(curso.getiD());
                 if (!profesores.isEmpty()) {
                     return profesores.get(0);
                 }
@@ -76,8 +78,7 @@ public class ServicioCurso {
     //Buscar un curso por su ID usando RepositorioCurso
     public Curso buscarCursoPorID(String idCurso) {
         try {
-            CursoRepositorio repositorioCurso = new CursoRepositorio();
-            return repositorioCurso.obtenerCursoPorId(idCurso);
+            return cursoRepositorio.obtenerCursoPorId(idCurso);
         } catch (SQLException e) {
             System.out.println("Error al buscar el curso con ID " + idCurso + ": " + e.getMessage());
             return null;
@@ -99,12 +100,11 @@ public class ServicioCurso {
 
     //Verificar cruce de horarios entre los cursos
     public boolean hayCruceHorarios(Curso curso, Estudiante estudiante) {
-        CursoRepositorio repositorioCurso = new CursoRepositorio();
         if (curso != null) {
             String id = curso.getiD();
             int idEstudiante = estudiante.getId();
             try {
-                boolean cruce = repositorioCurso.hayCruceHorarios(id, idEstudiante);
+                boolean cruce = cursoRepositorio.hayCruceHorarios(id, idEstudiante);
                 if (cruce == true) {
                     return true;
                 }
@@ -118,7 +118,6 @@ public class ServicioCurso {
 
     //Verificación de cumplimiento de requisitos pre y co
     public boolean cumpleRequisitos(Estudiante estudiante, Curso curso) {
-        EstudianteRepositorio estudianteRepositorio = new EstudianteRepositorio();
         try {
             List<Materia> materiasVistas = estudianteRepositorio.obtenerMateriasVistasPorEstudiante(estudiante.getId());
             List<Materia> preRequisitos = curso.getMateria().getPrerequisitos();
@@ -132,7 +131,6 @@ public class ServicioCurso {
             List<Materia> coRequisitos = curso.getMateria().getCorequisitos();
             for (Materia coRequisito : coRequisitos) {
                 boolean coRequisitoCumplido = false;
-
                 List<Curso> cursosInscritos = estudianteRepositorio.obtenerCursosInscritos(estudiante.getId());
                 for (Curso cursoInscrito : cursosInscritos) {
                     if (cursoInscrito.getMateria().equals(coRequisito)) {
@@ -167,7 +165,6 @@ public class ServicioCurso {
     }
 
     public List<String> obtenerCursosPorMateria(String materiaId) throws SQLException {
-        CursoRepositorio repositorioCurso = new CursoRepositorio();
-        return repositorioCurso.obtenerCursosPorMateria(materiaId);
+        return cursoRepositorio.obtenerCursosPorMateria(materiaId);
     }
 }

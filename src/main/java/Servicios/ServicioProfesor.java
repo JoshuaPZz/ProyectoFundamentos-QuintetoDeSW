@@ -14,9 +14,11 @@ import java.util.List;
 
 public class ServicioProfesor {
     private final ProfesorRepositorio profesorRepositorio;
+    private final ServicioCurso servicioCurso;
 
-    public ServicioProfesor(ProfesorRepositorio profesorRepositorio) {
+    public ServicioProfesor(ProfesorRepositorio profesorRepositorio, ServicioCurso servicioCurso) {
         this.profesorRepositorio = profesorRepositorio;
+        this.servicioCurso = servicioCurso;
     }
 
     //Método para ver el horario de un profesor (lista de cursos asignados)
@@ -37,7 +39,6 @@ public class ServicioProfesor {
             System.out.println("Error: No existe profesor");
             return null;
         }
-        ServicioCurso servicioCurso = new ServicioCurso();
         // Lista de profesores que contiene al profesor actual
         List<Profesor> profesores = new ArrayList<>();
         profesores.add(profesor);
