@@ -40,6 +40,85 @@ public class EstudianteRepositorio {
         return estudiante; // Retorna null si no se encuentra el estudiante
     }
 
+    public Estudiante validarCredenciales(String usuario, String contrasenia) {
+        String query = "SELECT id FROM Estudiante WHERE correo = ? AND clave = ?";
+        int estudianteId=-1;
+
+        try (Connection conexion = RepositorioBD.ConexionBaseDeDatos.getConnection();
+             PreparedStatement ps = conexion.prepareStatement(query)) {
+            ps.setString(1, usuario);
+            ps.setString(2, contrasenia);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    estudianteId = rs.getInt("id");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.err.println("Error en la consulta de base de datos: " + e.getMessage());
+        }
+        Estudiante estudiante = new Estudiante();
+        EstudianteRepositorio estudianteRepositorio = new EstudianteRepositorio();
+        estudiante = estudianteRepositorio.buscarPorId(estudianteId);
+        Sesion.getInstancia().setEstudiante(estudiante);
+        return estudiante;  // Credenciales incorrectas
+    }
+
+    public List<Curso> obtenerCarrito(int estudianteId) throws SQLException {
+        List<Curso> carrito = new ArrayList<>();
+        CursoRepositorio cursoRepositorio = new CursoRepositorio();
+        String sql = "SELECT c.id, c.cupos, c.capacidad, c.materia_id, c.sala_id, c.estado_id " +
+                "FROM Carrito ca " +
+                "JOIN Curso c ON ca.curso_id = c.id " +
+                "WHERE ca.estudiante_id = ?";
+
+        try (Connection conn = ConexionBaseDeDatos.getConnection();
+             PreparedStatement statement = conn.prepareStatement(sql)) {
+
+            statement.setInt(1, estudianteId);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                // Recupera los datos de la tabla Curso
+                String cursoID = resultSet.getString("id");
+                int capacidad = resultSet.getInt("capacidad");
+                int cupos = resultSet.getInt("cupos");
+                int materiaId = resultSet.getInt("materia_id");
+                String salaId = resultSet.getString("sala_id");
+
+                // Recupera la materia asociada al curso
+                Materia materia = cursoRepositorio.obtenerMateriaporCursoID(cursoID);
+
+                // Recupera los horarios asociados al curso
+                List<Horario> horarios = cursoRepositorio.obtenerHorarios(cursoID);
+
+                // Recupera las salas asociadas al curso
+                List<Sala> salas = cursoRepositorio.obtenerSalasPorCursoId(salaId);
+
+                // Crea el objeto Curso
+                Curso curso = new Curso(cursoID, materia, capacidad, horarios, salas, cupos);
+                carrito.add(curso);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al obtener el carrito: " + e.getMessage());
+            throw e;
+        }
+
+        return carrito;
+    }
+
+    public void agregarAlCarrito(int estudianteId, int cursoId) throws SQLException {
+        String sql = "INSERT IGNORE INTO Carrito (estudiante_id, curso_id) VALUES (?, ?)";
+        try (Connection conn = ConexionBaseDeDatos.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, estudianteId);
+            stmt.setInt(2, cursoId);
+            stmt.executeUpdate();
+        }
+    }
+
+
+
     public List<Estudiante> listaEstudiante() throws SQLException {
         List<Estudiante> estudiantes = new ArrayList<>();
         String consulta = "SELECT * FROM Estudiante";

@@ -41,6 +41,14 @@ public class ServicioEstudiante {
         return false;
     }
 
+    public List<Curso> obtenerCarrito(int estudianteId) throws SQLException {
+        return estudianteRepositorio.obtenerCarrito(estudianteId);
+    }
+
+    public void agregarAlCarrito(int estudianteId, int cursoId) throws SQLException {
+        estudianteRepositorio.agregarAlCarrito(estudianteId, cursoId);
+    }
+
     //Metodo para ver las materias que se encuentran actualmente en el carrito
     /*
     public ArrayList<Curso> verCarrito(Estudiante estudiante) {

@@ -1,4 +1,5 @@
 ﻿-- Eliminar tablas que dependen de claves foráneas primero
+DROP TABLE IF EXISTS Carrito;
 DROP TABLE IF EXISTS Inscripcion;
 DROP TABLE IF EXISTS Asignacion;
 DROP TABLE IF EXISTS Horario;
@@ -130,8 +131,19 @@ CREATE TABLE Horario (
                          sala_id INT NULL,
                          FOREIGN KEY (dia_semana_id) REFERENCES DiasSemana(id),
                          FOREIGN KEY (materia_id) REFERENCES Materia(id) ON DELETE CASCADE,
-                         FOREIGN KEY (sala_id) REFERENCES Sala(id) ON DELETE SET NULL -- Evitar ciclos
+                         FOREIGN KEY (sala_id) REFERENCES Sala(id) ON DELETE SET NULL
 );
+
+-- Tabla para almacenar los cursos que un estudiante tiene en su carrito
+CREATE TABLE Carrito (
+                         id INT PRIMARY KEY AUTO_INCREMENT,
+                         estudiante_id INT NOT NULL,
+                         curso_id INT NOT NULL,
+                         FOREIGN KEY (estudiante_id) REFERENCES Estudiante(id) ON DELETE CASCADE,
+                         FOREIGN KEY (curso_id) REFERENCES Curso(id) ON DELETE CASCADE,
+                         UNIQUE(estudiante_id, curso_id)
+);
+
 
 
 

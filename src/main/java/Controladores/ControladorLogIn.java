@@ -37,7 +37,8 @@ public class ControladorLogIn {
 
         String usuario = textUser.getText();
         String contrasenia = textPass.getText();
-        Estudiante estudiante = validarCredenciales(usuario,contrasenia);
+        EstudianteRepositorio estudianteRepositorio = new EstudianteRepositorio();
+        Estudiante estudiante = estudianteRepositorio.validarCredenciales(usuario,contrasenia);
         if (estudiante != null) {
             System.out.println("Usuario autenticado correctamente! " + estudiante.getNombre());
             try {
@@ -53,29 +54,7 @@ public class ControladorLogIn {
         }
     }
 
-    private Estudiante validarCredenciales(String usuario, String contrasenia) {
-        String query = "SELECT id FROM Estudiante WHERE correo = ? AND clave = ?";
-        int estudianteId=-1;
 
-        try (Connection conexion = RepositorioBD.ConexionBaseDeDatos.getConnection();
-             PreparedStatement ps = conexion.prepareStatement(query)) {
-            ps.setString(1, usuario);
-            ps.setString(2, contrasenia);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    estudianteId = rs.getInt("id");
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.err.println("Error en la consulta de base de datos: " + e.getMessage());
-        }
-        Estudiante estudiante = new Estudiante();
-        EstudianteRepositorio estudianteRepositorio = new EstudianteRepositorio();
-        estudiante = estudianteRepositorio.buscarPorId(estudianteId);
-        Sesion.getInstancia().setEstudiante(estudiante);
-        return estudiante;  // Credenciales incorrectas
-    }
 
 
 

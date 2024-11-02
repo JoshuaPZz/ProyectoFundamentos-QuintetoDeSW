@@ -268,6 +268,29 @@ public class CursoRepositorio{
             throw e;
         }
     }
+
+    public List<Sala> obtenerSalasPorCursoId(String salaId) throws SQLException {
+        List<Sala> salas = new ArrayList<>();
+        String sql = "SELECT * FROM Sala WHERE id = ?";
+
+        try (Connection conn = ConexionBaseDeDatos.getConnection();
+             PreparedStatement statement = conn.prepareStatement(sql)) {
+
+            statement.setString(1, salaId);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                Sala sala = new Sala();
+                sala.setUbicacion(resultSet.getString("ubicacion"));
+                sala.setCapacidad(resultSet.getInt("capacidad"));
+
+                sala.setTipo(resultSet.getString("tipo"));
+                salas.add(sala);
+            }
+        }
+        return salas;
+    }
+
 /*
     public Curso agregarCurso(Curso curso) throws SQLException {
         String query = "INSERT INTO Curso (cupos, capacidad, materia_id, sala_id, estado_id) VALUES (?, ?, ?, ?, ?)";
