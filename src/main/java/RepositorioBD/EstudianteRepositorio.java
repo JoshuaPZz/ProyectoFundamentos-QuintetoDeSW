@@ -221,6 +221,31 @@ public class EstudianteRepositorio {
         }
     }
 
+    public void eliminarDelCarrito(int estudianteId, String cursoId) throws SQLException {
+        String sql = "DELETE FROM Carrito WHERE estudiante_id = ? AND curso_id = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, estudianteId);
+            stmt.setString(2, cursoId);
+            stmt.executeUpdate();
+        }
+    }
+
+    public boolean cursoEstaEnCarrito(int estudianteId, String cursoId) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM Carrito WHERE estudiante_id = ? AND curso_id = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, estudianteId);
+            stmt.setString(2, cursoId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        }
+        return false;
+    }
+
 
 /*
     public List<Estudiante> listaEstudiante() throws SQLException {
@@ -460,12 +485,46 @@ public class EstudianteRepositorio {
     }
 
     public void inscribirCurso(int estudianteId, String cursoId) throws SQLException {
-        String sql = "INSERT INTO Inscripcion (estudiante_id, curso_id, ha_aprobado) VALUES (?, ?, 0)";
-        try (Connection conn = getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, estudianteId);
-            stmt.setString(2, cursoId);
-            stmt.executeUpdate();
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            conn.setAutoCommit(false); // Inicio de la transacción
+
+            // Primero inscribimos el curso
+            String sqlInscripcion = "INSERT INTO Inscripcion (estudiante_id, curso_id, ha_aprobado) VALUES (?, ?, 0)";
+            try (PreparedStatement stmtInscripcion = conn.prepareStatement(sqlInscripcion)) {
+                stmtInscripcion.setInt(1, estudianteId);
+                stmtInscripcion.setString(2, cursoId);
+                stmtInscripcion.executeUpdate();
+            }
+
+            // Luego eliminamos el curso del carrito
+            String sqlEliminarCarrito = "DELETE FROM Carrito WHERE estudiante_id = ? AND curso_id = ?";
+            try (PreparedStatement stmtEliminar = conn.prepareStatement(sqlEliminarCarrito)) {
+                stmtEliminar.setInt(1, estudianteId);
+                stmtEliminar.setString(2, cursoId);
+                stmtEliminar.executeUpdate();
+            }
+
+            conn.commit(); // Confirmar la transacción
+        } catch (SQLException e) {
+            if (conn != null) {
+                try {
+                    conn.rollback(); // Deshacer la transacción si algo sale mal
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            throw new SQLException("Error al inscribir el curso y eliminar del carrito: " + e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.setAutoCommit(true); // Restaurar el auto-commit
+                    conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
