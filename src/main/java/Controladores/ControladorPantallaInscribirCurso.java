@@ -17,6 +17,10 @@ public class ControladorPantallaInscribirCurso {
 
     private ServicioEstudiante servicioEstudiante;
 
+    public ControladorPantallaInscribirCurso(ServicioEstudiante servicioEstudiante){
+        this.servicioEstudiante = servicioEstudiante;
+    }
+
     @FXML
     private Button botonInscribirCurso;
 
@@ -25,11 +29,7 @@ public class ControladorPantallaInscribirCurso {
 
     @FXML
     void botonInscribirPressed(ActionEvent event) {
-        ControladorPantallaInscripcion controladorPantallaInscripcion = (ControladorPantallaInscripcion) SceneManager.getInstance().getControllers().get("/Pantallas/pantallaInscripcion.fxml");
         servicioEstudiante.inscribirCurso(Sesion.getInstancia().getEstudiante(), listCursoInscripcion.getSelectionModel().getSelectedItem());
-    }
-    public ControladorPantallaInscribirCurso(ServicioEstudiante servicioEstudiante){
-        this.servicioEstudiante = servicioEstudiante;
     }
 
     @FXML

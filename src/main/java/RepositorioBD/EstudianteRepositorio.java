@@ -56,7 +56,7 @@ public class EstudianteRepositorio {
         List<Curso> cursos = new ArrayList<>();
         MateriaRepositorio materiaRepositorio = new MateriaRepositorio();
         CursoRepositorio cursoRepositorio = new CursoRepositorio();
-        String sql = "SELECT c.id, c.capacidad, c.cupos, m.id AS materia_id" +
+        String sql = "SELECT c.id, c.capacidad, c.cupos, m.id AS materia_id " +
                 "FROM Curso c " +
                 "JOIN Materia m ON c.materia_id = m.id " +
                 "JOIN Inscripcion i ON c.id = i.curso_id " +
@@ -496,7 +496,7 @@ public class EstudianteRepositorio {
     }
 
     public Boolean eliminarInscripcion(int estudianteId, String cursoId) throws SQLException {
-        String sql = "DELETE FROM Inscripcion WHERE estudiante_id = ? and curso_id = ? AND ha_aprobado = 0";
+        String sql = "DELETE FROM Inscripcion WHERE estudiante_id = ? and curso_id = ? AND ha_aprobado = false";
         try (Connection connection = ConexionBaseDeDatos.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, estudianteId);

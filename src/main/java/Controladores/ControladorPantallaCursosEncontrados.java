@@ -58,6 +58,7 @@ public class ControladorPantallaCursosEncontrados {
     public void agregarButtonPressed(ActionEvent actionEvent) throws SQLException {
 
         this.servicioEstudiante.agregarCursoAlCarrito(Sesion.getInstancia().getEstudiante(), this.servicioCurso.buscarCursoPorID(textIdAgregar.getText()));
+        System.out.println(this.servicioEstudiante.obtenerCarrito(Sesion.getInstancia().getEstudiante().getId()).size());
 
     }
     @FXML
