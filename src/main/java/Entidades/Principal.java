@@ -1,26 +1,50 @@
 package Entidades;
 
-import Controladores.SceneManager;
+import Controladores.*;
 import RepositorioBD.CursoRepositorio;
 import RepositorioBD.EstudianteRepositorio;
-import Servicios.ServicioCurso;
-import Servicios.ServicioEstudiante;
+import RepositorioBD.ProfesorRepositorio;
+import Servicios.*;
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
 public class Principal extends Application {
     @Override
     public void start(Stage stage) throws IOException {
+        ProfesorRepositorio profesorRepositorio = new ProfesorRepositorio();
+        CursoRepositorio cursoRepositorio = new CursoRepositorio();
+        EstudianteRepositorio estudianteRepositorio = new EstudianteRepositorio();
+
+        ServicioCurso servicioCurso = new ServicioCurso(cursoRepositorio, estudianteRepositorio);
+        ServicioMateria servicioMateria = new ServicioMateria();
+        ServicioProfesor servicioProfesor = new ServicioProfesor(profesorRepositorio, servicioCurso);
+        ServicioSala servicioSala = new ServicioSala();
+        ServicioEstudiante servicioEstudiante = new ServicioEstudiante(servicioCurso, estudianteRepositorio);
+
+        ControladorLogIn controladorLogIn = new ControladorLogIn();
+        ControladorPantallaCursosEncontrados controladorPantallaCursosEncontrados = new ControladorPantallaCursosEncontrados(servicioEstudiante, servicioCurso);
+        ControladorPantallaBusqueda controladorPantallaBusqueda = new ControladorPantallaBusqueda();
+        ControladorPantallaInscripcion controladorPantallaInscripcion = new ControladorPantallaInscripcion();
+        ControladorPantallaInscribirCurso controladorPantallaInscribirCurso = new ControladorPantallaInscribirCurso(servicioEstudiante);
+
+        SceneManager.getInstance().getControllers().put("/Pantallas/PantallaLogin.fxml", controladorLogIn);
+        SceneManager.getInstance().getControllers().put("/Pantallas/pantallaInscripcion.fxml", controladorPantallaInscripcion);
+        SceneManager.getInstance().getControllers().put("/Pantallas/pantallaBusqueda.fxml", controladorPantallaBusqueda);
+        SceneManager.getInstance().getControllers().put("/Pantallas/pantallaCursosEncontrados.fxml", controladorPantallaCursosEncontrados);
+        SceneManager.getInstance().getControllers().put("/Pantallas/pantallaInscribirCurso.fxml", controladorPantallaInscribirCurso);
         // Set the primary stage in SceneManager
         SceneManager.getInstance().setPrimaryStage(stage);
-
         // Load custom font
         Font.loadFont(getClass().getResourceAsStream("/fonts/Lato-Bold.ttf"), 10);
         Font.loadFont(getClass().getResourceAsStream("/fonts/LeagueGothic.ttf"), 10);
@@ -29,22 +53,97 @@ public class Principal extends Application {
         stage.setResizable(true);
 
         // Switch to the login scene using SceneManager
-        SceneManager.getInstance().switchScene("/Pantallas/PantallaLogin.fxml", "/CssStyle/LoginStyle.css");
+
+        SceneManager.getInstance().switchScene("/Pantallas/PantallaLogin.fxml", "/CssStyle/LoginStyle.css", false);
 
         stage.show();
     }
 
     public static void main(String[] args) throws SQLException {
         launch();
+    }
+
+
+}
+
 /*
+
+        try {
+            // Crear instancias de Profesor y Materia
+            Profesor profesor = new Profesor(); // Asegúrate de que esta clase tenga al menos el método setId() o similar
+            profesor.setId(30); // Suponiendo que el profesor con ID 1 ya existe en la base de datos
+            Materia materia = new Materia();
+            materia.setiD("1"); // Asegúrate de que la materia con ID 1 ya exista
+
+            // Crear lista de Horarios (asume que tienes una clase Horario y sus métodos)
+            SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+            Date horaInicio = dateFormat.parse("12:00"); // Ejemplo de hora de inicio
+            Date horaFin = dateFormat.parse("13:00"); // Ejemplo de hora de fin
+            List<Horario> horarios = new ArrayList<>();
+            Horario horario1 = new Horario("Sabado", horaInicio, horaFin);
+            horarios.add(horario1);
+
+            // Crear lista de Salas (asume que tienes una clase Sala y sus métodos)
+            List<Sala> salas = new ArrayList<>();
+            Sala sala1 = new Sala();
+            sala1.setiD("14"); // Asegúrate de que esta sala exista en la base de datos
+            salas.add(sala1);
+
+            // Capacidad y cupos del curso
+            int capacidad = 30;
+            int cupos = 25;
+
+            // Crear instancia del servicio y ejecutar la función
+            ServicioProfesor servicioProfesor = new ServicioProfesor();
+            Curso nuevoCurso = servicioProfesor.crearYAsignarCurso(
+                    profesor, "81", materia, capacidad, horarios, salas, cupos
+            );
+
+            if (nuevoCurso != null) {
+                System.out.println("Curso creado y asignado con éxito:");
+                System.out.println("ID del curso: " + nuevoCurso.getiD());
+                System.out.println("Materia: " + nuevoCurso.getMateria().getiD());
+                System.out.println("Profesor asignado: " + profesor.getId());
+            } else {
+                System.out.println("Error al crear o asignar el curso.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error de SQL: " + e.getMessage());
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
         Scanner scanner = new Scanner(System.in);
         ServicioEstudiante servicioEstudiante = new ServicioEstudiante();
         EstudianteRepositorio estudianteRepositorio = new EstudianteRepositorio();
         CursoRepositorio cursoRepositorio = new CursoRepositorio();
 
-        Estudiante estudiante = null;
+        Estudiante estudiante = estudianteRepositorio.buscarPorId(1);
+        Curso curso = cursoRepositorio.obtenerCursoPorId("1");
+        servicioEstudiante.agregarCursoAlCarrito(estudiante, curso);
+
+        ArrayList<String> materiasCarrito = servicioEstudiante.verCarritoToString(estudiante);
+        if (materiasCarrito != null) {
+            for (String materia : materiasCarrito) {
+                System.out.println(materia); // Aquí mostramos cada curso en el carrito
+            }
+        } else {
+            System.out.println("El carrito está vacío o el estudiante no es válido.");
+        }
+
+
+    }
+}
+
+
 
         try {
+            Scanner scanner = new Scanner(System.in);
+            ServicioEstudiante servicioEstudiante = new ServicioEstudiante();
+            EstudianteRepositorio estudianteRepositorio = new EstudianteRepositorio();
+            CursoRepositorio cursoRepositorio = new CursoRepositorio();
+            Estudiante estudiante = null;
             System.out.print("Introduce el ID del estudiante: ");
             int estudianteId = scanner.nextInt();
             estudiante = estudianteRepositorio.buscarPorId(estudianteId);
@@ -93,6 +192,7 @@ public class Principal extends Application {
                                 System.out.println("No se pudo inscribir el curso: " + cursoEnCarrito.getMateria().getNombre());
                             }
                         }
+
                         break;
 
                     case 3:
@@ -126,6 +226,7 @@ public class Principal extends Application {
         }
 
     }
- */
-    }
+
 }
+
+ */

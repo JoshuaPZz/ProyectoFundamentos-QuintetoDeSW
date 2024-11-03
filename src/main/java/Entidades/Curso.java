@@ -1,6 +1,9 @@
 package Entidades;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -10,7 +13,7 @@ public class Curso {
     private int cupos; //Hace referencia a los cupos maximos
 
     private int capacidad; //la capacidad ocupada actualmente
-    private List<Date> horarios;
+    private List<Horario> horarios;
     private Materia materia;
     private List<Sala> salas;
 
@@ -32,11 +35,11 @@ public class Curso {
         this.capacidad = capacidad;
     }
 
-    public List<Date> getHorarios() {
+    public List<Horario> getHorarios() {
         return horarios;
     }
 
-    public void setHorarios(List<Date> horarios) {
+    public void setHorarios(List<Horario> horarios) {
         this.horarios = horarios;
     }
 
@@ -76,6 +79,41 @@ public class Curso {
 
     public void setCupos(int cupos) {this.cupos = cupos;}
 
+    @Override
+    public String toString() {
+
+        StringBuilder resumen = new StringBuilder();
+        SimpleDateFormat diaFormat = new SimpleDateFormat("EEEE"); // Formato solo del día
+        SimpleDateFormat horaFormat = new SimpleDateFormat("HH:mm"); // Formato solo de hora
+
+        // Detalles de la materia
+        resumen.append("Materia: ").append(materia.getNombre()).append("\n")
+                .append("Créditos: ").append(materia.getCreditos()).append("\n")
+                .append("Descripción: ").append(materia.getDescripcion()).append("\n")
+                .append("Horario: ");
+
+        // Construimos el resumen para cada horario sin agrupar por día
+        for (int i = 0; i < horarios.size(); i++) {
+            Horario horario = horarios.get(i);
+            String dia = horario.getDia();
+            String horaInicio = horaFormat.format(horario.getHoraInicio());
+            String horaFin = horaFormat.format(horario.getHoraFin());
+
+            resumen.append(dia).append(" ").append(horaInicio).append("-").append(horaFin);
+
+            if (i < horarios.size() - 1) {
+                resumen.append(", ");
+            }
+        }
+        resumen.append("\n" + "Salas: ");
+        for (Sala sala : salas) {
+            resumen.append(sala.getUbicacion()).append(" ");
+        }
+
+        return resumen.toString().trim();
+
+    }
+
     public Curso() {
         this.iD = "";
         this.cupos = 0;
@@ -87,8 +125,18 @@ public class Curso {
         this.estudiantes = new ArrayList<>();
     }
 
-    public Curso(String ID, Materia materia, int capacidad, List<Date> horarios, List<Sala> salas, int cupos) {
+    public Curso(String ID, Materia materia, int capacidad, List<Horario> horarios, List<Sala> salas, int cupos) {
         this.iD = ID;
+        this.capacidad = capacidad;
+        this.horarios = horarios;
+        this.materia = materia;
+        this.salas = salas;
+        this.profesores = new ArrayList<>();
+        this.estudiantes = new ArrayList<>();
+        this.cupos = cupos;
+    }
+
+    public Curso(Materia materia, int capacidad, List<Horario> horarios, List<Sala> salas, int cupos) {
         this.capacidad = capacidad;
         this.horarios = horarios;
         this.materia = materia;
