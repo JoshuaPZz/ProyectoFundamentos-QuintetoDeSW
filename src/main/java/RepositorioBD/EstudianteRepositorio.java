@@ -108,7 +108,7 @@ public class EstudianteRepositorio {
     }
 
     public void agregarAlCarrito(int estudianteId, int cursoId) throws SQLException {
-        String sql = "INSERT IGNORE INTO Carrito (estudiante_id, curso_id) VALUES (?, ?)";
+        String sql = "INSERT INTO Carrito (estudiante_id, curso_id) VALUES (?, ?)";
         try (Connection conn = ConexionBaseDeDatos.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, estudianteId);
