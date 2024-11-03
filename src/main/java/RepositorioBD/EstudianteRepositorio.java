@@ -22,11 +22,23 @@ public class EstudianteRepositorio {
             statement = connection.prepareStatement(sql);
             statement.setInt(1, id);
             resultSet = statement.executeQuery();
+
             if (resultSet.next()) {
-                estudiante = new Estudiante();
-                estudiante.setId(resultSet.getInt("id"));
-                estudiante.setNombre(resultSet.getString("nombre"));
-                estudiante.setCreditosmax(resultSet.getInt("creditos_max"));
+                // Obtener datos principales del estudiante
+                int estudianteId = resultSet.getInt("id");
+                String nombre = resultSet.getString("nombre");
+                String documento = resultSet.getString("documento");
+                String correo = resultSet.getString("correo");
+                String clave = resultSet.getString("clave");
+                int creditosMax = resultSet.getInt("creditos_max");
+
+                // Consultar cursos, cursosVistos, y carrito
+                List<Curso> cursos = obtenerCursosPorEstudianteId(estudianteId);
+                List<Curso> cursosVistos = obtenerCursosVistosPorEstudianteId(estudianteId);
+                List<Curso> carrito = obtenerCarritoPorEstudianteId(estudianteId);
+
+                // Llenar el constructor completo
+                estudiante = new Estudiante(estudianteId, nombre, documento, correo, clave, creditosMax, cursos, cursosVistos, carrito);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -38,6 +50,121 @@ public class EstudianteRepositorio {
         }
 
         return estudiante; // Retorna null si no se encuentra el estudiante
+    }
+
+    private List<Curso> obtenerCursosPorEstudianteId(int estudianteId) {
+        List<Curso> cursos = new ArrayList<>();
+        MateriaRepositorio materiaRepositorio = new MateriaRepositorio();
+        CursoRepositorio cursoRepositorio = new CursoRepositorio();
+        String sql = "SELECT c.id, c.capacidad, c.cupos, m.id AS materia_id" +
+                "FROM Curso c " +
+                "JOIN Materia m ON c.materia_id = m.id " +
+                "JOIN Inscripcion i ON c.id = i.curso_id " +
+                "WHERE i.estudiante_id = ?";
+
+        try (Connection connection = ConexionBaseDeDatos.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, estudianteId);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                String cursoId = resultSet.getString("id");
+                int capacidad = resultSet.getInt("capacidad");
+                int cupos = resultSet.getInt("cupos");
+
+                // Obtener la entidad Materia
+                Materia materia = materiaRepositorio.obtenerMateriaPorId(Integer.parseInt(resultSet.getString("materia_id")));
+
+                // Obtener horarios y salas asociados al curso
+                List<Horario> horarios = cursoRepositorio.obtenerHorarios(cursoId);
+                List<Sala> salas = cursoRepositorio.obtenerSalasPorCursoId(cursoId);
+
+                // Crear el objeto Curso con todos los atributos completos
+                Curso curso = new Curso(cursoId, materia, capacidad, horarios, salas, cupos);
+                cursos.add(curso);
+                cursos.add(curso);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return cursos;
+    }
+
+    private List<Curso> obtenerCursosVistosPorEstudianteId(int estudianteId) {
+        List<Curso> cursosVistos = new ArrayList<>();
+        MateriaRepositorio materiaRepositorio = new MateriaRepositorio();
+        CursoRepositorio cursoRepositorio = new CursoRepositorio();
+        String sql = "SELECT c.id, c.capacidad, c.cupos, m.id AS materia_id " +
+                "FROM Curso c " +
+                "JOIN Materia m ON c.materia_id = m.id " +
+                "JOIN Inscripcion i ON c.id = i.curso_id " +
+                "WHERE i.estudiante_id = ? AND i.ha_aprobado = TRUE";
+
+        try (Connection connection = ConexionBaseDeDatos.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, estudianteId);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                String cursoId = resultSet.getString("id");
+                int capacidad = resultSet.getInt("capacidad");
+                int cupos = resultSet.getInt("cupos");
+
+                // Obtener la entidad Materia
+                Materia materia = materiaRepositorio.obtenerMateriaPorId(Integer.parseInt(resultSet.getString("materia_id")));
+
+                // Obtener horarios y salas asociados al curso
+                List<Horario> horarios = cursoRepositorio.obtenerHorarios(cursoId);
+                List<Sala> salas = cursoRepositorio.obtenerSalasPorCursoId(cursoId);
+
+                // Crear el objeto Curso con todos los atributos completos
+                Curso curso = new Curso(cursoId, materia, capacidad, horarios, salas, cupos);
+                cursosVistos.add(curso);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return cursosVistos;
+    }
+
+    private List<Curso> obtenerCarritoPorEstudianteId(int estudianteId) {
+        List<Curso> carrito = new ArrayList<>();
+        MateriaRepositorio materiaRepositorio = new MateriaRepositorio();
+        CursoRepositorio cursoRepositorio = new CursoRepositorio();
+        String sql = "SELECT c.id, c.capacidad, c.cupos, m.id AS materia_id " +
+                "FROM Curso c " +
+                "JOIN Materia m ON c.materia_id = m.id " +
+                "JOIN Carrito car ON c.id = car.curso_id " +
+                "WHERE car.estudiante_id = ?";
+
+        try (Connection connection = ConexionBaseDeDatos.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, estudianteId);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                String cursoId = resultSet.getString("id");
+                int capacidad = resultSet.getInt("capacidad");
+                int cupos = resultSet.getInt("cupos");
+
+                // Obtener la entidad Materia
+                Materia materia = materiaRepositorio.obtenerMateriaPorId(Integer.parseInt(resultSet.getString("materia_id")));
+
+                // Obtener horarios y salas asociados al curso
+                List<Horario> horarios = cursoRepositorio.obtenerHorarios(cursoId);
+                List<Sala> salas = cursoRepositorio.obtenerSalasPorCursoId(cursoId);
+
+                // Crear el objeto Curso con todos los atributos completos
+                Curso curso = new Curso(cursoId, materia, capacidad, horarios, salas, cupos);
+                carrito.add(curso);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return carrito;
     }
 
     public Estudiante validarCredenciales(String usuario, String contrasenia) {
@@ -57,7 +184,7 @@ public class EstudianteRepositorio {
             e.printStackTrace();
             System.err.println("Error en la consulta de base de datos: " + e.getMessage());
         }
-        Estudiante estudiante = new Estudiante();
+        Estudiante estudiante;
         EstudianteRepositorio estudianteRepositorio = new EstudianteRepositorio();
         estudiante = estudianteRepositorio.buscarPorId(estudianteId);
         Sesion.getInstancia().setEstudiante(estudiante);
@@ -118,7 +245,7 @@ public class EstudianteRepositorio {
     }
 
 
-
+/*
     public List<Estudiante> listaEstudiante() throws SQLException {
         List<Estudiante> estudiantes = new ArrayList<>();
         String consulta = "SELECT * FROM Estudiante";
@@ -148,6 +275,7 @@ public class EstudianteRepositorio {
         }
         return estudiantes;
     }
+ */
 
     private void obtenerCursosActivos(Estudiante estudiante) throws SQLException {
         String queryCurso = "SELECT c.id, c.capacidad, m.id AS materia_id, m.nombre AS materia_nombre " +
@@ -291,7 +419,7 @@ public class EstudianteRepositorio {
 
         return cursos;
     }
-//
+
     public List<Curso> obtenerCursosInscritos(int estudianteId) throws SQLException {
         List<Curso> cursosInscritos = new ArrayList<>();
         String queryCurso = "SELECT c.id, c.capacidad, m.id AS materia_id, m.nombre AS materia_nombre " +
@@ -370,7 +498,7 @@ public class EstudianteRepositorio {
     public Boolean eliminarInscripcion(int estudianteId, String cursoId) throws SQLException {
         String sql = "DELETE FROM Inscripcion WHERE estudiante_id = ? and curso_id = ? AND ha_aprobado = 0";
         try (Connection connection = ConexionBaseDeDatos.getConnection();
-        PreparedStatement ps = connection.prepareStatement(sql)) {
+             PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, estudianteId);
             ps.setString(2, cursoId);
             int rowsAffected = ps.executeUpdate();
