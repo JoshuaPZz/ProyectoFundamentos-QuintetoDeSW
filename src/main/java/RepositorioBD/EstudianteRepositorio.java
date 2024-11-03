@@ -291,7 +291,7 @@ public class EstudianteRepositorio {
 
         return cursos;
     }
-
+//
     public List<Curso> obtenerCursosInscritos(int estudianteId) throws SQLException {
         List<Curso> cursosInscritos = new ArrayList<>();
         String queryCurso = "SELECT c.id, c.capacidad, m.id AS materia_id, m.nombre AS materia_nombre " +
