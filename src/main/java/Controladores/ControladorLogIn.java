@@ -33,7 +33,7 @@ public class ControladorLogIn {
     private Label labelError;
 
     @FXML
-    void logInButtonPressed(ActionEvent event) {
+    void logInButtonPressed(ActionEvent event) throws SQLException {
 
         if (textPass.getText().isEmpty() || textUser.getText().isEmpty()) {
             labelError.setText("Por favor ingrese su usuario y contraseña.");
