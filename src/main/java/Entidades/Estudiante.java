@@ -101,12 +101,16 @@ public class Estudiante {
         return this.carrito;
     }
 
-
-    public Estudiante() {
-        this.cursos = FXCollections.observableArrayList();
-        this.carrito = FXCollections.observableArrayList();
-        this.cursosVistos = FXCollections.observableArrayList();
-
+    public Estudiante(int id, String nombre, String documento, String correo, String clave, int creditosmax, List<Curso> cursos, List<Curso> cursosVistos, List<Curso> carrito) {
+        this.id = id;
+        this.nombre = nombre;
+        this.documento = documento;
+        this.correo = correo;
+        this.clave = clave;
+        this.creditosmax = creditosmax;
+        this.cursos = FXCollections.observableList(cursos);
+        this.carrito = FXCollections.observableList(carrito);
+        this.cursosVistos = FXCollections.observableList(cursosVistos);
     }
 
 }
