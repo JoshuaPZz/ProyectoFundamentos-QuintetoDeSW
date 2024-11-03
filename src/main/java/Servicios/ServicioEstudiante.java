@@ -20,7 +20,7 @@ public class ServicioEstudiante {
     }
 
     //Metodo para agregar un curso al carrito del estudiante
-    public boolean agregarCursoAlCarrito(Estudiante estudiante, Curso curso) {
+    public boolean agregarCursoAlCarrito(Estudiante estudiante, Curso curso) throws SQLException {
         if (estudiante != null && curso != null) {
             List<Curso> cursosInscritos = estudiante.getCursos();
             List<Curso> carrito = estudiante.getCarrito();
@@ -34,7 +34,7 @@ public class ServicioEstudiante {
                 System.out.println("El curso ya está en el carrito.");
                 return false;
             }
-
+            estudianteRepositorio.agregarAlCarrito(estudiante.getId(), Integer.parseInt(curso.getiD()));
             carrito.add(curso);
             return true;
         }

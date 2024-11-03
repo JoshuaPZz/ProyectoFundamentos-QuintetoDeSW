@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class ControladorPantallaCursosEncontrados {
@@ -54,7 +55,7 @@ public class ControladorPantallaCursosEncontrados {
     }
 
     @FXML
-    public void agregarButtonPressed(ActionEvent actionEvent) {
+    public void agregarButtonPressed(ActionEvent actionEvent) throws SQLException {
 
         this.servicioEstudiante.agregarCursoAlCarrito(Sesion.getInstancia().getEstudiante(), this.servicioCurso.buscarCursoPorID(textIdAgregar.getText()));
 
