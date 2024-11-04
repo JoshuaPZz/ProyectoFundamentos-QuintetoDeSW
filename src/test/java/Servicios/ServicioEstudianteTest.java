@@ -1,210 +1,103 @@
 package Servicios;
 
 import Entidades.*;
+import RepositorioBD.CursoRepositorio;
+import RepositorioBD.EstudianteRepositorio;
+import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import java.sql.SQLException;
 import java.util.*;
 
 public class ServicioEstudianteTest {
+    private ServicioEstudiante servicioEstudiante;
+    private ServicioCurso servicioCurso;
+    private EstudianteRepositorio estudianteRepositorio;
+    private CursoRepositorio cursoRepositorio;
+    private Estudiante estudiante;
+    private Curso curso;
 
-    @Test
-    public void testAgregarCursoAlCarrito_CursoNuevo() {
-        ServicioEstudiante servicioEstudiante = new ServicioEstudiante();
+    @Before
+    public void setUp() throws SQLException {
+        cursoRepositorio = new CursoRepositorio();
+        estudianteRepositorio = new EstudianteRepositorio();
+        servicioCurso = new ServicioCurso(cursoRepositorio, estudianteRepositorio);
+        servicioEstudiante = new ServicioEstudiante(servicioCurso, estudianteRepositorio);
 
-        Estudiante estudiante = new Estudiante();
-        estudiante.setCarrito(new ArrayList<>());
-        estudiante.setCursos(new ArrayList<>());
-
-        Curso curso = new Curso();
-        curso.setiD("CURSO1");
-
-        boolean resultado = servicioEstudiante.agregarCursoAlCarrito(estudiante, curso);
-
-        assertTrue(resultado, "Debería agregar el curso al carrito exitosamente");
-        assertTrue(estudiante.getCarrito().contains(curso), "El curso debería estar en el carrito");
-    }
-
-    @Test
-    public void testAgregarCursoAlCarrito_CursoYaInscrito() {
-        ServicioEstudiante servicioEstudiante = new ServicioEstudiante();
-
-        Estudiante estudiante = new Estudiante();
-        estudiante.setCarrito(new ArrayList<>());
-        estudiante.setCursos(new ArrayList<>());
-
-        Curso curso = new Curso();
-        curso.setiD("CURSO1");
-
-        estudiante.getCursos().add(curso);
-
-        boolean resultado = servicioEstudiante.agregarCursoAlCarrito(estudiante, curso);
-
-        assertFalse(resultado, "No debería agregar un curso ya inscrito");
-        assertFalse(estudiante.getCarrito().contains(curso), "El curso no debería estar en el carrito");
-    }
-
-    @Test
-    public void testAgregarCursoAlCarrito_CursoYaEnCarrito() {
-        ServicioEstudiante servicioEstudiante = new ServicioEstudiante();
-
-        Estudiante estudiante = new Estudiante();
-        estudiante.setCarrito(new ArrayList<>());
-        estudiante.setCursos(new ArrayList<>());
-
-        Curso curso = new Curso();
-        curso.setiD("CURSO1");
-
-        estudiante.getCarrito().add(curso);
-
-        boolean resultado = servicioEstudiante.agregarCursoAlCarrito(estudiante, curso);
-
-        assertFalse(resultado, "No debería agregar un curso que ya está en el carrito");
-    }
-
-    @Test
-    public void testAgregarCursoAlCarrito_EstudianteNull() {
-        ServicioEstudiante servicioEstudiante = new ServicioEstudiante();
-        Curso curso = new Curso();
-
-        boolean resultado = servicioEstudiante.agregarCursoAlCarrito(null, curso);
-
-        assertFalse(resultado, "Debería retornar false cuando el estudiante es null");
-    }
-
-    @Test
-    public void testVerCarrito_EstudianteConCarrito() {
-        ServicioEstudiante servicioEstudiante = new ServicioEstudiante();
-
-        Estudiante estudiante = new Estudiante();
-        estudiante.setCarrito(new ArrayList<>());
-
-        Curso curso = new Curso();
-        Materia materia = new Materia();
-        materia.setNombre("Matemáticas");
-        curso.setMateria(materia);
-
-        estudiante.getCarrito().add(curso);
-
-        List<Materia> materias = servicioEstudiante.verCarrito(estudiante);
-
-        assertNotNull(materias, "La lista de materias no debería ser null");
-        assertEquals(1, materias.size(), "Debería haber una materia en el carrito");
-        assertEquals("Matemáticas", materias.get(0).getNombre(), "El nombre de la materia debería coincidir");
-    }
-
-    @Test
-    public void testVerCarrito_EstudianteNull() {
-        ServicioEstudiante servicioEstudiante = new ServicioEstudiante();
-
-        List<Materia> materias = servicioEstudiante.verCarrito(null);
-
-        assertNull(materias, "Debería retornar null cuando el estudiante es null");
-    }
-
-    @Test
-    public void testRemoverCurso_CursoInscrito() {
-        ServicioEstudiante servicioEstudiante = new ServicioEstudiante();
-
-        Estudiante estudiante = new Estudiante();
+        // Configurar estudiante de prueba
+        estudiante = new Estudiante();
         estudiante.setId(1);
-        estudiante.setCursos(new ArrayList<>());
-
-        Curso curso = new Curso();
-        curso.setiD("CURSO1");
-        curso.setEstudiantes(new ArrayList<>());
-
-        estudiante.getCursos().add(curso);
-        curso.getEstudiantes().add(estudiante);
-
-        try {
-            boolean resultado = servicioEstudiante.removerCurso(estudiante, curso);
-            assertFalse(resultado, "Debería retornar false ya que no hay conexión a BD");
-        } catch (SQLException e) {
-            fail("No debería lanzar excepción: " + e.getMessage());
-        }
-    }
-
-    @Test
-    public void testObtenerCursosEstudiante_EstudianteExistente() {
-        ServicioEstudiante servicioEstudiante = new ServicioEstudiante();
-
-        Estudiante estudiante = new Estudiante();
-        estudiante.setId(1);
-
-        List<Curso> cursos = servicioEstudiante.obtenerCursosEstudiante(estudiante);
-
-        assertNotNull(cursos, "La lista no debería ser null");
-        assertTrue(cursos.isEmpty(), "La lista debería estar vacía ya que no hay conexión a BD");
-    }
-
-    @Test
-    public void testInscribirCurso_CursoEnCarrito() {
-        ServicioEstudiante servicioEstudiante = new ServicioEstudiante();
-
-        Estudiante estudiante = new Estudiante();
-        estudiante.setId(1);
-        estudiante.setCarrito(new ArrayList<>());
-        estudiante.setCursos(new ArrayList<>());
-        estudiante.setCursosVistos(new ArrayList<>());
+        estudiante.setNombre("Test Student");
         estudiante.setCreditosmax(20);
+        estudiante.setCursos(new ArrayList<>());
+        estudiante.setCarrito(new ArrayList<>());
+        estudiante.setCursosVistos(new ArrayList<>());
 
-        Curso curso = new Curso();
-        curso.setiD("CURSO1");
-        curso.setEstudiantes(new ArrayList<>());
+        // Configurar curso de prueba
         Materia materia = new Materia();
+        materia.setiD("MAT101");
         materia.setCreditos(3);
-        materia.setiD("MAT1");
+        materia.setNombre("Matemáticas");
+
+        List<Horario> horarios = new ArrayList<>();
+        String dia = "Lunes"; // Definir el día de la semana
+        Date horaInicio = ServicioCurso.crearHorario(2024, Calendar.JANUARY, 1, 9);
+        Date horaFin = ServicioCurso.crearHorario(2024, Calendar.JANUARY, 1, 11);
+        horarios.add(new Horario(dia, horaInicio, horaFin));
+
+        curso = new Curso();
         curso.setMateria(materia);
         curso.setCapacidad(30);
+        curso.setHorarios(horarios);
+        curso.setSalas(new ArrayList<>());
+        curso.setProfesores(new ArrayList<>());
+        curso.setEstudiantes(new ArrayList<>());
+        curso.setiD("CURSO101");
 
-        estudiante.getCarrito().add(curso);
-
-        boolean resultado = servicioEstudiante.inscribirCurso(estudiante, curso);
-
-        assertFalse(resultado, "Debería retornar false ya que no hay conexión a BD");
+        // Guardar en la base de datos
+        cursoRepositorio.crearCurso(curso);
     }
 
     @Test
-    public void testInscribirCurso_CursoNoEnCarrito() {
-        ServicioEstudiante servicioEstudiante = new ServicioEstudiante();
+    public void testAgregarCursoAlCarritoExitoso() throws SQLException {
+        boolean resultado = servicioEstudiante.agregarCursoAlCarrito(estudiante, curso);
 
-        Estudiante estudiante = new Estudiante();
-        estudiante.setCarrito(new ArrayList<>());
-
-        Curso curso = new Curso();
-        curso.setiD("CURSO1");
-
-        boolean resultado = servicioEstudiante.inscribirCurso(estudiante, curso);
-
-        assertFalse(resultado, "No debería inscribir un curso que no está en el carrito");
+        assertTrue(resultado, "Debería agregar el curso al carrito");
+        List<Curso> carrito = servicioEstudiante.obtenerCarrito(estudiante.getId());
+        assertTrue(carrito.contains(curso), "El curso debería estar en el carrito");
     }
 
     @Test
-    public void testInscribirCurso_ExcedeCreditos() {
-        ServicioEstudiante servicioEstudiante = new ServicioEstudiante();
+    public void testAgregarCursoAlCarritoDuplicado() throws SQLException {
+        servicioEstudiante.agregarCursoAlCarrito(estudiante, curso);
+        boolean resultado = servicioEstudiante.agregarCursoAlCarrito(estudiante, curso);
 
-        Estudiante estudiante = new Estudiante();
-        estudiante.setCarrito(new ArrayList<>());
-        estudiante.setCursos(new ArrayList<>());
-        estudiante.setCreditosmax(3);
+        assertFalse(resultado, "No debería agregar un curso duplicado al carrito");
+    }
 
-        Curso cursoExistente = new Curso();
-        Materia materiaExistente = new Materia();
-        materiaExistente.setCreditos(3);
-        cursoExistente.setMateria(materiaExistente);
-        estudiante.getCursos().add(cursoExistente);
+    @Test
+    public void testAgregarCursoAlCarritoCursoYaInscrito() throws SQLException {
+        estudianteRepositorio.inscribirCurso(estudiante.getId(), curso.getiD());
+        boolean resultado = servicioEstudiante.agregarCursoAlCarrito(estudiante, curso);
 
-        Curso cursoNuevo = new Curso();
-        cursoNuevo.setiD("CURSO2");
-        Materia materiaNueva = new Materia();
-        materiaNueva.setCreditos(3);
-        cursoNuevo.setMateria(materiaNueva);
+        assertFalse(resultado, "No debería agregar un curso ya inscrito al carrito");
+    }
 
-        estudiante.getCarrito().add(cursoNuevo);
+    @Test
+    public void testObtenerCarritoVacio() throws SQLException {
+        List<Curso> carrito = servicioEstudiante.obtenerCarrito(estudiante.getId());
 
-        boolean resultado = servicioEstudiante.inscribirCurso(estudiante, cursoNuevo);
+        assertNotNull(carrito, "El carrito no debería ser null");
+        assertTrue(carrito.isEmpty(), "El carrito debería estar vacío");
+    }
 
-        assertFalse(resultado, "No debería inscribir un curso que excede el límite de créditos");
+    @Test
+    public void testObtenerCarritoConCursos() throws SQLException {
+        servicioEstudiante.agregarCursoAlCarrito(estudiante, curso);
+        List<Curso> carrito = servicioEstudiante.obtenerCarrito(estudiante.getId());
+
+        assertNotNull(carrito, "El carrito no debería ser null");
+        assertFalse(carrito.isEmpty(), "El carrito no debería estar vacío");
+        assertEquals(carrito.size(), 1, "Debería haber un curso en el carrito");
     }
 }

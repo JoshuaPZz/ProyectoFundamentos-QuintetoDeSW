@@ -2,12 +2,8 @@ package RepositorioBD;
 import Entidades.*;
 
 import java.sql.*;
-import java.time.DayOfWeek;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Date;
 
 public class CursoRepositorio{
     private MateriaRepositorio materiaRepositorio;

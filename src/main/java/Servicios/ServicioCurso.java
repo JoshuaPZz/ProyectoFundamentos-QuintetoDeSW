@@ -174,7 +174,6 @@ public class ServicioCurso {
 
     public boolean asignarSalaACurso(String idCurso, Sala sala) {
         CursoRepositorio repositorioCurso = new CursoRepositorio();
-
         try {
             Curso curso = repositorioCurso.obtenerCursoPorId(idCurso);
             if (curso != null) {
