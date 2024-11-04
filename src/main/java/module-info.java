@@ -9,4 +9,6 @@ module org.example.inscripcionmaterias {
     exports Entidades;
     exports Controladores;
     opens Controladores to javafx.fxml;
+    exports Servicios;
+    opens Servicios to javafx.fxml;
 }

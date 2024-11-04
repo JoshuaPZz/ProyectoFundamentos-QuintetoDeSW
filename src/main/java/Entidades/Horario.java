@@ -13,6 +13,18 @@ public class Horario {
         this.horaFin = horaFin;
     }
 
+    public void setDia(String dia) {
+        this.dia = dia;
+    }
+
+    public void setHoraInicio(Date horaInicio) {
+        this.horaInicio = horaInicio;
+    }
+
+    public void setHoraFin(Date horaFin) {
+        this.horaFin = horaFin;
+    }
+
     public String getDia() {
         return dia;
     }

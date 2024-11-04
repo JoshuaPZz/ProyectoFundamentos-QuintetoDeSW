@@ -32,7 +32,7 @@ public class Principal extends Application {
         ServicioSala servicioSala = new ServicioSala();
         ServicioEstudiante servicioEstudiante = new ServicioEstudiante(servicioCurso, estudianteRepositorio);
 
-        ControladorLogIn controladorLogIn = new ControladorLogIn(estudianteRepositorio, profesorRepositorio);
+        ControladorLogIn controladorLogIn = new ControladorLogIn();
         ControladorPantallaCursosEncontrados controladorPantallaCursosEncontrados = new ControladorPantallaCursosEncontrados(servicioEstudiante, servicioCurso);
         ControladorPantallaBusqueda controladorPantallaBusqueda = new ControladorPantallaBusqueda();
         ControladorPantallaInscripcion controladorPantallaInscripcion = new ControladorPantallaInscripcion();
