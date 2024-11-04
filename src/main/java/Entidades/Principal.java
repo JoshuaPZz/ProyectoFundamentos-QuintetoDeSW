@@ -64,12 +64,8 @@ public class Principal extends Application {
     public static void main(String[] args) throws SQLException {
         launch();
     }
-
-
 }
-
 /*
-
         try {
             // Crear instancias de Profesor y Materia
             Profesor profesor = new Profesor(); // Asegúrate de que esta clase tenga al menos el método setId() o similar

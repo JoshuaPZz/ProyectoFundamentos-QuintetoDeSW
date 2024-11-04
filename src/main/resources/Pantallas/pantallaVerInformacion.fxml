@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER" fillWidth="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox prefHeight="338.0" prefWidth="465.0">
+         <children>
+            <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="40.0" prefWidth="334.0" text="SUS CLASES INSCRITAS">
+               <font>
+                  <Font name="League Gothic Regular" size="32.0" />
+               </font>
+            </Label>
+            <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="298.0" prefWidth="419.0" VBox.vgrow="ALWAYS" />
+            <ListView fx:id="listViewCursos" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="332.0" prefWidth="0.0" />
+         </children>
+      </VBox>
+      <HBox alignment="CENTER" nodeOrientation="RIGHT_TO_LEFT" prefHeight="42.0" prefWidth="372.0">
+         <VBox.margin>
+            <Insets bottom="10.0" />
+         </VBox.margin>
+         <children>
+            <Pane prefHeight="39.0" prefWidth="200.0" />
+         </children>
+      </HBox>
+      <HBox prefHeight="49.0" prefWidth="213.0">
+         <children>
+            <Button fx:id="botonVerInfo" alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#botonVerInfoPressed" prefHeight="48.0" prefWidth="108.0" text="VER INFORMACION" textAlignment="CENTER" HBox.hgrow="ALWAYS">
+               <font>
+                  <Font name="League Gothic Regular" size="22.0" />
+               </font>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+               <cursor>
+                  <Cursor fx:constant="OPEN_HAND" />
+               </cursor>
+            </Button>
+         </children>
+      </HBox>
+   </children>
+</VBox>
