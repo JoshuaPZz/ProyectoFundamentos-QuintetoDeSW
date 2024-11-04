@@ -6,9 +6,9 @@ import RepositorioBD.EstudianteRepositorio;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.*;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import java.sql.SQLException;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ServicioCursoTest {
     private ServicioCurso servicioCurso;
@@ -17,7 +17,7 @@ public class ServicioCursoTest {
     private Curso curso;
     private Estudiante estudiante;
 
-    @Before
+    @BeforeEach
     public void setUp() throws SQLException {
         cursoRepositorio = new CursoRepositorio();
         estudianteRepositorio = new EstudianteRepositorio();
@@ -78,9 +78,9 @@ public class ServicioCursoTest {
 
         Curso nuevoCurso = servicioCurso.crearCurso(materia, 25, horarios, salas, 25, profesores);
 
-        assertNotNull("El curso creado no debería ser null", nuevoCurso);
-        assertEquals("La capacidad del curso no coincide", 25, nuevoCurso.getCapacidad());
-        assertEquals("La materia del curso no coincide", materia, nuevoCurso.getMateria());
+        assertNotNull(nuevoCurso, "El curso creado no debería ser null");
+        assertEquals(25, nuevoCurso.getCapacidad(), "La capacidad del curso no coincide");
+        assertEquals(materia, nuevoCurso.getMateria(), "La materia del curso no coincide");
     }
 
     @Test
@@ -88,7 +88,7 @@ public class ServicioCursoTest {
         cursoRepositorio.crearCurso(curso);
         Curso cursoConsultado = servicioCurso.consultarCurso(curso);
 
-        assertNotNull("El curso consultado no debería ser null", cursoConsultado);
+        assertNotNull(cursoConsultado, "El curso consultado no debería ser null");
         assertEquals(Optional.of("El ID del curso consultado no coincide"), curso.getiD(), cursoConsultado.getiD());
     }
 
@@ -98,7 +98,7 @@ public class ServicioCursoTest {
         cursoInexistente.setiD("NOID");
 
         Curso resultado = servicioCurso.consultarCurso(cursoInexistente);
-        assertNull("El resultado debería ser null para un curso inexistente", resultado);
+        assertNull(resultado, "El resultado debería ser null para un curso inexistente");
     }
 
     @Test
@@ -106,8 +106,8 @@ public class ServicioCursoTest {
         cursoRepositorio.crearCurso(curso);
         List<Estudiante> estudiantes = servicioCurso.verEstudiantes(curso);
 
-        assertNotNull("La lista de estudiantes no debería ser null", estudiantes);
-        assertTrue("La lista de estudiantes debería estar vacía", estudiantes.isEmpty());
+        assertNotNull(estudiantes, "La lista de estudiantes no debería ser null");
+        assertTrue(estudiantes.isEmpty(), "La lista de estudiantes debería estar vacía");
     }
 
     @Test
@@ -117,9 +117,9 @@ public class ServicioCursoTest {
 
         List<Estudiante> estudiantes = servicioCurso.verEstudiantes(curso);
 
-        assertNotNull("La lista de estudiantes no debería ser null", estudiantes);
-        assertFalse("La lista de estudiantes no debería estar vacía", estudiantes.isEmpty());
-        assertEquals("Debería haber un estudiante en la lista", 1, estudiantes.size());
+        assertNotNull(estudiantes, "La lista de estudiantes no debería ser null");
+        assertFalse(estudiantes.isEmpty(), "La lista de estudiantes no debería estar vacía");
+        assertEquals(1, estudiantes.size(), "Debería haber un estudiante en la lista");
     }
 
     @Test
@@ -127,8 +127,8 @@ public class ServicioCursoTest {
         cursoRepositorio.crearCurso(curso);
         Profesor profesor = servicioCurso.verProfesor(curso);
 
-        assertNotNull("El profesor no debería ser null", profesor);
-        assertEquals("El ID del profesor no coincide", "P001", profesor.getId());
+        assertNotNull(profesor, "El profesor no debería ser null");
+        assertEquals("P001", profesor.getId(), "El ID del profesor no coincide");
     }
 
     @Test
@@ -137,7 +137,7 @@ public class ServicioCursoTest {
         cursoSinProfesor.setiD("NOPROF");
 
         Profesor profesor = servicioCurso.verProfesor(cursoSinProfesor);
-        assertNull("El profesor debería ser null para un curso inexistente", profesor);
+        assertNull(profesor, "El profesor debería ser null para un curso inexistente");
     }
 
     @Test
@@ -155,7 +155,7 @@ public class ServicioCursoTest {
         cursoRepositorio.crearCurso(curso2);
 
         boolean hayCruce = servicioCurso.hayCruceHorarios(curso2, estudiante);
-        assertTrue("Debería detectar el cruce de horarios", hayCruce);
+        assertTrue(hayCruce, "Debería detectar el cruce de horarios");
     }
 
     @Test
@@ -178,7 +178,7 @@ public class ServicioCursoTest {
         cursoRepositorio.crearCurso(curso2);
 
         boolean hayCruce = servicioCurso.hayCruceHorarios(curso2, estudiante);
-        assertFalse("No debería haber cruce de horarios", hayCruce);
+        assertFalse(hayCruce, "No debería haber cruce de horarios");
     }
 
     @Test
@@ -196,7 +196,7 @@ public class ServicioCursoTest {
         estudianteRepositorio.obtenerMateriasVistasPorEstudiante(estudiante.getId());
 
         boolean cumpleRequisitos = servicioCurso.cumpleRequisitos(estudiante, curso);
-        assertTrue("El estudiante debería cumplir los prerequisitos", cumpleRequisitos);
+        assertTrue(cumpleRequisitos, "El estudiante debería cumplir los prerequisitos");
     }
 
     @Test
@@ -211,7 +211,7 @@ public class ServicioCursoTest {
         curso.getMateria().setPrerequisitos(prerequisitos);
 
         boolean cumpleRequisitos = servicioCurso.cumpleRequisitos(estudiante, curso);
-        assertFalse("El estudiante no debería cumplir los prerequisitos", cumpleRequisitos);
+        assertFalse(cumpleRequisitos, "El estudiante no debería cumplir los prerequisitos");
     }
 
     @Test
@@ -222,7 +222,7 @@ public class ServicioCursoTest {
         nuevaSala.setCapacidad(35);
 
         boolean resultado = servicioCurso.asignarSalaACurso(curso.getiD(), nuevaSala);
-        assertTrue("Debería asignar la sala exitosamente", resultado);
+        assertTrue(resultado, "Debería asignar la sala exitosamente");
     }
 
     @Test
@@ -231,6 +231,6 @@ public class ServicioCursoTest {
         Sala salaExistente = curso.getSalas().get(0);
 
         boolean resultado = servicioCurso.asignarSalaACurso(curso.getiD(), salaExistente);
-        assertFalse("No debería asignar una sala que ya está asignada", resultado);
+        assertFalse(resultado, "No debería asignar una sala que ya está asignada");
     }
 }

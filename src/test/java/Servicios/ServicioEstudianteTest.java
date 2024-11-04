@@ -3,7 +3,7 @@ package Servicios;
 import Entidades.*;
 import RepositorioBD.CursoRepositorio;
 import RepositorioBD.EstudianteRepositorio;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import java.sql.SQLException;
@@ -17,7 +17,7 @@ public class ServicioEstudianteTest {
     private Estudiante estudiante;
     private Curso curso;
 
-    @Before
+    @BeforeEach
     public void setUp() throws SQLException {
         cursoRepositorio = new CursoRepositorio();
         estudianteRepositorio = new EstudianteRepositorio();
