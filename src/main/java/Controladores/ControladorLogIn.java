@@ -1,8 +1,10 @@
 package Controladores;
 
 import Entidades.Estudiante;
+import Entidades.Profesor;
 import Entidades.Sesion;
 import RepositorioBD.EstudianteRepositorio;
+import RepositorioBD.ProfesorRepositorio;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -18,9 +20,11 @@ import java.io.IOException;
 public class ControladorLogIn {
 
     private EstudianteRepositorio estudianteRepositorio;
+    private ProfesorRepositorio profesorRepositorio;
 
-    public ControladorLogIn(EstudianteRepositorio estudianteRepositorio) {
+    public ControladorLogIn(EstudianteRepositorio estudianteRepositorio, ProfesorRepositorio profesorRepositorio) {
         this.estudianteRepositorio = estudianteRepositorio;
+        this.profesorRepositorio = profesorRepositorio;
     }
 
     @FXML
@@ -43,6 +47,7 @@ public class ControladorLogIn {
         String usuario = textUser.getText();
         String contrasenia = textPass.getText();
         Estudiante estudiante = estudianteRepositorio.validarCredenciales(usuario,contrasenia);
+        Profesor profesor = null;// profesorRepositorio.validarCredenciales(usuario, contrasenia) ;
         if (estudiante != null) {
             System.out.println("Usuario autenticado correctamente! " + estudiante.getNombre());
             try {
@@ -53,7 +58,19 @@ public class ControladorLogIn {
                 // Handle the exception (e.g., show an error message to the user)
                 System.err.println("Error al cambiar de escena: " + e.getMessage());
             }
-        } else {
+        }
+        else if (profesor != null){
+            System.out.println("Usuario autenticado correctamente! " + profesor.getNombre());
+            try {
+                // Switch to the main application scene
+                SceneManager.getInstance().switchScene("/Pantallas/PantallaProfesores.fxml", "/CssStyle/LoginStyle.css", false);
+            } catch (IOException e) {
+                e.printStackTrace();
+                // Handle the exception (e.g., show an error message to the user)
+                System.err.println("Error al cambiar de escena: " + e.getMessage());
+            }
+        }
+        else {
             labelError.setText("Usuario y/o Contraseña Incorrecto!");
         }
     }
