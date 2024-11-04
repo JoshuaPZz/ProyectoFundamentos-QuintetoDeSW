@@ -17,6 +17,11 @@ import java.io.IOException;
 
 public class ControladorLogIn {
 
+    private EstudianteRepositorio estudianteRepositorio;
+
+    public ControladorLogIn(EstudianteRepositorio estudianteRepositorio) {
+        this.estudianteRepositorio = estudianteRepositorio;
+    }
 
     @FXML
     private PasswordField textPass;
@@ -28,7 +33,7 @@ public class ControladorLogIn {
     private Label labelError;
 
     @FXML
-    void logInButtonPressed(ActionEvent event) {
+    void logInButtonPressed(ActionEvent event) throws SQLException {
 
         if (textPass.getText().isEmpty() || textUser.getText().isEmpty()) {
             labelError.setText("Por favor ingrese su usuario y contraseña.");
@@ -37,7 +42,6 @@ public class ControladorLogIn {
 
         String usuario = textUser.getText();
         String contrasenia = textPass.getText();
-        EstudianteRepositorio estudianteRepositorio = new EstudianteRepositorio();
         Estudiante estudiante = estudianteRepositorio.validarCredenciales(usuario,contrasenia);
         if (estudiante != null) {
             System.out.println("Usuario autenticado correctamente! " + estudiante.getNombre());

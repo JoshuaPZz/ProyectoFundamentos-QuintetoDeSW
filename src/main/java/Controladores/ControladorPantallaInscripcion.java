@@ -1,28 +1,22 @@
 package Controladores;
 
 import Entidades.Curso;
-import Entidades.Materia;
 import Entidades.Sesion;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.control.ListView;
 import java.awt.*;
 import javafx.collections.ObservableList;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.ResourceBundle;
 
 public class ControladorPantallaInscripcion {
 
@@ -102,6 +96,7 @@ public class ControladorPantallaInscripcion {
 
 
 
+
     @FXML
     void revisarButtonPressed(ActionEvent event) {
         File archivoPDF = new File("src/main/resources/Images/Plan_Ing_Sistemas_v5.pdf");
@@ -128,6 +123,16 @@ public class ControladorPantallaInscripcion {
             stageBuscar.setResizable(false);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+    @FXML
+    void botonBajaPressed(ActionEvent event) {
+        try {
+            Stage stageBaja = SceneManager.getInstance().openNewWindow("/Pantallas/pantallaDarBaja.fxml", "/CssStyle/LoginStyle.css", "Dar de baja", true);
+            stageBaja.show();
+            stageBaja.setResizable(false);
+        }catch (IOException e){
+            System.out.println("Error al abrir nueva ventana: " + e.getMessage());
         }
     }
     @FXML

@@ -76,6 +76,31 @@ public class ServicioEstudiante {
 
     //Método para remover a un estudiante de un curso
     public boolean removerCurso(Estudiante estudiante, Curso curso) throws SQLException {
+        if (estudiante == null || curso == null) {
+            System.out.println("Estudiante o curso es null");
+            return false;
+        }
+
+        // Primero verificamos si la inscripción existe en la base de datos
+        if (estudianteRepositorio.verificarInscripcion(estudiante.getId(), curso.getiD())) {
+            // Intentamos eliminar la inscripción de la base de datos
+            boolean eliminado = estudianteRepositorio.eliminarInscripcion(estudiante.getId(), curso.getiD());
+
+            if (eliminado) {
+                // Si se eliminó correctamente de la BD, actualizamos los objetos en memoria
+                curso.getEstudiantes().remove(estudiante);
+                estudiante.getCursos().remove(curso);
+                System.out.println("Curso removido exitosamente: Estudiante=" + estudiante.getId() + ", Curso=" + curso.getiD());
+                return true;
+            } else {
+                System.out.println("No se pudo eliminar la inscripción de la BD: Estudiante=" + estudiante.getId() + ", Curso=" + curso.getiD());
+            }
+        } else {
+            System.out.println("No se encontró la inscripción en la BD: Estudiante=" + estudiante.getId() + ", Curso=" + curso.getiD());
+        }
+
+        return false;
+        /*
         if (estudiante != null && curso != null && curso.getEstudiantes().contains(estudiante)) {
         estudianteRepositorio.eliminarInscripcion(estudiante.getId(), curso.getiD());
             curso.getEstudiantes().remove(estudiante);
@@ -83,6 +108,7 @@ public class ServicioEstudiante {
             return true;
         }
         return false;
+         */
     }
 
     //Metodo para obtener los cursos de un estudiante
