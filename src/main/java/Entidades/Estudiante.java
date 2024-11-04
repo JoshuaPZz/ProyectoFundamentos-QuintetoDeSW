@@ -112,5 +112,6 @@ public class Estudiante {
         this.carrito = FXCollections.observableList(carrito);
         this.cursosVistos = FXCollections.observableList(cursosVistos);
     }
+    public Estudiante (){}
 
 }
