@@ -1,8 +1,12 @@
 package Controladores;
 
 import Entidades.Estudiante;
+import Entidades.Profesor;
 import Entidades.Sesion;
 import RepositorioBD.EstudianteRepositorio;
+import RepositorioBD.ProfesorRepositorio;
+import Servicios.ServicioAutenticacion;
+import Servicios.ServicioEstudiante;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -17,10 +21,10 @@ import java.io.IOException;
 
 public class ControladorLogIn {
 
-    private EstudianteRepositorio estudianteRepositorio;
+    private ServicioAutenticacion servicioAutenticacion;
 
-    public ControladorLogIn(EstudianteRepositorio estudianteRepositorio) {
-        this.estudianteRepositorio = estudianteRepositorio;
+    public ControladorLogIn() {
+        this.servicioAutenticacion = new ServicioAutenticacion();
     }
 
     @FXML
@@ -42,20 +46,62 @@ public class ControladorLogIn {
 
         String usuario = textUser.getText();
         String contrasenia = textPass.getText();
-        Estudiante estudiante = estudianteRepositorio.validarCredenciales(usuario,contrasenia);
-        if (estudiante != null) {
-            System.out.println("Usuario autenticado correctamente! " + estudiante.getNombre());
-            try {
-                // Switch to the main application scene
-                SceneManager.getInstance().switchScene("/Pantallas/pantallaInscripcion.fxml", "/CssStyle/LoginStyle.css", false);
-            } catch (IOException e) {
-                e.printStackTrace();
-                // Handle the exception (e.g., show an error message to the user)
-                System.err.println("Error al cambiar de escena: " + e.getMessage());
-            }
-        } else {
-            labelError.setText("Usuario y/o Contraseña Incorrecto!");
+        ServicioAutenticacion.ResultadoAutenticacion resultado = servicioAutenticacion.validarCredenciales(usuario, contrasenia);
+        switch (resultado.getTipo()) {
+            case ESTUDIANTE:
+                Estudiante estudiante = resultado.getEstudiante();
+                if (estudiante != null) {
+                    System.out.println("Estudiante autenticado: " + estudiante.getNombre());
+                    cambiarAEscenaEstudiante();
+                } else {
+                    labelError.setText("Error al cargar datos del estudiante");
+                }
+                break;
+
+            case PROFESOR:
+                Profesor profesor = resultado.getProfesor();
+                if (profesor != null) {
+                    System.out.println("Profesor autenticado: " + profesor.getNombre() + " " + profesor.getApellido());
+                    cambiarAEscenaProfesor();
+                } else {
+                    labelError.setText("Error al cargar datos del profesor");
+                }
+                break;
+
+            case NO_ENCONTRADO:
+                labelError.setText("Usuario o contraseña incorrectos");
+                break;
         }
+    }
+
+    private void cambiarAEscenaEstudiante() {
+        try {
+            SceneManager.getInstance().switchScene(
+                    "/Pantallas/pantallaInscripcion.fxml",
+                    "/CssStyle/LoginStyle.css",
+                    false
+            );
+        } catch (IOException e) {
+            manejarErrorCambioEscena(e);
+        }
+    }
+
+    private void cambiarAEscenaProfesor() {
+        try {
+            SceneManager.getInstance().switchScene(
+                    "/Pantallas/PantallaProfesores.fxml",
+                    "/CssStyle/LoginStyle.css",
+                    false
+            );
+        } catch (IOException e) {
+            manejarErrorCambioEscena(e);
+        }
+    }
+
+    private void manejarErrorCambioEscena(IOException e) {
+        e.printStackTrace();
+        labelError.setText("Error al cambiar de pantalla");
+        System.err.println("Error al cambiar de escena: " + e.getMessage());
     }
 
 
