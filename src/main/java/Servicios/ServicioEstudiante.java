@@ -86,6 +86,25 @@ public class ServicioEstudiante {
         }
         return null;
     }
+    public boolean removerCursoCarrito(Estudiante estudiante, Curso curso) throws SQLException{
+        if(estudiante == null || curso == null){
+            System.out.println("Estudiante o curso es null");
+            return false;
+        }
+        if(estudianteRepositorio.cursoEstaEnCarrito(estudiante.getId(), curso.getiD())){
+            boolean eliminado = estudianteRepositorio.eliminarDelCarrito(estudiante.getId(), curso.getiD());
+            if(eliminado){
+                estudiante.getCarrito().remove(curso);
+                System.out.println("Curso removido exitosamente: Estudiante=" + estudiante.getId() + ", Curso=" + curso.getiD());
+                return true;
+            } else {
+                System.out.println("No se pudo eliminar en el carrito de la BD: Estudiante=" + estudiante.getId() + ", Curso=" + curso.getiD());
+            }
+        } else {
+            System.out.println("No se encontró la inscripción en la BD: Estudiante=" + estudiante.getId() + ", Curso=" + curso.getiD());
+        }
+        return false;
+    }
 
     //Método para remover a un estudiante de un curso
     public boolean removerCurso(Estudiante estudiante, Curso curso) throws SQLException {
