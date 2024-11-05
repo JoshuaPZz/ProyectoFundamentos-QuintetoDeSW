@@ -32,11 +32,12 @@ public class ControladorPantallaVerInformacion {
         try {
             Stage stageInfo = SceneManager.getInstance().openNewWindow("/Pantallas/pantallaInformacionCompleta.fxml", "/CssStyle/LoginStyle.css", "Revisar informacion", true);
             stageInfo.show();
-            stageInfo.setResizable(true);
+            stageInfo.setResizable(false);
         } catch (IOException e) {
             e.printStackTrace();
         }
         ControladorPantallaInformacionCompleta controladorPantallaInformacionCompleta = (ControladorPantallaInformacionCompleta) SceneManager.getInstance().getControllers().get("/Pantallas/pantallaInformacionCompleta.fxml");
+
         controladorPantallaInformacionCompleta.getLabelInformacionCompleta().setText(servicioCurso.obtenerInformacionCompleta(this.listViewCursos.getSelectionModel().getSelectedItem().getiD()));
     }
 

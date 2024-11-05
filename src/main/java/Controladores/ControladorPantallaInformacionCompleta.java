@@ -3,8 +3,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 
 public class ControladorPantallaInformacionCompleta {
 
@@ -20,9 +22,24 @@ public class ControladorPantallaInformacionCompleta {
     }
 
     @FXML
-    void initialize() {
+    void initialize() {;
         VBox parentVbox = (VBox) labelInformacionCompleta.getParent();
-        this.labelInformacionCompleta.wrappingWidthProperty().bind(parentVbox.widthProperty());
+
+        // Configure VBox
+        parentVbox.setFillWidth(true);
+        labelInformacionCompleta.setTextAlignment(TextAlignment.CENTER);
+        // Bind the text wrapping width
+        labelInformacionCompleta.wrappingWidthProperty().bind(
+                parentVbox.widthProperty().subtract(20)
+        );
+
+        // Force layout recalculation when text changes
+        labelInformacionCompleta.textProperty().addListener((obs, oldText, newText) -> {
+            if (parentVbox.getScene() != null && parentVbox.getScene().getWindow() != null) {
+                parentVbox.getScene().getWindow().sizeToScene();
+            }
+        });
+
     }
     public Text getLabelInformacionCompleta() {
         return this.labelInformacionCompleta;
