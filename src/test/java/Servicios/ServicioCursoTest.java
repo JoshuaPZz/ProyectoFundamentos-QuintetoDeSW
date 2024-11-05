@@ -1,10 +1,7 @@
 package Servicios;
 
 import Entidades.*;
-import RepositorioBD.CursoRepositorio;
-import RepositorioBD.EstudianteRepositorio;
-import RepositorioBD.MateriaRepositorio;
-import RepositorioBD.SalaRepositorio;
+import RepositorioBD.*;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.*;
@@ -17,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ServicioCursoTest {
     private ServicioCurso servicioCurso;
     private CursoRepositorio cursoRepositorio;
+    private ProfesorRepositorio profesorRepositorio;
     private EstudianteRepositorio estudianteRepositorio;
     private MateriaRepositorio materiaRepositorio;
     private SalaRepositorio salaRepositorio;
@@ -25,6 +23,7 @@ public class ServicioCursoTest {
 
     @BeforeEach
     public void setUp() throws SQLException {
+        profesorRepositorio = new ProfesorRepositorio();
         cursoRepositorio = new CursoRepositorio();
         estudianteRepositorio = new EstudianteRepositorio();
         materiaRepositorio = new MateriaRepositorio();
@@ -62,6 +61,7 @@ public class ServicioCursoTest {
         profesor.setId(1);
         profesor.setNombre("Juan Perez");
         profesores.add(profesor);
+
 
         curso = new Curso();
         curso.setMateria(materia);
@@ -123,7 +123,7 @@ public class ServicioCursoTest {
         Curso cursoConsultado = servicioCurso.consultarCurso(curso);
 
         assertNotNull(cursoConsultado, "El curso consultado no debería ser null");
-        assertEquals("El ID del curso consultado no coincide", curso, cursoConsultado.getiD());
+        assertEquals(curso.getiD(), cursoConsultado.getiD(), "El ID del curso consultado no coincide");
     }
 
 

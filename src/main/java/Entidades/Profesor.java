@@ -62,4 +62,16 @@ public class Profesor {
     public void setClave(String clave) {
         this.clave = clave;
     }
+
+    public Profesor() {
+    }
+
+    public Profesor(String nombre, String apellido, String documento, List<Curso> cursos, String correo, String clave) {
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.documento = documento;
+        this.cursos = cursos;
+        this.correo = correo;
+        this.clave = clave;
+    }
 }
