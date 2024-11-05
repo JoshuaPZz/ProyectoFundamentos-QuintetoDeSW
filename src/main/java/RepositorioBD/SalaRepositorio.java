@@ -44,4 +44,24 @@ public class SalaRepositorio {
             ps.executeUpdate();
         }
     }
+
+    public Sala obtenerSalaPorId(String salaId) throws SQLException {
+        Sala sala = null;
+        String query = "SELECT * FROM Sala WHERE ID = ?";
+
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, salaId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    sala = new Sala();
+                    sala.setiD(resultSet.getString("ID"));
+                    sala.setUbicacion(resultSet.getString("ubicacion"));
+                    sala.setCapacidad(resultSet.getInt("capacidad"));
+                    sala.setTipo(resultSet.getString("tipo"));
+                }
+            }
+        }
+        return sala;
+    }
 }

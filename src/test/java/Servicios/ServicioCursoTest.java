@@ -44,17 +44,18 @@ public class ServicioCursoTest {
         Date horaFin = ServicioCurso.crearHorario(2024, Calendar.JANUARY, 1, 11);
         horarios.add(new Horario(dia, horaInicio, horaFin));
 
-        List<Sala> salas = new ArrayList<>();
         Sala sala = new Sala();
         sala.setiD("101");
         sala.setUbicacion("Edificio Basicas");
         sala.setCapacidad(30);
         sala.setTipo("Laboratorio");
-        salas.add(sala);
         salaRepositorio.insertarSala(sala);
 
-        String salaId = sala.getiD();
-        System.out.println("ID de la Sala creada: " + sala.getiD());
+        Sala salaInsertada = salaRepositorio.obtenerSalaPorId(sala.getiD());
+        assertNotNull(salaInsertada, "La sala no fue insertada correctamente");
+
+        List<Sala> salas = new ArrayList<>();
+        salas.add(salaInsertada);
 
         List<Profesor> profesores = new ArrayList<>();
         Profesor profesor = new Profesor();
@@ -76,9 +77,20 @@ public class ServicioCursoTest {
         estudiante.setNombre("Test Student");
         estudiante.setCursos(new ArrayList<>());
         estudiante.setCursosVistos(new ArrayList<>());
+/*
+        for(Horario horario : curso.getHorarios()) {
+            System.out.println(horario.getDia());
+            System.out.println(horario.getHoraInicio());
+            System.out.println(horario.getHoraFin());
+        }
 
+ */
 
         cursoRepositorio.crearCurso(curso);
+    }
+
+    public void tearDown() throws SQLException {
+        cursoRepositorio.eliminarCurso(curso.getiD());
     }
 
     @Test
@@ -94,6 +106,7 @@ public class ServicioCursoTest {
         List<Profesor> profesores = new ArrayList<>();
 
         Curso nuevoCurso = servicioCurso.crearCurso(materia, 25, horarios, salas, 25, profesores);
+
 
         assertNotNull(nuevoCurso, "El curso creado no debería ser null");
         assertEquals(25, nuevoCurso.getCapacidad(), "La capacidad del curso no coincide");
