@@ -85,6 +85,48 @@ public class ServicioCurso {
         }
     }
 
+    public String obtenerInformacionCompleta(String idCurso) {
+        StringBuilder sb = new StringBuilder();
+
+        Curso curso = this.buscarCursoPorID(idCurso);
+
+        sb.append("ID DEL CURSO: ").append(curso.getiD()).append("\n");
+
+        Materia materia = curso.getMateria();
+        if (materia != null) {
+            sb.append("ID DE LA MATERIA: ").append(materia.getiD()).append("\n");
+            sb.append("NOMBRE DE LA MATERIA: ").append(materia.getNombre()).append("\n");
+            sb.append("DESCRIPCION DE LA MATERIA: ").append(materia.getDescripcion()).append("\n");
+            sb.append("CREDITOS DE LA MATERIA: ").append(materia.getCreditos()).append("\n");
+        }
+
+        sb.append("UBICACION DE LAS SALAS: ");
+        if (curso.getSalas() != null && !curso.getSalas().isEmpty()) {
+            for (Sala sala : curso.getSalas()) {
+                sb.append(sala.getUbicacion()).append(" ");
+            }
+        } else {
+            sb.append("No hay salas asignadas");
+        }
+        sb.append("\n");
+
+        sb.append("CUPOS DEL CURSO: ").append(curso.getCupos()).append("\n");
+        sb.append("CAPACIDAD DEL CURSO: ").append(curso.getCapacidad()).append("\n");
+
+        sb.append("PROFESORES DEL CURSO: ");
+        if (curso.getProfesores() != null && !curso.getProfesores().isEmpty()) {
+            for (Profesor profesor : curso.getProfesores()) {
+                sb.append(profesor.getNombre()).append(" ");
+            }
+        } else {
+            sb.append("No hay profesores asignados");
+        }
+        sb.append("\n");
+
+        return sb.toString();
+    }
+
+
 
     //Crear los horarios del curso
     public static Date crearHorario(int year, int month, int day, int hour) {

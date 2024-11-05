@@ -30,32 +30,6 @@ public class SceneManager {
     public Map<String, Object> getControllers() {
         return controllers;
     }
-    /*
-    public FXMLLoader findLoader(String controller) {
-        if (loaders.containsKey(controller)) {
-            return loaders.get(controller);
-        }
-
-        FXMLLoader loader = null;
-        String fxmlPath = switch (controller) {
-            case "ControladorPantallaInscripcion" -> "/Pantallas/pantallaInscripcion.fxml";
-            case "ControladorPantallaCursosEncontrados" -> "/Pantallas/pantallaCursosEncontrados.fxml";
-            case "ControladorPantallaBusqueda" -> "/Pantallas/pantallaBusqueda.fxml";
-            case "ControladorLogIn" -> "/Pantallas/PantallaLogin.fxml";
-            default -> null;
-        };
-
-        if (fxmlPath != null) {
-            loader = new FXMLLoader(getClass().getResource(fxmlPath));
-            loaders.put(controller, loader);
-        }
-
-        return loader;
-    }
-
-     */
-
-
     public void setPrimaryStage(Stage stage) {
         this.primaryStage = stage;
     }

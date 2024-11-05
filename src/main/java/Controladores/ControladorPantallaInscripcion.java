@@ -33,6 +33,9 @@ public class ControladorPantallaInscripcion {
     private Button botonInscribir;
 
     @FXML
+    private Button botonVerInfo;
+
+    @FXML
     private AnchorPane buscarMateriaPane;
 
     @FXML
@@ -114,6 +117,18 @@ public class ControladorPantallaInscripcion {
         } else {
             System.out.println("El archivo no existe.");
         }
+    }
+
+    @FXML
+    void botonVerInfoPressed(ActionEvent event) {
+        try {
+            Stage stageInfo = SceneManager.getInstance().openNewWindow("/Pantallas/pantallaVerInformacion.fxml", "/CssStyle/LoginStyle.css", "Revisar informacion", true);
+            stageInfo.show();
+            stageInfo.setResizable(false);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
     @FXML
     void botonInscribirPressed(ActionEvent event) {
