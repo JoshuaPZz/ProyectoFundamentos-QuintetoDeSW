@@ -229,7 +229,6 @@ public class EstudianteRepositorio {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, estudianteId);
             stmt.setString(2, cursoId);
-            stmt.executeUpdate();
             int filasAfectadas = stmt.executeUpdate();
             System.out.println("Filas afectadas al eliminar inscripción: " + filasAfectadas);
 
