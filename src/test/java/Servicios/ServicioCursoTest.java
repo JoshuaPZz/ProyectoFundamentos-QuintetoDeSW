@@ -3,17 +3,23 @@ package Servicios;
 import Entidades.*;
 import RepositorioBD.CursoRepositorio;
 import RepositorioBD.EstudianteRepositorio;
+import RepositorioBD.MateriaRepositorio;
+import RepositorioBD.SalaRepositorio;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.*;
 import org.junit.jupiter.api.BeforeEach;
 import java.sql.SQLException;
+import java.util.function.Supplier;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ServicioCursoTest {
     private ServicioCurso servicioCurso;
     private CursoRepositorio cursoRepositorio;
     private EstudianteRepositorio estudianteRepositorio;
+    private MateriaRepositorio materiaRepositorio;
+    private SalaRepositorio salaRepositorio;
     private Curso curso;
     private Estudiante estudiante;
 
@@ -21,12 +27,16 @@ public class ServicioCursoTest {
     public void setUp() throws SQLException {
         cursoRepositorio = new CursoRepositorio();
         estudianteRepositorio = new EstudianteRepositorio();
+        materiaRepositorio = new MateriaRepositorio();
+        salaRepositorio = new SalaRepositorio();
         servicioCurso = new ServicioCurso(cursoRepositorio, estudianteRepositorio);
 
         // Configurar datos de prueba
         Materia materia = new Materia();
-        materia.setiD("MAT101");
+        materia.setiD("101");
         materia.setCreditos(3);
+        materia.setNombre("Matemáticas");
+        materiaRepositorio.agregarMateria(materia);
 
         List<Horario> horarios = new ArrayList<>();
         String dia = "Lunes"; // Definir el día de la semana
@@ -37,8 +47,14 @@ public class ServicioCursoTest {
         List<Sala> salas = new ArrayList<>();
         Sala sala = new Sala();
         sala.setiD("101");
+        sala.setUbicacion("Edificio Basicas");
         sala.setCapacidad(30);
+        sala.setTipo("Laboratorio");
         salas.add(sala);
+        salaRepositorio.insertarSala(sala);
+
+        String salaId = sala.getiD();
+        System.out.println("ID de la Sala creada: " + sala.getiD());
 
         List<Profesor> profesores = new ArrayList<>();
         Profesor profesor = new Profesor();
@@ -50,10 +66,11 @@ public class ServicioCursoTest {
         curso.setMateria(materia);
         curso.setCapacidad(30);
         curso.setHorarios(horarios);
-        curso.setSalas(salas);
+        curso.setSalas(Collections.singletonList(sala));
         curso.setProfesores(profesores);
         curso.setEstudiantes(new ArrayList<>());
         curso.setiD("CURSO101");
+        curso.setSalas(salas);
 
         estudiante = new Estudiante();
         estudiante.setId(1);
@@ -67,7 +84,7 @@ public class ServicioCursoTest {
     @Test
     public void testCrearCursoExitoso() {
         Materia materia = new Materia();
-        materia.setiD("MAT102");
+        materia.setiD("102");
         List<Horario> horarios = new ArrayList<>();
         String dia = "Lunes"; // Definir el día de la semana
         Date horaInicio = ServicioCurso.crearHorario(2024, Calendar.JANUARY, 1, 9);
@@ -86,16 +103,21 @@ public class ServicioCursoTest {
     @Test
     public void testConsultarCursoExistente() throws SQLException {
         cursoRepositorio.crearCurso(curso);
+        System.out.println("ID del curso creado: " + curso.getiD());
+        assertNotNull(curso, "El ID del curso debería estar asignado después de guardarlo");
+
+        // Consultar el curso usando el ID
         Curso cursoConsultado = servicioCurso.consultarCurso(curso);
 
         assertNotNull(cursoConsultado, "El curso consultado no debería ser null");
-        assertEquals(Optional.of("El ID del curso consultado no coincide"), curso.getiD(), cursoConsultado.getiD());
+        assertEquals("El ID del curso consultado no coincide", curso, cursoConsultado.getiD());
     }
+
 
     @Test
     public void testConsultarCursoInexistente() {
         Curso cursoInexistente = new Curso();
-        cursoInexistente.setiD("NOID");
+        cursoInexistente.setiD("0");
 
         Curso resultado = servicioCurso.consultarCurso(cursoInexistente);
         assertNull(resultado, "El resultado debería ser null para un curso inexistente");
@@ -148,7 +170,7 @@ public class ServicioCursoTest {
         // Crear otro curso con el mismo horario
         Curso curso2 = new Curso();
         Materia materia2 = new Materia();
-        materia2.setiD("MAT103");
+        materia2.setiD("103");
         curso2.setMateria(materia2);
         curso2.setHorarios(curso.getHorarios());
         curso2.setiD("CURSO102");
@@ -166,7 +188,7 @@ public class ServicioCursoTest {
         // Crear otro curso con horario diferente
         Curso curso2 = new Curso();
         Materia materia2 = new Materia();
-        materia2.setiD("MAT103");
+        materia2.setiD("103");
         List<Horario> horarios = new ArrayList<>();
         String dia = "Lunes"; // Definir el día de la semana
         Date horaInicio = ServicioCurso.crearHorario(2024, Calendar.JANUARY, 1, 9);
