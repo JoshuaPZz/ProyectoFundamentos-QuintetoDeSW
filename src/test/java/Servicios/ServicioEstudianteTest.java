@@ -3,6 +3,8 @@ package Servicios;
 import Entidades.*;
 import RepositorioBD.CursoRepositorio;
 import RepositorioBD.EstudianteRepositorio;
+import RepositorioBD.MateriaRepositorio;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -13,9 +15,11 @@ public class ServicioEstudianteTest {
     private ServicioEstudiante servicioEstudiante;
     private ServicioCurso servicioCurso;
     private EstudianteRepositorio estudianteRepositorio;
+    private MateriaRepositorio materiaRepositorio;
     private CursoRepositorio cursoRepositorio;
     private Estudiante estudiante;
     private Curso curso;
+    private Materia materia;
 
     @BeforeEach
     public void setUp() throws SQLException {
@@ -23,6 +27,7 @@ public class ServicioEstudianteTest {
         estudianteRepositorio = new EstudianteRepositorio();
         servicioCurso = new ServicioCurso(cursoRepositorio, estudianteRepositorio);
         servicioEstudiante = new ServicioEstudiante(servicioCurso, estudianteRepositorio);
+        materiaRepositorio = new MateriaRepositorio();
 
         estudiante = new Estudiante();
         estudiante.setId(1);
@@ -32,10 +37,14 @@ public class ServicioEstudianteTest {
         estudiante.setCarrito(new ArrayList<>());
         estudiante.setCursosVistos(new ArrayList<>());
 
+
         Materia materia = new Materia();
         materia.setiD("101");
         materia.setCreditos(3);
         materia.setNombre("Matemáticas");
+
+        materiaRepositorio.agregarMateria(materia);
+
 
         List<Horario> horarios = new ArrayList<>();
         String dia = "Lunes";
@@ -55,6 +64,12 @@ public class ServicioEstudianteTest {
         cursoRepositorio.crearCurso(curso);
     }
 
+    @AfterEach
+    public void tearDown() throws SQLException {
+        // Limpia los datos de prueba
+        cursoRepositorio.eliminarCurso(curso.getiD());
+        materiaRepositorio.eliminarMateria(materia.getiD());
+    }
     @Test
     public void testAgregarCursoAlCarritoExitoso() throws SQLException {
         boolean resultado = servicioEstudiante.agregarCursoAlCarrito(estudiante, curso);
