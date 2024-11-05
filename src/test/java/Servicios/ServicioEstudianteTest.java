@@ -38,7 +38,7 @@ public class ServicioEstudianteTest {
         estudiante.setCursosVistos(new ArrayList<>());
 
 
-        Materia materia = new Materia();
+        materia = new Materia();
         materia.setiD("101");
         materia.setCreditos(3);
         materia.setNombre("Matemáticas");
@@ -151,6 +151,7 @@ public class ServicioEstudianteTest {
 
     @Test
     public void testRemoverCursoExitoso() throws SQLException {
+        servicioEstudiante.agregarCursoAlCarrito(estudiante,curso);
         servicioEstudiante.inscribirCurso(estudiante, curso);
         boolean resultado = servicioEstudiante.removerCurso(estudiante, curso);
         assertTrue(resultado, "Debería poder remover el curso exitosamente");
