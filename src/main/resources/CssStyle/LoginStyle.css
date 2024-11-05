@@ -246,3 +246,15 @@ Seccion profesores
     -fx-background-repeat: no-repeat;
 
 }
+
+#labelBaja{
+    -fx-font-family: "Lato";
+
+}
+#btnTextBaja{
+    -fx-background-color: #f0bc14;
+    -fx-font-family: "Lato";
+    -fx-font-size: 32;
+    -fx-text-fill: #014BA0;
+    -fx-background-radius: 5px;
+}

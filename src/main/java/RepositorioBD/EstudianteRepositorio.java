@@ -223,13 +223,16 @@ public class EstudianteRepositorio {
         }
     }
 
-    public void eliminarDelCarrito(int estudianteId, String cursoId) throws SQLException {
+    public boolean eliminarDelCarrito(int estudianteId, String cursoId) throws SQLException {
         String sql = "DELETE FROM Carrito WHERE estudiante_id = ? AND curso_id = ?";
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, estudianteId);
             stmt.setString(2, cursoId);
-            stmt.executeUpdate();
+            int filasAfectadas = stmt.executeUpdate();
+            System.out.println("Filas afectadas al eliminar inscripción: " + filasAfectadas);
+
+            return filasAfectadas > 0;
         }
     }
 
