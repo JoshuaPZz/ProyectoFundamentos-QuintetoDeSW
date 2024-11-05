@@ -21,25 +21,38 @@ public class ServicioEstudiante {
 
     //Metodo para agregar un curso al carrito del estudiante
     public boolean agregarCursoAlCarrito(Estudiante estudiante, Curso curso) throws SQLException {
-        if (estudiante != null && curso != null) {
-            List<Curso> cursosInscritos = estudiante.getCursos();
-            List<Curso> carrito = estudiante.getCarrito();
+        if (estudiante == null || curso == null) {
+            System.out.println("Estudiante o curso inválido.");
+            return false;
+        }
 
-            if (cursosInscritos.contains(curso)) {
-                System.out.println("El curso ya está inscrito.");
-                return false;
-            }
+        List<Curso> cursosInscritos = estudiante.getCursos();
+        List<Curso> carrito = estudiante.getCarrito();
 
-            if (carrito.contains(curso)) {
-                System.out.println("El curso ya está en el carrito.");
-                return false;
-            }
+        // Verificar si el curso ya está inscrito
+        if (cursosInscritos.contains(curso)) {
+            System.out.println("El curso ya está inscrito.");
+            return false;
+        }
+
+        // Verificar si el curso ya está en el carrito
+        if (carrito.contains(curso)) {
+            System.out.println("El curso ya está en el carrito.");
+            return false;
+        }
+
+        try {
+            // Agregar el curso al carrito en la base de datos
             estudianteRepositorio.agregarAlCarrito(estudiante.getId(), Integer.parseInt(curso.getiD()));
+            // Agregar el curso al carrito en el objeto en memoria
             carrito.add(curso);
             return true;
+        } catch (SQLException e) {
+            System.out.println("Error al agregar el curso al carrito: " + e.getMessage());
+            throw e;
         }
-        return false;
     }
+
 
     public List<Curso> obtenerCarrito(int estudianteId) throws SQLException {
         return estudianteRepositorio.obtenerCarrito(estudianteId);
