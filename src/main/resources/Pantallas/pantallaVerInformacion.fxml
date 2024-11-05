@@ -33,7 +33,7 @@
       </HBox>
       <HBox prefHeight="49.0" prefWidth="213.0">
          <children>
-            <Button fx:id="botonVerInfo" alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#botonVerInfoPressed" prefHeight="48.0" prefWidth="108.0" text="VER INFORMACION" textAlignment="CENTER" HBox.hgrow="ALWAYS">
+            <Button fx:id="botonVerInfoCurso" alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#botonVerInfoPressed" prefHeight="48.0" prefWidth="108.0" text="VER INFORMACION" textAlignment="CENTER" HBox.hgrow="ALWAYS">
                <font>
                   <Font name="League Gothic Regular" size="22.0" />
                </font>
