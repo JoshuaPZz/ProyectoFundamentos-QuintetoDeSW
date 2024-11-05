@@ -38,7 +38,7 @@ public class ServicioEstudianteTest {
         estudiante.setCursosVistos(new ArrayList<>());
 
 
-        Materia materia = new Materia();
+        materia = new Materia();
         materia.setiD("101");
         materia.setCreditos(3);
         materia.setNombre("Matemáticas");
