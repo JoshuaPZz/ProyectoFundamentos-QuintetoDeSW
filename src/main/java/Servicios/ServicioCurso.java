@@ -87,14 +87,16 @@ public class ServicioCurso {
 
 
     //Crear los horarios del curso
-    public static Date crearHorario(int year, int month, int day, int hourOfDay) {
+    public static Date crearHorario(int year, int month, int day, int hour) {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, 2024);          // Establecer el año
-        calendar.set(Calendar.MONTH, month);        // Establecer el mes (0=enero, 1=febrero, ..., 11=diciembre)
-        calendar.set(Calendar.DAY_OF_MONTH, day);   // Establecer el día del mes
-        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay); // Establecer la hora (formato 24 horas)
-        calendar.set(Calendar.SECOND, 0);           // Establecer los segundos en 0
-        calendar.set(Calendar.MILLISECOND, 0);      // Establecer los milisegundos en 0
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.DAY_OF_MONTH, day);
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
         return calendar.getTime();
     }
 
@@ -167,4 +169,30 @@ public class ServicioCurso {
     public List<String> obtenerCursosPorMateria(String materiaId) throws SQLException {
         return cursoRepositorio.obtenerCursosPorMateria(materiaId);
     }
+
+
+
+    public boolean asignarSalaACurso(String idCurso, Sala sala) {
+        CursoRepositorio repositorioCurso = new CursoRepositorio();
+        try {
+            Curso curso = repositorioCurso.obtenerCursoPorId(idCurso);
+            if (curso != null) {
+                List<Sala> salas = curso.getSalas();
+                if (!salas.contains(sala)) {
+                    salas.add(sala);
+                    curso.setSalas(salas); // Actualiza la lista de salas en el curso
+                    repositorioCurso.actualizarCurso(curso); // Actualiza el curso en la base de datos
+                    return true;
+                } else {
+                    System.out.println("La sala ya está asignada a este curso.");
+                }
+            } else {
+                System.out.println("Curso no encontrado con ID: " + idCurso);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al asignar sala al curso: " + e.getMessage());
+        }
+        return false;
+    }
+
 }

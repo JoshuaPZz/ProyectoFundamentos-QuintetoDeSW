@@ -2,12 +2,8 @@ package RepositorioBD;
 import Entidades.*;
 
 import java.sql.*;
-import java.time.DayOfWeek;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Date;
 
 public class CursoRepositorio{
     private MateriaRepositorio materiaRepositorio;
@@ -309,5 +305,33 @@ public class CursoRepositorio{
  */
 
 
+    public void actualizarCurso(Curso curso) throws SQLException {
+        String actualizarCursoQuery = "UPDATE Curso SET sala_id = ? WHERE id = ?";
+
+        try (Connection conexion = ConexionBaseDeDatos.getConnection();
+             PreparedStatement ps = conexion.prepareStatement(actualizarCursoQuery)) {
+
+            // Asigna el ID de la sala actual al curso
+            if (!curso.getSalas().isEmpty()) {
+                ps.setString(1, curso.getSalas().get(0).getiD());  // Usa el primer ID de la lista de salas
+            } else {
+                ps.setNull(1, java.sql.Types.INTEGER);  // Si no hay salas, establece sala_id como NULL
+            }
+
+            ps.setString(2, curso.getiD());  // ID del curso
+
+            int filasActualizadas = ps.executeUpdate();
+            if (filasActualizadas > 0) {
+                System.out.println("Curso actualizado exitosamente con la nueva sala.");
+            } else {
+                System.out.println("No se encontró el curso para actualizar.");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error al actualizar el curso: " + e.getMessage());
+            throw e;
+        }
+    }
 }
+
 
