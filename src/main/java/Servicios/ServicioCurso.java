@@ -150,6 +150,7 @@ public class ServicioCurso {
             try {
                 boolean cruce = cursoRepositorio.hayCruceHorarios(id, idEstudiante);
                 if (cruce == true) {
+                    System.out.println("pailanders");
                     return true;
                 }
             } catch (SQLException e) {
