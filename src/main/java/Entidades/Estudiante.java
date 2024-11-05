@@ -115,5 +115,8 @@ public class Estudiante {
     }
 
     public Estudiante() {
+        this.cursos = FXCollections.observableArrayList();
+        this.cursosVistos = FXCollections.observableArrayList();
+        this.carrito = FXCollections.observableArrayList();
     }
 }

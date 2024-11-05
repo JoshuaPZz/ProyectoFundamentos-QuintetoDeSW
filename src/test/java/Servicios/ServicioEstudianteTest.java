@@ -35,7 +35,7 @@ public class ServicioEstudianteTest {
 
         // Configurar curso de prueba
         Materia materia = new Materia();
-        materia.setiD("MAT101");
+        materia.setiD("101");
         materia.setCreditos(3);
         materia.setNombre("Matemáticas");
 
