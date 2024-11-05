@@ -37,7 +37,9 @@
     -fx-font-family: 'Lato';
     -fx-font-size: 14px;
 }
-
+/*
+Seccion Estudiante
+ */
 #hboxTop{
     -fx-background-color: #f0bc14;
 }
@@ -199,3 +201,48 @@
     -fx-font-family: "League Gothic";
 }
 
+/*
+Seccion profesores
+ */
+#hboxProfes {
+    -fx-background-color: #f0bc14;
+}
+
+#gestionarClasePane {
+    -fx-background-image: url('../Images/clase.png');
+    -fx-background-size: cover; /* or contain depending on the desired effect */
+    -fx-background-position: center center; /* Center the image */
+    -fx-background-repeat: no-repeat;
+    -fx-opacity: 0.7;
+    -fx-border-radius: 25px;
+    -fx-background-radius: 25px;
+    -fx-clip-to-shape: true;
+}
+
+#gestionarInsripcionPane {
+    -fx-background-image: url('../Images/biblioteca.jpg');
+    -fx-background-size: cover; /* or contain depending on the desired effect */
+    -fx-background-position: center center; /* Center the image */
+    -fx-background-repeat: no-repeat;
+    -fx-opacity: 0.7;
+    -fx-border-radius: 25px;
+    -fx-background-radius: 25px;
+    -fx-clip-to-shape: true;
+}
+#gestionarSalonPane {
+    -fx-background-image: url('../Images/salon.jpg');
+    -fx-background-size: cover; /* or contain depending on the desired effect */
+    -fx-background-position: center center; /* Center the image */
+    -fx-background-repeat: no-repeat;
+    -fx-opacity: 0.7; /* Transparency for the background */
+    -fx-background-radius: 25px;
+
+}
+
+#formamosImagePane {
+    -fx-background-image: url('../Images/formamosImagePanel.png');
+    -fx-background-size: stretch;
+    -fx-background-position: center center;
+    -fx-background-repeat: no-repeat;
+
+}
