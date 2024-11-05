@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" fillWidth="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+<VBox alignment="CENTER" fillWidth="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <VBox prefHeight="338.0" prefWidth="465.0">
          <children>
@@ -31,6 +31,7 @@
             <Pane prefHeight="39.0" prefWidth="200.0" />
          </children>
       </HBox>
+      <Label fx:id="labelMensajeError" alignment="CENTER" contentDisplay="BOTTOM" prefHeight="46.0" prefWidth="176.0" textAlignment="RIGHT" />
       <HBox prefHeight="49.0" prefWidth="213.0">
          <children>
             <Button fx:id="botonInscribirCurso" alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#botonInscribirPressed" prefHeight="48.0" prefWidth="108.0" text="INSCRIBIR" textAlignment="CENTER" HBox.hgrow="ALWAYS">

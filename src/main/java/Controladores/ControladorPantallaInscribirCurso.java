@@ -35,11 +35,9 @@ public class ControladorPantallaInscribirCurso {
     @FXML
     void botonInscribirPressed(ActionEvent event) {
         if (!servicioEstudiante.inscribirCurso(Sesion.getInstancia().getEstudiante(), listCursoInscripcion.getSelectionModel().getSelectedItem())) {
-            System.out.println("no boff");
-            // labelMensajeError.setText("No se pudo inscribir el curso. Verifique los requisitos o cupos.");
+            labelMensajeError.setText("No se pudo inscribir el curso. Verifique los requisitos o cupos.");
         } else {
-            System.out.println("boff");
-            //labelMensajeError.setText("Se inscribio correctamente el curso");
+            labelMensajeError.setText("Se inscribio correctamente el curso");
         }
     }
 
