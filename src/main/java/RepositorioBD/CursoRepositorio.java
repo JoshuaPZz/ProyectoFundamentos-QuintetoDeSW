@@ -265,6 +265,19 @@ public class CursoRepositorio{
         }
     }
 
+    public void eliminarCurso(String cursoId) throws SQLException {
+        String sql = "DELETE FROM Curso WHERE id = ?";
+
+        try (Connection conn = ConexionBaseDeDatos.getConnection();  // Asume que tienes un método para obtener la conexión
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, cursoId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new SQLException("Error al eliminar el curso: " + e.getMessage());
+        }
+    }
+
     public List<Sala> obtenerSalasPorCursoId(String salaId) throws SQLException {
         List<Sala> salas = new ArrayList<>();
         String sql = "SELECT * FROM Sala WHERE id = ?";

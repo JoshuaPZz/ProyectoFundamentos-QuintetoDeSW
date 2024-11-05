@@ -66,7 +66,6 @@ public class ServicioCursoTest {
         curso.setMateria(materia);
         curso.setCapacidad(30);
         curso.setHorarios(horarios);
-        curso.setSalas(Collections.singletonList(sala));
         curso.setProfesores(profesores);
         curso.setEstudiantes(new ArrayList<>());
         curso.setiD("CURSO101");
@@ -77,6 +76,7 @@ public class ServicioCursoTest {
         estudiante.setNombre("Test Student");
         estudiante.setCursos(new ArrayList<>());
         estudiante.setCursosVistos(new ArrayList<>());
+
 
         cursoRepositorio.crearCurso(curso);
     }

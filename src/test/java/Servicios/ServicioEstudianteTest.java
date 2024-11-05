@@ -3,6 +3,8 @@ package Servicios;
 import Entidades.*;
 import RepositorioBD.CursoRepositorio;
 import RepositorioBD.EstudianteRepositorio;
+import RepositorioBD.MateriaRepositorio;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -13,12 +15,15 @@ public class ServicioEstudianteTest {
     private ServicioEstudiante servicioEstudiante;
     private ServicioCurso servicioCurso;
     private EstudianteRepositorio estudianteRepositorio;
+    private MateriaRepositorio materiaRepositorio;
     private CursoRepositorio cursoRepositorio;
     private Estudiante estudiante;
     private Curso curso;
+    private Materia materia;
 
     @BeforeEach
     public void setUp() throws SQLException {
+        materiaRepositorio = new MateriaRepositorio();
         cursoRepositorio = new CursoRepositorio();
         estudianteRepositorio = new EstudianteRepositorio();
         servicioCurso = new ServicioCurso(cursoRepositorio, estudianteRepositorio);
@@ -33,14 +38,17 @@ public class ServicioEstudianteTest {
         estudiante.setCarrito(new ArrayList<>());
         estudiante.setCursosVistos(new ArrayList<>());
 
-        // Configurar curso de prueba
-        Materia materia = new Materia();
+        // Configurar y GUARDAR la materia primero
+        materia = new Materia();
         materia.setiD("101");
         materia.setCreditos(3);
         materia.setNombre("Matemáticas");
+        // Añade aquí la línea para guardar la materia en la base de datos
+        materiaRepositorio.agregarMateria(materia); // Necesitarás crear esta clase/método
 
+        // Luego configura el curso
         List<Horario> horarios = new ArrayList<>();
-        String dia = "Lunes"; // Definir el día de la semana
+        String dia = "Lunes";
         Date horaInicio = ServicioCurso.crearHorario(2024, Calendar.JANUARY, 1, 9);
         Date horaFin = ServicioCurso.crearHorario(2024, Calendar.JANUARY, 1, 11);
         horarios.add(new Horario(dia, horaInicio, horaFin));
@@ -54,8 +62,15 @@ public class ServicioEstudianteTest {
         curso.setEstudiantes(new ArrayList<>());
         curso.setiD("CURSO101");
 
-        // Guardar en la base de datos
+        // Ahora sí, guarda el curso
         cursoRepositorio.crearCurso(curso);
+    }
+
+    @AfterEach
+    public void tearDown() throws SQLException {
+        // Limpia los datos de prueba
+        cursoRepositorio.eliminarCurso(curso.getiD());
+        materiaRepositorio.eliminarMateria(materia.getiD());
     }
 
     @Test

@@ -131,6 +131,51 @@ public class MateriaRepositorio {
             System.out.println("Error SQL: " + e.getMessage());
             e.printStackTrace();
         }
+    }
 
+    public void eliminarMateria(String materiaId) throws SQLException {
+        // Primero eliminamos las relaciones en las tablas dependientes
+        eliminarRelacionesMateria(materiaId);
+
+        // Luego eliminamos la materia
+        String sql = "DELETE FROM Materia WHERE id = ?";
+
+        try (Connection conn = ConexionBaseDeDatos.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, materiaId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new SQLException("Error al eliminar la materia: " + e.getMessage());
+        }
+    }
+
+    private void eliminarRelacionesMateria(String materiaId) throws SQLException {
+        try (Connection conn = ConexionBaseDeDatos.getConnection()) {
+            // Eliminar prerrequisitos
+            String sqlPre = "DELETE FROM Prerrequisito WHERE MateriaID = ? OR PrerrequisitoID = ?";
+            try (PreparedStatement stmtPre = conn.prepareStatement(sqlPre)) {
+                stmtPre.setString(1, materiaId);
+                stmtPre.setString(2, materiaId);
+                stmtPre.executeUpdate();
+            }
+
+            // Eliminar correquisitos
+            String sqlCo = "DELETE FROM Correquisito WHERE MateriaID = ? OR CorrequisitoID = ?";
+            try (PreparedStatement stmtCo = conn.prepareStatement(sqlCo)) {
+                stmtCo.setString(1, materiaId);
+                stmtCo.setString(2, materiaId);
+                stmtCo.executeUpdate();
+            }
+
+            // Eliminar horarios
+            String sqlHorario = "DELETE FROM Horario WHERE materia_id = ?";
+            try (PreparedStatement stmtHorario = conn.prepareStatement(sqlHorario)) {
+                stmtHorario.setString(1, materiaId);
+                stmtHorario.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Error al eliminar las relaciones de la materia: " + e.getMessage());
+        }
     }
 }
