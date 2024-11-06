@@ -21,6 +21,15 @@ public class ServicioProfesor {
         this.servicioCurso = servicioCurso;
     }
 
+    public boolean AsignarSala(Sala sala, Curso curso){
+        if(curso != null && sala!= null){
+            if(curso.getSalas().isEmpty()){
+                servicioCurso.asignarSalaACurso(curso.getiD(),sala);
+            }
+        }
+        return false;
+    }
+
     //Método para ver el horario de un profesor (lista de cursos asignados)
     public List<Curso> cursosAsociadosProfesor(Profesor profesor) throws SQLException {
         List<Curso> curso = new ArrayList<>();
@@ -50,5 +59,7 @@ public class ServicioProfesor {
         System.out.println("Curso creado y asignado exitosamente al profesor.");
         return nuevoCurso;
     }
+
+
 
 }
