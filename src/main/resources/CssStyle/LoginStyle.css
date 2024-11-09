@@ -53,7 +53,7 @@ Seccion Estudiante
 #inscText {
     -fx-font-family: 'League Gothic';
     -fx-text-fill: #014BA0;
-    -fx-font-size: 49px;
+    -fx-font-size: 45px;
 
 }
 #backInscPane {
@@ -257,4 +257,46 @@ Seccion profesores
     -fx-font-size: 32;
     -fx-text-fill: #014BA0;
     -fx-background-radius: 5px;
+}
+
+#botonGestionClase {
+    -fx-background-color: transparent;
+    -fx-font-family: "League Gothic";
+    -fx-text-fill: white;
+    -fx-font-size: 65px;
+    -fx-line-spacing: -26px;
+
+}
+#botonGestionInsc {
+    -fx-background-color: transparent;
+    -fx-font-family: "League Gothic";
+    -fx-text-fill: white;
+    -fx-font-size: 65px;
+    -fx-line-spacing: -26px;
+}
+#botonGestionSalon {
+    -fx-background-color: transparent;
+    -fx-font-family: "League Gothic";
+    -fx-text-fill: white;
+    -fx-font-size: 65px;
+    -fx-line-spacing: -26px;
+}
+
+#botonCrearCurso {
+    -fx-background-color: white;
+    -fx-border-style: solid;
+    -fx-border-color: black;
+    -fx-border-radius: 5px;
+    -fx-font-size: 20px;
+    -fx-line-spacing: -6px;
+    -fx-font-family: "League Gothic";
+}
+#botonEditarClase {
+    -fx-background-color: white;
+    -fx-border-style: solid;
+    -fx-border-color: black;
+    -fx-border-radius: 5px;
+    -fx-font-size: 20px;
+    -fx-line-spacing: -6px;
+    -fx-font-family: "League Gothic";
 }

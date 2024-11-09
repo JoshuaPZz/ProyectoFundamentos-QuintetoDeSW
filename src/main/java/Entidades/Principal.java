@@ -33,6 +33,8 @@ public class Principal extends Application {
         ControladorPantallaBaja controladorPantallaBaja = new ControladorPantallaBaja(servicioEstudiante);
         ControladorPantallaVerInformacion controladorPantallaVerInformacion = new ControladorPantallaVerInformacion(servicioCurso);
         ControladorPantallaInformacionCompleta controladorPantallaInformacionCompleta = new ControladorPantallaInformacionCompleta();
+        ControladorProfesor controladorProfesor = new ControladorProfesor();
+        ControladorSeleccion controladorSeleccion = new ControladorSeleccion();
 
         SceneManager.getInstance().getControllers().put("/Pantallas/PantallaLogin.fxml", controladorLogIn);
         SceneManager.getInstance().getControllers().put("/Pantallas/pantallaInscripcion.fxml", controladorPantallaInscripcion);
@@ -42,6 +44,8 @@ public class Principal extends Application {
         SceneManager.getInstance().getControllers().put("/Pantallas/pantallaDarBaja.fxml", controladorPantallaBaja);
         SceneManager.getInstance().getControllers().put("/Pantallas/pantallaVerInformacion.fxml", controladorPantallaVerInformacion);
         SceneManager.getInstance().getControllers().put("/Pantallas/pantallaInformacionCompleta.fxml", controladorPantallaInformacionCompleta);
+        SceneManager.getInstance().getControllers().put("/Pantallas/PantallaProfesores.fxml", controladorProfesor);
+        SceneManager.getInstance().getControllers().put("/Pantallas/pantallaSeleccion.fxml", controladorSeleccion);
         // Set the primary stage in SceneManager
         SceneManager.getInstance().setPrimaryStage(stage);
         // Load custom font

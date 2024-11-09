@@ -74,7 +74,7 @@ public class SceneManager {
             secondaryStage.setScene(scene);
         }
 
-        if (fxmlPath.equals("/Pantallas/pantallaInscripcion.fxml")) {
+        if (fxmlPath.equals("/Pantallas/pantallaInscripcion.fxml") || fxmlPath.equals("/Pantallas/PantallaProfesores.fxml")) {
             primaryStage.setMaximized(true);
         }
     }
