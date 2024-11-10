@@ -232,36 +232,83 @@ public class CursoRepositorio{
         return materia;
     }
 
-    public void     crearCurso(Curso nuevoCurso) throws SQLException {
-        String consulta = "INSERT INTO Curso (cupos, capacidad, materia_id, sala_id, estado_id) VALUES (?, ?, ?, ?, ?)";
-
-        try (Connection connection = ConexionBaseDeDatos.getConnection();
-             PreparedStatement ps = connection.prepareStatement(consulta, Statement.RETURN_GENERATED_KEYS)) {
-
-            ps.setInt(1, nuevoCurso.getCupos());
-            ps.setInt(2, nuevoCurso.getCapacidad());
-            ps.setInt(3, Integer.parseInt(nuevoCurso.getMateria().getiD()));
-            if (nuevoCurso.getSalas() != null && !nuevoCurso.getSalas().isEmpty()) {
-                ps.setInt(4, Integer.parseInt(nuevoCurso.getSalas().get(0).getiD()));
-            } else {
-                ps.setNull(4, java.sql.Types.INTEGER);
-            }
-            ps.setInt(5, 1);
-
+    public void crearCurso(Curso nuevoCurso) throws SQLException {
+        Connection connection = ConexionBaseDeDatos.getConnection();
+        connection.setAutoCommit(false);
+         try {
+             String consulta = "INSERT INTO Curso (cupos, capacidad, materia_id, estado_id) VALUES (?, ?, ?, ?, ?)";
+             PreparedStatement ps = connection.prepareStatement(consulta, Statement.RETURN_GENERATED_KEYS);
+             ps.setInt(1, nuevoCurso.getCupos());
+             ps.setInt(2, nuevoCurso.getCapacidad());
+             ps.setInt(3, Integer.parseInt(nuevoCurso.getMateria().getiD()));
+             ps.setInt(4, 1);
 
             int filasInsertadas = ps.executeUpdate();
-            if (filasInsertadas > 0) {
-                try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
-                    if (generatedKeys.next()) {
-                        nuevoCurso.setiD(String.valueOf(generatedKeys.getInt(1))); // Asigna el ID generado al objeto `curso`
-                    }
-                }
-            } else {
-                System.out.println("No se pudo crear el curso.");
+            if (filasInsertadas == 0) {
+                throw new SQLException("Falló la creación del curso, no se insertaron filas.");
             }
-        } catch (SQLException e) {
-            System.out.println("Error al crear el curso: " + e.getMessage());
-            throw e;
+
+            ResultSet generatedKeys = ps.getGeneratedKeys();
+            int cursoId;
+            if (generatedKeys.next()) {
+                cursoId = generatedKeys.getInt(1);
+            } else {
+                    throw new SQLException("Falló la creación del curso, no se obtuvo el ID.");
+            }
+
+                // 2. Insertar las salas asociadas al curso
+            String sqlSalaCurso = "UPDATE Curso SET sala_id = ? WHERE id = ?";
+            PreparedStatement psSalaCurso = connection.prepareStatement(sqlSalaCurso);
+
+            for (Sala sala : nuevoCurso.getSalas()) {
+                psSalaCurso.setString(1, sala.getiD());
+                psSalaCurso.setInt(2, cursoId);
+                psSalaCurso.executeUpdate();
+            }
+
+            // 3. Insertar los horarios
+            String sqlHorario = "INSERT INTO Horario (hora_inicio, hora_fin, dia_semana_id, materia_id, sala_id) VALUES (?, ?, ?, ?, ?)";
+            PreparedStatement psHorario = connection.prepareStatement(sqlHorario);
+
+            for (Horario horario : nuevoCurso.getHorarios()) {
+                psHorario.setTime(1, new Time(horario.getHoraInicio().getTime()));
+                psHorario.setTime(2, new Time(horario.getHoraFin().getTime()));
+                psHorario.setInt(3, obtenerIdDiaSemana(horario.getDia()));
+                psHorario.setString(4, nuevoCurso.getMateria().getiD());
+                psHorario.setString(5, nuevoCurso.getSalas().get(0).getiD());
+                psHorario.executeUpdate();
+            }
+
+            // 4. Asignar los profesores al curso
+            String sqlAsignacion = "INSERT INTO Asignacion (profesor_id, curso_id) VALUES (?, ?)";
+            PreparedStatement psAsignacion = connection.prepareStatement(sqlAsignacion);
+
+            for (Profesor profesor : nuevoCurso.getProfesores()) {
+                psAsignacion.setInt(1, profesor.getId());
+                psAsignacion.setInt(2, cursoId);
+                psAsignacion.executeUpdate();
+            }
+            connection.commit();
+         } catch (SQLException e) {
+         // Si algo salió mal, hacemos rollback de la transacción
+         connection.rollback();
+         throw e;
+         } finally {
+         // Restauramos el auto-commit a su estado original
+         connection.setAutoCommit(true);
+         }
+    }
+
+    private int obtenerIdDiaSemana(String nombreDia) throws SQLException {
+        String sql = "SELECT id FROM DiasSemana WHERE nombre = ?";
+        PreparedStatement ps = ConexionBaseDeDatos.getConnection().prepareStatement(sql);
+        ps.setString(1, nombreDia);
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            return rs.getInt("id");
+        } else {
+            throw new SQLException("No se encontró el día: " + nombreDia);
         }
     }
 
