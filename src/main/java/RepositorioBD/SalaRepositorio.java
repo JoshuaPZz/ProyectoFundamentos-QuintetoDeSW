@@ -46,7 +46,7 @@ public class SalaRepositorio {
     }
 
     public Sala obtenerSalaPorId(String salaId) throws SQLException {
-        Sala sala = null;
+        Sala sala = new Sala();
         String query = "SELECT * FROM Sala WHERE ID = ?";
 
         try (Connection connection = getConnection();

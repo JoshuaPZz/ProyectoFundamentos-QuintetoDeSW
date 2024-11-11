@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class ServicioCursoTest {
     private ServicioCurso servicioCurso;
+    private ServicioSala servicioSala;
     private CursoRepositorio cursoRepositorio;
     private ProfesorRepositorio profesorRepositorio;
     private EstudianteRepositorio estudianteRepositorio;
@@ -23,6 +24,7 @@ public class ServicioCursoTest {
 
     @BeforeEach
     public void setUp() throws SQLException {
+        servicioSala = new ServicioSala();
         profesorRepositorio = new ProfesorRepositorio();
         cursoRepositorio = new CursoRepositorio();
         estudianteRepositorio = new EstudianteRepositorio();

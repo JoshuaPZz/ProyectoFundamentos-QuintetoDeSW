@@ -19,11 +19,18 @@ public class ServicioSala {
     }
 
     //Método para consultar los detalles de una sala
-    public String consultarSala(Sala sala) {
+    public Sala consultarSala(Sala sala) {
+        if (sala != null) {
+            return sala; // Retorna la instancia de Sala encontrada
+        }
+        return null;
+        /*
         if (sala != null) {
             return "Sala: " + sala.getiD() + ", Ubicación: " + sala.getUbicacion() +
                     ", Capacidad: " + sala.getCapacidad() + ", Tipo: " + sala.getTipo();
         }
         return "Sala no encontrada.";
+
+         */
     }
 }
