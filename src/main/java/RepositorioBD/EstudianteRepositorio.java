@@ -495,7 +495,12 @@ public class EstudianteRepositorio {
             conn = getConnection();
             conn.setAutoCommit(false); // Inicio de la transacción
 
-            // Primero inscribimos el curso
+            // 1. Verificar créditos disponibles
+            if (!verificarCreditosDisponibles(conn, estudianteId, cursoId)) {
+                throw new SQLException("El estudiante superaría su límite de créditos permitidos");
+            }
+
+            // 2. Inscribir el curso
             String sqlInscripcion = "INSERT INTO Inscripcion (estudiante_id, curso_id, ha_aprobado) VALUES (?, ?, 0)";
             try (PreparedStatement stmtInscripcion = conn.prepareStatement(sqlInscripcion)) {
                 stmtInscripcion.setInt(1, estudianteId);
@@ -503,7 +508,7 @@ public class EstudianteRepositorio {
                 stmtInscripcion.executeUpdate();
             }
 
-            // Luego eliminamos el curso del carrito
+            // 3. Eliminar el curso del carrito
             String sqlEliminarCarrito = "DELETE FROM Carrito WHERE estudiante_id = ? AND curso_id = ?";
             try (PreparedStatement stmtEliminar = conn.prepareStatement(sqlEliminarCarrito)) {
                 stmtEliminar.setInt(1, estudianteId);
@@ -531,6 +536,52 @@ public class EstudianteRepositorio {
                 }
             }
         }
+    }
+
+    private boolean verificarCreditosDisponibles(Connection conn, int estudianteId, String cursoId) throws SQLException {
+
+        // 1. Obtener créditos máximos del estudiante
+        String sql = "SELECT creditos_max FROM Estudiante WHERE id = ?";
+        int creditosMaximos;
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, estudianteId);
+            ResultSet rs = ps.executeQuery();
+            if (!rs.next()) {
+                throw new SQLException("El estudiante no existe");
+            }
+            creditosMaximos = rs.getInt("creditos_max");
+        }
+
+        // 2. Obtener créditos actuales del estudiante (de cursos inscritos)
+        String sqlCreditosActuales = "SELECT COALESCE(SUM(m.creditos), 0) as creditos_actuales " +
+                                    "FROM Inscripcion i " +
+                                    "JOIN Curso c ON i.curso_id = c.id " +
+                                    "JOIN Materia m ON c.materia_id = m.id " +
+                                    "WHERE i.estudiante_id = ? AND i.ha_aprobado = false ";
+        int creditosActuales;
+        try (PreparedStatement ps = conn.prepareStatement(sqlCreditosActuales)) {
+            ps.setInt(1, estudianteId);
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+            creditosActuales = rs.getInt("creditos_actuales");
+        }
+
+        // 3. Obtener créditos del curso a inscribir
+        String sqlCreditosCurso = "SELECT m.creditos FROM Curso c " +
+                                "JOIN Materia m ON c.materia_id = m.id " +
+                                "WHERE c.id = ?";
+
+        int creditosCurso;
+        try (PreparedStatement ps = conn.prepareStatement(sqlCreditosCurso)) {
+            ps.setString(1, cursoId);
+            ResultSet rs = ps.executeQuery();
+            if(!rs.next()) {
+                throw new SQLException("El curso no existe");
+            }
+            creditosCurso = rs.getInt("creditos");
+        }
+
+        return (creditosActuales + creditosCurso) <= creditosMaximos;
     }
 
     public boolean verificarInscripcion(int estudianteId, String cursoId) throws SQLException {
