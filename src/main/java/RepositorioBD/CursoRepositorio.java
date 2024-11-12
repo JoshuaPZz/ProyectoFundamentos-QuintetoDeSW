@@ -135,7 +135,8 @@ public class CursoRepositorio{
                 "JOIN Horario h2 ON h1.dia_semana_id = h2.dia_semana_id " +
                 "JOIN Curso c2 ON h2.materia_id = c2.materia_id " +
                 "AND i.estudiante_id = ? AND c2.id = ? " +
-                "AND (h1.hora_inicio < h2.hora_fin AND h1.hora_fin > h2.hora_inicio)";
+                "AND (h1.hora_inicio < h2.hora_fin AND h1.hora_fin > h2.hora_inicio) " +
+                "AND ha_aprobado = false";
 
         try (Connection conexion = getConnection();
              PreparedStatement pstmt = conexion.prepareStatement(query)) {
@@ -236,6 +237,7 @@ public class CursoRepositorio{
         Connection connection = ConexionBaseDeDatos.getConnection();
         connection.setAutoCommit(false);
          try {
+             // 1. Insertar el curso
              String consulta = "INSERT INTO Curso (cupos, capacidad, materia_id, estado_id) VALUES (?, ?, ?, ?, ?)";
              PreparedStatement ps = connection.prepareStatement(consulta, Statement.RETURN_GENERATED_KEYS);
              ps.setInt(1, nuevoCurso.getCupos());
@@ -256,7 +258,7 @@ public class CursoRepositorio{
                     throw new SQLException("Falló la creación del curso, no se obtuvo el ID.");
             }
 
-                // 2. Insertar las salas asociadas al curso
+            // 2. Insertar las salas asociadas al curso
             String sqlSalaCurso = "UPDATE Curso SET sala_id = ? WHERE id = ?";
             PreparedStatement psSalaCurso = connection.prepareStatement(sqlSalaCurso);
 

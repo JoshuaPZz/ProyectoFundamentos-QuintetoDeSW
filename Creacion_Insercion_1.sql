@@ -75,7 +75,7 @@ CREATE TABLE Curso (
                        cupos INT NOT NULL,
                        capacidad INT NOT NULL,
                        materia_id INT NOT NULL,
-                       sala_id INT NULL, -- Cambiado para permitir valores nulos
+                       sala_id INT,
                        estado_id INT NOT NULL,
                        FOREIGN KEY (materia_id) REFERENCES Materia(id) ON DELETE CASCADE,
                        FOREIGN KEY (sala_id) REFERENCES Sala(id) ON DELETE SET NULL, -- Acción ON DELETE SET NULL ahora es válida
@@ -128,10 +128,8 @@ CREATE TABLE Horario (
                          hora_fin TIME NOT NULL,
                          dia_semana_id INT NOT NULL,
                          materia_id INT NOT NULL,
-                         sala_id INT NULL,
                          FOREIGN KEY (dia_semana_id) REFERENCES DiasSemana(id),
                          FOREIGN KEY (materia_id) REFERENCES Materia(id) ON DELETE CASCADE,
-                         FOREIGN KEY (sala_id) REFERENCES Sala(id) ON DELETE SET NULL
 );
 
 -- Tabla para almacenar los cursos que un estudiante tiene en su carrito
@@ -396,7 +394,9 @@ INSERT INTO Curso (cupos,capacidad, materia_id, sala_id, estado_id) VALUES
 -- Relaci�n entre Curso y Estudiante (Inscripciones)
 INSERT INTO Inscripcion (estudiante_id, curso_id, ha_aprobado) VALUES
 -- Estudiante 1
-(1, 1, 0), (1, 6, 0), (1, 11, 0), (1, 16, 0), (1, 21, 0), (1,5,1),
+(1, 1, 1), (1, 2, 1), (1, 3, 1), (1, 4, 1), (1, 5,  1), (1, 6,  1),
+(1, 7, 1), (1, 8,  1), (1, 9,  1), (1, 10,  1), (1, 11,  1), (1, 12,  1),
+(1, 13,  1),
 -- Estudiante 2
 (2, 2, 0), (2, 7, 0), (2, 12, 0), (2, 17, 0), (2, 22, 0),
 -- Estudiante 3
