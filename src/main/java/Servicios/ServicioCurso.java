@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ServicioCurso {
     private final CursoRepositorio cursoRepositorio;
@@ -20,17 +21,34 @@ public class ServicioCurso {
     }
 
     // Método para crear un curso
-    public Curso crearCurso(Materia materia, int capacidad, List<Horario> horarios, List<Sala> salas, int cupos, List<Profesor> profesores) {
-        Curso nuevoCurso = new Curso(materia, capacidad, horarios, salas, cupos);
-        nuevoCurso.setProfesores(profesores); // Asigna la lista de profesores al nuevo curso
-        // Llamada al repositorio para almacenar el curso en la base de datos
+    public Curso crearCurso(Materia materia, int capacidad, Horario horarios, Sala sala, int cupos, List<Profesor> profesores) throws SQLException {
         try {
+            Curso nuevoCurso = new Curso(materia, capacidad, horarios, sala, cupos);
+            nuevoCurso.setProfesores(profesores);
+
             cursoRepositorio.crearCurso(nuevoCurso);
+
+            System.out.println("\n¡Curso creado exitosamente!");
+            System.out.println("Detalles del curso:");
+            System.out.println("- Materia: " + materia.getNombre());
+            System.out.println("- Capacidad: " + capacidad);
+            System.out.println("- Sala: " + sala.getUbicacion());
+            System.out.println("- Cupos: " + cupos);
+            System.out.println("- Profesor(es): " + profesores.stream()
+                    .map(Profesor::getNombre)
+                    .collect(Collectors.joining(", ")));
+            if (horarios != null) {
+                System.out.println("- Horario: " + horarios.getDia() +
+                        " de " + horarios.getHoraInicio() + " a " + horarios.getHoraFin());
+            }
+
+            return nuevoCurso;
         } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("Error al guardar el curso en la base de datos.");
+            System.err.println("\n❌ Error al crear el curso:");
+            System.err.println("- Mensaje: " + e.getMessage());
+            System.err.println("- Por favor, verifique los datos e intente nuevamente.");
+            throw e;  // Re-lanzamos la excepción para manejarla en el nivel superior
         }
-        return nuevoCurso;
     }
 
 
