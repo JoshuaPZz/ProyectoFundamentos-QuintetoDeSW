@@ -1,9 +1,7 @@
 package Entidades;
 
 import Controladores.*;
-import RepositorioBD.CursoRepositorio;
-import RepositorioBD.EstudianteRepositorio;
-import RepositorioBD.ProfesorRepositorio;
+import RepositorioBD.*;
 import Servicios.*;
 import javafx.application.Application;
 import javafx.scene.text.Font;
@@ -11,6 +9,9 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 public class Principal extends Application {
     @Override
@@ -18,6 +19,8 @@ public class Principal extends Application {
         ProfesorRepositorio profesorRepositorio = new ProfesorRepositorio();
         CursoRepositorio cursoRepositorio = new CursoRepositorio();
         EstudianteRepositorio estudianteRepositorio = new EstudianteRepositorio();
+        MateriaRepositorio materiaRepositorio = new MateriaRepositorio();
+        SalaRepositorio salaRepositorio = new SalaRepositorio();
 
         ServicioCurso servicioCurso = new ServicioCurso(cursoRepositorio, estudianteRepositorio);
         ServicioMateria servicioMateria = new ServicioMateria();
@@ -33,6 +36,9 @@ public class Principal extends Application {
         ControladorPantallaBaja controladorPantallaBaja = new ControladorPantallaBaja(servicioEstudiante);
         ControladorPantallaVerInformacion controladorPantallaVerInformacion = new ControladorPantallaVerInformacion(servicioCurso);
         ControladorPantallaInformacionCompleta controladorPantallaInformacionCompleta = new ControladorPantallaInformacionCompleta();
+        ControladorProfesor controladorProfesor = new ControladorProfesor();
+        ControladorSeleccion controladorSeleccion = new ControladorSeleccion();
+        ControladorCreacionCurso controladorCreacionCurso = new ControladorCreacionCurso(materiaRepositorio, salaRepositorio, cursoRepositorio, servicioCurso);
 
         SceneManager.getInstance().getControllers().put("/Pantallas/PantallaLogin.fxml", controladorLogIn);
         SceneManager.getInstance().getControllers().put("/Pantallas/pantallaInscripcion.fxml", controladorPantallaInscripcion);
@@ -42,6 +48,9 @@ public class Principal extends Application {
         SceneManager.getInstance().getControllers().put("/Pantallas/pantallaDarBaja.fxml", controladorPantallaBaja);
         SceneManager.getInstance().getControllers().put("/Pantallas/pantallaVerInformacion.fxml", controladorPantallaVerInformacion);
         SceneManager.getInstance().getControllers().put("/Pantallas/pantallaInformacionCompleta.fxml", controladorPantallaInformacionCompleta);
+        SceneManager.getInstance().getControllers().put("/Pantallas/PantallaProfesores.fxml", controladorProfesor);
+        SceneManager.getInstance().getControllers().put("/Pantallas/pantallaSeleccion.fxml", controladorSeleccion);
+        SceneManager.getInstance().getControllers().put("/Pantallas/pantallaCreacionCurso.fxml", controladorCreacionCurso);
         // Set the primary stage in SceneManager
         SceneManager.getInstance().setPrimaryStage(stage);
         // Load custom font
@@ -60,6 +69,98 @@ public class Principal extends Application {
 
     public static void main(String[] args) throws SQLException {
         launch();
+/*
+        List<Profesor> profesores = new ArrayList<>();
+        Profesor profesor = new Profesor();
+        profesor.setId(1);
+        profesor.setNombre("Juan Perez");
+        profesores.add(profesor);
+        MateriaRepositorio materiaRepositorio = new MateriaRepositorio();
+        materiaRepositorio.obtenerMaterias();
+        Scanner scanner = new Scanner(System.in);
+        Materia materiaSeleccion = new Materia();
+        Horario horario = null;
+        try {
+            // Obtener y mostrar la lista de materias
+            List<Materia> materias = materiaRepositorio.obtenerMaterias();
+            System.out.println("Materias disponibles:");
+            for (Materia materia : materias) {
+                System.out.println("ID: " + materia.getiD() + ", Nombre: " + materia.getNombre());
+            }
+
+            // Pedir al usuario que seleccione una materia
+            System.out.print("Ingrese el ID de la materia que desea seleccionar: ");
+            String idSeleccionado = scanner.nextLine();
+
+            // Buscar la materia seleccionada
+            Materia materiaSeleccionada = materiaRepositorio.obtenerMateriaPorId(Integer.parseInt(idSeleccionado));
+
+
+            System.out.print("Ingrese el número de cupos para el curso: ");
+            int cupos;
+            while (true) {
+                try {
+                    cupos = Integer.parseInt(scanner.nextLine());
+                    if (cupos > 0) {
+                        break; // Salir del bucle si el número de cupos es válido
+                    } else {
+                        System.out.print("Ingrese un número de cupos válido (mayor que 0): ");
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.print("Por favor, ingrese un número válido de cupos: ");
+                }
+            }
+
+            SalaRepositorio salaRepositorio = new SalaRepositorio();
+            ServicioSala servicioSala = new ServicioSala();
+            List<Sala> salas = salaRepositorio.obtenerSalas();
+            System.out.println("Salas disponibles:");
+            for (Sala sala : salas) {
+                System.out.println("ID: " + sala.getiD() + ", Ubicación: " + sala.getUbicacion() +
+                        ", Capacidad: " + sala.getCapacidad() + ", Tipo: " + sala.getTipo());
+            }
+
+            // Permitir que el usuario seleccione una sala por ID
+            System.out.print("Ingrese el ID de la sala que desea seleccionar: ");
+            int idSalaSeleccionada = Integer.parseInt(scanner.nextLine());
+            Sala salaSeleccionada = salaRepositorio.obtenerSalaPorId(String.valueOf(idSalaSeleccionada));
+            int capacidad = salaRepositorio.obtenerCapacidadSala(salaSeleccionada.getiD());
+
+            CursoRepositorio cursoRepositorio = new CursoRepositorio();
+            List<HorarioDisponible> horariosDisponibles = cursoRepositorio.obtenerHorariosDisponiblesPorSala(Integer.parseInt(salaSeleccionada.getiD()));
+
+            if (!horariosDisponibles.isEmpty()) {
+                System.out.println("Horarios disponibles para la sala " + salaSeleccionada.getUbicacion() + ":");
+                for (HorarioDisponible horarios : horariosDisponibles) {
+                    // Mostrar el horario con su día, hora de inicio y fin
+                    String dia = cursoRepositorio.obtenerNombreDiaSemana(horarios.getDiaSemanaId());  // Método que convierte id de día a nombre
+                    System.out.println("ID: " + horarios.getId() + ", Día: " + dia +
+                            ", Hora de inicio: " + horarios.getHoraInicio() + ", Hora de fin: " + horarios.getHoraFin());
+                }
+                System.out.print("Ingrese el ID del horario que desea seleccionar: ");
+                int idHorarioSeleccionado = Integer.parseInt(scanner.nextLine());
+                horario = cursoRepositorio.obtenerHorarioPorRelacion(idHorarioSeleccionado);
+            }
+            EstudianteRepositorio estudianteRepositorio = new EstudianteRepositorio();
+            ServicioCurso servicioCurso = new ServicioCurso(cursoRepositorio, estudianteRepositorio);
+            Curso cursoCreado = servicioCurso.crearCurso(materiaSeleccionada, capacidad, horario, salaSeleccionada, cupos, profesores);
+            System.out.println("\n✅ El proceso de creación del curso ha finalizado correctamente.");
+            System.out.println("Puede proceder a realizar otras operaciones en el sistema.");
+
+        } catch (SQLException e) {
+            System.err.println("\n❌ Error en el proceso de creación del curso:");
+            System.err.println("Detalles del error: " + e.getMessage());
+            System.err.println("Por favor, contacte al administrador del sistema si el problema persiste.");
+        } finally {
+            scanner.close();
+        }
+
+
+
+
+    }
+
+ */
     }
 }
 /*

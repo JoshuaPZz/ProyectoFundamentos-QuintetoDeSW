@@ -13,8 +13,10 @@ public class Curso {
     private int cupos; //Hace referencia a los cupos maximos
 
     private int capacidad; //la capacidad ocupada actualmente
+    private Horario horario;
     private List<Horario> horarios;
     private Materia materia;
+    private Sala sala;
     private List<Sala> salas;
 
     private List<Profesor> profesores;
@@ -73,6 +75,22 @@ public class Curso {
 
     public void setEstudiantes(List<Estudiante> estudiantes) {
         this.estudiantes = estudiantes;
+    }
+
+    public Horario getHorario() {
+        return horario;
+    }
+
+    public void setHorario(Horario horario) {
+        this.horario = horario;
+    }
+
+    public Sala getSala() {
+        return sala;
+    }
+
+    public void setSala(Sala sala) {
+        this.sala = sala;
     }
 
     public int getCupos() {return cupos;}
@@ -145,6 +163,18 @@ public class Curso {
         this.estudiantes = new ArrayList<>();
         this.cupos = cupos;
     }
+
+    public Curso(Materia materia, int capacidad, Horario horario, Sala sala, int cupos) {
+        this.capacidad = capacidad;
+        this.horario = horario;
+        this.materia = materia;
+        this.sala = sala;
+        this.profesores = new ArrayList<>();
+        this.estudiantes = new ArrayList<>();
+        this.cupos = cupos;
+    }
+
+
 
 }
 

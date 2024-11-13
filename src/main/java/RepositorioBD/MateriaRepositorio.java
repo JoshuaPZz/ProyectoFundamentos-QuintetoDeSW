@@ -1,10 +1,13 @@
 package RepositorioBD;
+import java.nio.file.WatchEvent;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
 import Entidades.Materia;
+
+import javax.swing.*;
 
 public class MateriaRepositorio {
     private Connection getConnection() throws SQLException {
@@ -178,4 +181,25 @@ public class MateriaRepositorio {
             throw new SQLException("Error al eliminar las relaciones de la materia: " + e.getMessage());
         }
     }
+
+    public List<Materia> obtenerMaterias() throws SQLException {
+        List<Materia> materias = new ArrayList<>();
+        String sql = "SELECT id, nombre FROM Materia";
+        try (Connection conn = ConexionBaseDeDatos.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql)) {
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Materia materia = new Materia();
+                materia.setiD(String.valueOf(rs.getInt("id")));
+                materia.setNombre(rs.getString("nombre"));
+                materias.add(materia);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al obtener las materias: " + e.getMessage());
+            throw e;
+        }
+        return materias;
+    }
+
+
 }

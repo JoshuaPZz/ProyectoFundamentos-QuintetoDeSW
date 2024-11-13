@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" spacing="20.0" HBox.hgrow="ALWAYS">
+         <children>
+            <Label prefHeight="25.0" text="MATERIA" VBox.vgrow="ALWAYS">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
+               <font>
+                  <Font name="League Gothic Regular" size="20.0" />
+               </font>
+            </Label>
+            <Label prefHeight="25.0" text="CUPOS">
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+               <font>
+                  <Font name="League Gothic Regular" size="20.0" />
+               </font>
+            </Label>
+            <Label prefHeight="25.0" text="SALA">
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
+               <font>
+                  <Font name="League Gothic Regular" size="20.0" />
+               </font>
+            </Label>
+            <Label prefHeight="25.0" text="HORARIOS">
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+               <font>
+                  <Font name="League Gothic Regular" size="20.0" />
+               </font>
+            </Label>
+            <Label minHeight="25.0" prefHeight="35.0" />
+         </children>
+      </VBox>
+      <VBox alignment="CENTER_LEFT" fillWidth="false" maxHeight="-Infinity" maxWidth="-Infinity" spacing="20.0" HBox.hgrow="ALWAYS">
+         <children>
+            <ChoiceBox fx:id="materiasChoice" prefWidth="150.0">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </ChoiceBox>
+            <TextField fx:id="cuposLabel">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </TextField>
+            <ChoiceBox fx:id="salasChoice" minWidth="150.0" VBox.vgrow="ALWAYS">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </ChoiceBox>
+            <ChoiceBox fx:id="horariosChoice" minWidth="150.0" VBox.vgrow="ALWAYS" />
+            <Button fx:id="btnCrearClase" mnemonicParsing="false" onAction="#crearClasePressed" text="CREAR CLASE">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+               <font>
+                  <Font name="League Gothic Regular" size="18.0" />
+               </font>
+            </Button>
+         </children>
+         <padding>
+            <Insets left="10.0" />
+         </padding>
+         <HBox.margin>
+            <Insets />
+         </HBox.margin>
+      </VBox>
+   </children>
+</HBox>

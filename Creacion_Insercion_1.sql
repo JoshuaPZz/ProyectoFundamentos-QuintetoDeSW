@@ -6,6 +6,7 @@ DROP TABLE IF EXISTS Horario;
 DROP TABLE IF EXISTS Curso;
 DROP TABLE IF EXISTS Prerrequisito;
 DROP TABLE IF EXISTS Correquisito;
+DROP TABLE IF EXISTS Semana_Hora;
 
 -- Eliminar tablas principales
 DROP TABLE IF EXISTS Estudiante;
@@ -129,8 +130,10 @@ CREATE TABLE Horario (
                          dia_semana_id INT NOT NULL,
                          materia_id INT NOT NULL,
                          sala_id INT NULL,
+                         curso_id INT NOT NULL,
                          FOREIGN KEY (dia_semana_id) REFERENCES DiasSemana(id),
                          FOREIGN KEY (materia_id) REFERENCES Materia(id) ON DELETE CASCADE,
+                         FOREIGN KEY (curso_id) REFERENCES Curso(id) ON DELETE CASCADE,
                          FOREIGN KEY (sala_id) REFERENCES Sala(id) ON DELETE SET NULL
 );
 
@@ -144,13 +147,22 @@ CREATE TABLE Carrito (
                          UNIQUE(estudiante_id, curso_id)
 );
 
+--Tabla para parametrizar el horario por semana
+CREATE TABLE Semana_Hora (
+                        id INT PRIMARY KEY AUTO_INCREMENT,
+                        hora_inicio TIME NOT NULL,
+                        hora_fin TIME NOT NULL,
+                        dia_semana_id INT NOT NULL,
+                        FOREIGN KEY (dia_semana_id) REFERENCES DiasSemana(id)
+);
+
 
 
 
 -- Inserciones en las tablas auxiliares
 
 -- D�as de la semana
-INSERT INTO DiasSemana (nombre) VALUES 
+INSERT INTO DiasSemana (nombre) VALUES
 ('Lunes'),
 ('Martes'),
 ('Miercoles'),
@@ -159,7 +171,7 @@ INSERT INTO DiasSemana (nombre) VALUES
 ('Sabado');
 
 -- Estados de los cursos
-INSERT INTO EstadoCurso (estado) VALUES 
+INSERT INTO EstadoCurso (estado) VALUES
 ('Abierto'),
 ('Cerrado'),
 ('En progreso'),
@@ -309,94 +321,96 @@ INSERT INTO Sala (ubicacion, capacidad, tipo) VALUES
 
 
 -- Cursos (Primero aseg�rate de que existen materias, salas y estados)
-INSERT INTO Curso (cupos,capacidad, materia_id, sala_id, estado_id) VALUES
-(50,40, 1, 10, 1),  -- Materia 1
-(55,50, 2, 8, 1),   -- Materia 2
-(60,45, 3, 7, 1),   -- Materia 3
-(60,60, 4, 6, 1),   -- Materia 4
-(50,35, 5, 5, 1),   -- Materia 5
-(45,30, 6, 4, 1),   -- Materia 6
-(55,50, 7, 3, 1),   -- Materia 7
-(60,45, 8, 2, 1),   -- Materia 8
-(70,60, 9, 1, 1),   -- Materia 9
-(50,40, 10, 12, 1), -- Materia 10
-(40,35, 11, 11, 1), -- Materia 11
-(55,50, 12, 10, 1), -- Materia 12
-(35,30, 13, 9, 1),  -- Materia 13
-(50,45, 14, 8, 1),  -- Materia 14
-(65,60, 15, 7, 1),  -- Materia 15
-(50,40, 16, 6, 1),  -- Materia 16
-(45,35, 17, 5, 1),  -- Materia 17
-(45,30, 18, 4, 1),  -- Materia 18
-(50,50, 19, 3, 1),  -- Materia 19
-(50,45, 20, 2, 1),  -- Materia 20
-(65,60, 21, 1, 1),  -- Materia 21
-(50,40, 22, 12, 1), -- Materia 22
-(45,35, 23, 11, 1), -- Materia 23
-(50,50, 24, 10, 1), -- Materia 24
-(45,30, 25, 9, 1),  -- Materia 25
-(50,45, 26, 8, 1),  -- Materia 26
-(65,60, 27, 7, 1),  -- Materia 27
-(50,40, 28, 6, 1),  -- Materia 28
-(45,35, 29, 5, 1),  -- Materia 29
-(45,30, 30, 4, 1),  -- Materia 30
-(50,50, 31, 3, 1),  -- Materia 31
-(50,45, 32, 2, 1),  -- Materia 32
-(60,60, 33, 1, 1),  -- Materia 33
-(50,40, 34, 12, 1), -- Materia 34
-(45,35, 35, 11, 1), -- Materia 35
-(50,50, 36, 10, 1), -- Materia 36
-(45,30, 37, 9, 1),  -- Materia 37
-(50,45, 38, 8, 1),  -- Materia 38
-(65,60, 39, 7, 1),  -- Materia 39
-(50,40, 40, 6, 1),  -- Materia 40
-(45,35, 41, 5, 1),  -- Materia 41
-(45,30, 42, 4, 1),  -- Materia 42
-(50,50, 43, 3, 1),  -- Materia 43
-(50,45, 44, 2, 1),  -- Materia 44
-(65,60, 45, 1, 1),  -- Materia 45
-(50,40, 46, 12, 1), -- Materia 46
-(45,35, 1, 11, 1),  -- Repetida Materia 1
-(50,50, 2, 10, 1),  -- Repetida Materia 2
-(45,30, 3, 9, 1),   -- Repetida Materia 3
-(50,45, 4, 8, 1),   -- Repetida Materia 4
-(65,60, 5, 7, 1),   -- Repetida Materia 5
-(50,40, 6, 6, 1),   -- Repetida Materia 6
-(45,35, 7, 5, 1),   -- Repetida Materia 7
-(50,50, 8, 4, 1),   -- Repetida Materia 8
-(45,30, 9, 3, 1),   -- Repetida Materia 9
-(65,60, 10, 2, 1),  -- Repetida Materia 10
-(50,45, 11, 1, 1),  -- Repetida Materia 11
-(50,50, 12, 12, 1), -- Repetida Materia 12
-(50,40, 13, 11, 1), -- Repetida Materia 13
-(45,35, 14, 10, 1), -- Repetida Materia 14
-(45,30, 15, 9, 1),  -- Repetida Materia 15
-(65,60, 16, 8, 1),  -- Repetida Materia 16
-(50,45, 17, 7, 1),  -- Repetida Materia 17
-(50,50, 18, 6, 1),  -- Repetida Materia 18
-(50,40, 19, 5, 1),  -- Repetida Materia 19
-(45,35, 20, 4, 1),  -- Repetida Materia 20
-(45,30, 21, 3, 1),  -- Repetida Materia 21
-(65,60, 22, 2, 1),  -- Repetida Materia 22
-(50,45, 23, 1, 1),  -- Repetida Materia 23
-(50,50, 24, 12, 1), -- Repetida Materia 24
-(50,40, 25, 11, 1), -- Repetida Materia 25
-(45,35, 26, 10, 1), -- Repetida Materia 26
-(45,30, 27, 9, 1),  -- Repetida Materia 27
-(65,60, 28, 8, 1),  -- Repetida Materia 28
-(50,45, 29, 7, 1),  -- Repetida Materia 29
-(50,50, 30, 6, 1),  -- Repetida Materia 30
-(50,40, 31, 5, 1),  -- Repetida Materia 31
-(45,35, 32, 4, 1),  -- Repetida Materia 32
-(45,30, 33, 3, 1),  -- Repetida Materia 33
-(65,60, 34, 2, 1);  -- Repetida Materia 34
+    INSERT INTO Curso (cupos,capacidad, materia_id, sala_id, estado_id) VALUES
+    (50,40, 1, 10, 1),  -- Materia 1
+    (55,50, 2, 8, 1),   -- Materia 2
+    (60,45, 3, 7, 1),   -- Materia 3
+    (60,60, 4, 6, 1),   -- Materia 4
+    (50,35, 5, 5, 1),   -- Materia 5
+    (45,30, 6, 4, 1),   -- Materia 6
+    (55,50, 7, 3, 1),   -- Materia 7
+    (60,45, 8, 2, 1),   -- Materia 8
+    (70,60, 9, 1, 1),   -- Materia 9
+    (50,40, 10, 12, 1), -- Materia 10
+    (40,35, 11, 11, 1), -- Materia 11
+    (55,50, 12, 10, 1), -- Materia 12
+    (35,30, 13, 9, 1),  -- Materia 13
+    (50,45, 14, 8, 1),  -- Materia 14
+    (65,60, 15, 7, 1),  -- Materia 15
+    (50,40, 16, 6, 1),  -- Materia 16
+    (45,35, 17, 5, 1),  -- Materia 17
+    (45,30, 18, 4, 1),  -- Materia 18
+    (50,50, 19, 3, 1),  -- Materia 19
+    (50,45, 20, 2, 1),  -- Materia 20
+    (65,60, 21, 1, 1),  -- Materia 21
+    (50,40, 22, 12, 1), -- Materia 22
+    (45,35, 23, 11, 1), -- Materia 23
+    (50,50, 24, 10, 1), -- Materia 24
+    (45,30, 25, 9, 1),  -- Materia 25
+    (50,45, 26, 8, 1),  -- Materia 26
+    (65,60, 27, 7, 1),  -- Materia 27
+    (50,40, 28, 6, 1),  -- Materia 28
+    (45,35, 29, 5, 1),  -- Materia 29
+    (45,30, 30, 4, 1),  -- Materia 30
+    (50,50, 31, 3, 1),  -- Materia 31
+    (50,45, 32, 2, 1),  -- Materia 32
+    (60,60, 33, 1, 1),  -- Materia 33
+    (50,40, 34, 12, 1), -- Materia 34
+    (45,35, 35, 11, 1), -- Materia 35
+    (50,50, 36, 10, 1), -- Materia 36
+    (45,30, 37, 9, 1),  -- Materia 37
+    (50,45, 38, 8, 1),  -- Materia 38
+    (65,60, 39, 7, 1),  -- Materia 39
+    (50,40, 40, 6, 1),  -- Materia 40
+    (45,35, 41, 5, 1),  -- Materia 41
+    (45,30, 42, 4, 1),  -- Materia 42
+    (50,50, 43, 3, 1),  -- Materia 43
+    (50,45, 44, 2, 1),  -- Materia 44
+    (65,60, 45, 1, 1),  -- Materia 45
+    (50,40, 46, 12, 1), -- Materia 46
+    (45,35, 1, 11, 1),  -- Repetida Materia 1
+    (50,50, 2, 10, 1),  -- Repetida Materia 2
+    (45,30, 3, 9, 1),   -- Repetida Materia 3
+    (50,45, 4, 8, 1),   -- Repetida Materia 4
+    (65,60, 5, 7, 1),   -- Repetida Materia 5
+    (50,40, 6, 6, 1),   -- Repetida Materia 6
+    (45,35, 7, 5, 1),   -- Repetida Materia 7
+    (50,50, 8, 4, 1),   -- Repetida Materia 8
+    (45,30, 9, 3, 1),   -- Repetida Materia 9
+    (65,60, 10, 2, 1),  -- Repetida Materia 10
+    (50,45, 11, 1, 1),  -- Repetida Materia 11
+    (50,50, 12, 12, 1), -- Repetida Materia 12
+    (50,40, 13, 11, 1), -- Repetida Materia 13
+    (45,35, 14, 10, 1), -- Repetida Materia 14
+    (45,30, 15, 9, 1),  -- Repetida Materia 15
+    (65,60, 16, 8, 1),  -- Repetida Materia 16
+    (50,45, 17, 7, 1),  -- Repetida Materia 17
+    (50,50, 18, 6, 1),  -- Repetida Materia 18
+    (50,40, 19, 5, 1),  -- Repetida Materia 19
+    (45,35, 20, 4, 1),  -- Repetida Materia 20
+    (45,30, 21, 3, 1),  -- Repetida Materia 21
+    (65,60, 22, 2, 1),  -- Repetida Materia 22
+    (50,45, 23, 1, 1),  -- Repetida Materia 23
+    (50,50, 24, 12, 1), -- Repetida Materia 24
+    (50,40, 25, 11, 1), -- Repetida Materia 25
+    (45,35, 26, 10, 1), -- Repetida Materia 26
+    (45,30, 27, 9, 1),  -- Repetida Materia 27
+    (65,60, 28, 8, 1),  -- Repetida Materia 28
+    (50,45, 29, 7, 1),  -- Repetida Materia 29
+    (50,50, 30, 6, 1),  -- Repetida Materia 30
+    (50,40, 31, 5, 1),  -- Repetida Materia 31
+    (45,35, 32, 4, 1),  -- Repetida Materia 32
+    (45,30, 33, 3, 1),  -- Repetida Materia 33
+    (65,60, 34, 2, 1);  -- Repetida Materia 34
 
 
 
 -- Relaci�n entre Curso y Estudiante (Inscripciones)
 INSERT INTO Inscripcion (estudiante_id, curso_id, ha_aprobado) VALUES
 -- Estudiante 1
-(1, 1, 0), (1, 6, 0), (1, 11, 0), (1, 16, 0), (1, 21, 0), (1,5,1),
+(1, 1, 1), (1, 2, 1), (1, 3, 1), (1, 4, 1), (1, 5,  1), (1, 6,  1),
+(1, 7, 1), (1, 8,  1), (1, 9,  1), (1, 10,  1), (1, 11,  1), (1, 12,  1),
+(1, 13,  1),
 -- Estudiante 2
 (2, 2, 0), (2, 7, 0), (2, 12, 0), (2, 17, 0), (2, 22, 0),
 -- Estudiante 3
@@ -547,49 +561,80 @@ INSERT INTO Asignacion (profesor_id, curso_id) VALUES
 
 
 -- Horarios de los cursos
-INSERT INTO Horario (hora_inicio, hora_fin, dia_semana_id, materia_id, sala_id) VALUES
-('20:00', '22:00', 3, 43, 3),   -- Materia 43, Lunes
-('20:00', '22:00', 1, 43, 1),   -- Materia 43, Lunes
-('08:00', '10:00', 1, 1, 1),   -- Materia 1, Lunes
-('08:00', '10:00', 2, 1, 1),   -- Materia 1, Lunes
-('10:00', '12:00', 3, 2, 2),   -- Materia 2, Miércoles
-('14:00', '16:00', 2, 3, 3),   -- Materia 3, Martes
-('16:00', '18:00', 4, 4, 4),   -- Materia 4, Jueves
-('08:00', '10:00', 1, 5, 5),   -- Materia 5, Lunes
-('10:00', '12:00', 3, 6, 6),   -- Materia 6, Miércoles
-('14:00', '16:00', 5, 7, 7),   -- Materia 7, Viernes
-('16:00', '18:00', 6, 8, 8),   -- Materia 8, Sábado
-('08:00', '10:00', 1, 9, 9),   -- Materia 9, Lunes
-('10:00', '12:00', 2, 10, 10), -- Materia 10, Martes
-('08:00', '10:00', 1, 11, 1), -- Materia 11, Lunes
-('10:00', '12:00', 3, 12, 2), -- Materia 12, Miércoles
-('14:00', '16:00', 2, 13, 3), -- Materia 13, Martes
-('16:00', '18:00', 4, 14, 4), -- Materia 14, Jueves
-('08:00', '10:00', 1, 15, 5), -- Materia 15, Lunes
-('10:00', '12:00', 3, 16, 6), -- Materia 16, Miércoles
-('14:00', '16:00', 5, 17, 7), -- Materia 17, Viernes
-('16:00', '18:00', 6, 18,8), -- Materia 18, Sábado
-('08:00', '10:00', 1, 19, 9), -- Materia 19, Lunes
-('10:00', '12:00', 2, 20, 10), -- Materia 20, Martes
-('08:00', '10:00', 1, 21, 1), -- Materia 21, Lunes
-('10:00', '12:00', 3, 22, 2), -- Materia 22, Miércoles
-('14:00', '16:00', 2, 23, 3), -- Materia 23, Martes
-('16:00', '18:00', 4, 24, 4), -- Materia 24, Jueves
-('08:00', '10:00', 1, 25, 5), -- Materia 25, Lunes
-('10:00', '12:00', 3, 26, 6), -- Materia 26, Miércoles
-('14:00', '16:00', 5, 27, 7), -- Materia 27, Viernes
-('16:00', '18:00', 6, 28, 8), -- Materia 28, Sábado
-('08:00', '10:00', 1, 29, 9), -- Materia 29, Lunes
-('10:00', '12:00', 2, 30, 10), -- Materia 30, Martes
-('08:00', '10:00', 1, 31, 11), -- Materia 31, Lunes
-('10:00', '12:00', 3, 32, 12), -- Materia 32, Miércoles
-('14:00', '16:00', 2, 33, 13), -- Materia 33, Martes
-('16:00', '18:00', 4, 34, 13), -- Materia 34, Jueves
-('08:00', '10:00', 1, 35, 5), -- Materia 35, Lunes
-('10:00', '12:00', 3, 36, 6), -- Materia 36, Miércoles
-('14:00', '16:00', 5, 37, 7), -- Materia 37, Viernes
-('16:00', '18:00', 6, 38, 8), -- Materia 38, Sábado
-('08:00', '10:00', 1, 39, 3), -- Materia 39, Lunes
-('10:00', '12:00', 2, 40, 4), -- Materia 40, Martes
-('08:00', '10:00', 1, 41, 1), -- Materia 41, Lunes
-('10:00', '12:00', 3, 42, 2); -- Materia 42, Miércoles
+INSERT INTO Horario (hora_inicio, hora_fin, dia_semana_id, materia_id, sala_id, curso_id) VALUES
+('18:00', '20:00', 3, 43, 3, 45),   -- Materia 43, Lunes
+('07:00', '09:00', 1, 1, 1, 3),   -- Materia 1, Lunes
+('07:00', '09:00', 2, 1, 1, 49),   -- Materia 1, Lunes
+('09:00', '11:00', 3, 2, 2, 4),   -- Materia 2, Miércoles
+('14:00', '16:00', 2, 3, 3,5),   -- Materia 3, Martes
+('16:00', '18:00', 4, 4, 4,52),   -- Materia 4, Jueves
+('07:00', '09:00', 1, 5, 5,7),   -- Materia 5, Lunes
+('09:00', '11:00', 3, 6, 6,8),   -- Materia 6, Miércoles
+('14:00', '16:00', 5, 7, 7,9),   -- Materia 7, Viernes
+('16:00', '18:00', 6, 8, 8,10),   -- Materia 8, Sábado
+('08:00', '10:00', 1, 9, 9,11),   -- Materia 9, Lunes
+('09:00', '11:00', 2, 10, 10,12), -- Materia 10, Martes
+('07:00', '09:00', 1, 11, 1,59), -- Materia 11, Lunes
+('09:00', '11:00', 3, 12, 2,60), -- Materia 12, Miércoles
+('14:00', '16:00', 2, 13, 3,61), -- Materia 13, Martes
+('16:00', '18:00', 4, 14, 4, 16), -- Materia 14, Jueves
+('07:00', '09:00', 1, 15, 5, 17), -- Materia 15, Lunes
+('09:00', '11:00', 3, 16, 6,18), -- Materia 16, Miércoles
+('14:00', '16:00', 5, 17, 7,65), -- Materia 17, Viernes
+('16:00', '18:00', 6, 18,8,66), -- Materia 18, Sábado
+('07:00', '09:00', 1, 19, 9,21), -- Materia 19, Lunes
+('09:00', '11:00', 2, 20, 10,22), -- Materia 20, Martes
+('07:00', '09:00', 1, 21, 1,23), -- Materia 21, Lunes
+('09:00', '11:00', 3, 22, 2,24), -- Materia 22, Miércoles
+('14:00', '16:00', 2, 23, 3,25), -- Materia 23, Martes
+('16:00', '18:00', 4, 24, 4,26), -- Materia 24, Jueves
+('07:00', '09:00', 1, 25, 5,27), -- Materia 25, Lunes
+('09:00', '11:00', 3, 26, 6,28), -- Materia 26, Miércoles
+('14:00', '16:00', 5, 27, 7,29), -- Materia 27, Viernes
+('16:00', '18:00', 6, 28, 8,30), -- Materia 28, Sábado
+('07:00', '09:00', 1, 29, 9,31), -- Materia 29, Lunes
+('09:00', '11:00', 2, 30, 10,32), -- Materia 30, Martes
+('07:00', '09:00', 1, 31, 11,33), -- Materia 31, Lunes
+('09:00', '11:00', 3, 32, 12,34), -- Materia 32, Miércoles
+('14:00', '16:00', 2, 33, 13,35), -- Materia 33, Martes
+('16:00', '18:00', 4, 34, 13,36), -- Materia 34, Jueves
+('07:00', '09:00', 1, 35, 5,37), -- Materia 35, Lunes
+('09:00', '11:00', 3, 36, 6,38), -- Materia 36, Miércoles
+('14:00', '16:00', 5, 37, 7,39), -- Materia 37, Viernes
+('16:00', '18:00', 6, 38, 8,40), -- Materia 38, Sábado
+('07:00', '09:00', 1, 39, 3,41), -- Materia 39, Lunes
+('09:00', '11:00', 2, 40, 4,42), -- Materia 40, Martes
+('07:00', '09:00', 1, 41, 1,43), -- Materia 41, Lunes
+('09:00', '11:00', 3, 42, 2,44); -- Materia 42, Miércoles
+
+INSERT INTO Semana_Hora (hora_inicio, hora_fin, dia_semana_id) VALUES
+('07:00', '09:00', 1),
+('09:00', '11:00', 1),
+('11:00', '13:00', 1),
+('14:00', '16:00', 1),
+('18:00', '20:00', 1),
+('07:00', '09:00', 2),
+('09:00', '11:00', 2),
+('11:00', '13:00', 2),
+('14:00', '16:00', 2),
+('18:00', '20:00', 2),
+('07:00', '09:00', 3),
+('09:00', '11:00', 3),
+('11:00', '13:00', 3),
+('14:00', '16:00', 3),
+('18:00', '20:00', 3),
+('07:00', '09:00', 4),
+('09:00', '11:00', 4),
+('11:00', '13:00', 4),
+('14:00', '16:00', 4),
+('18:00', '20:00', 4),
+('07:00', '09:00', 5),
+('09:00', '11:00', 5),
+('11:00', '13:00', 5),
+('14:00', '16:00', 5),
+('18:00', '20:00', 5),
+('07:00', '09:00', 6),
+('09:00', '11:00', 6),
+('11:00', '13:00', 6),
+('14:00', '16:00', 6),
+('18:00', '20:00', 6);

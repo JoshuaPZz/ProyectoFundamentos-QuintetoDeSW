@@ -39,11 +39,11 @@ public class ServicioCursoTest {
         materia.setNombre("Matemáticas");
         materiaRepositorio.agregarMateria(materia);
 
-        List<Horario> horarios = new ArrayList<>();
-        String dia = "Lunes"; // Definir el día de la semana
-        Date horaInicio = ServicioCurso.crearHorario(2024, Calendar.JANUARY, 1, 9);
-        Date horaFin = ServicioCurso.crearHorario(2024, Calendar.JANUARY, 1, 11);
-        horarios.add(new Horario(dia, horaInicio, horaFin));
+        Horario horario = new Horario();
+        horario.setDia("Lunes");
+        horario.setHoraInicio(ServicioCurso.crearHorario(2024, Calendar.JANUARY, 1, 9));
+        horario.setHoraFin(ServicioCurso.crearHorario(2024, Calendar.JANUARY, 1, 11));
+
 
         Sala sala = new Sala();
         sala.setiD("101");
@@ -55,9 +55,6 @@ public class ServicioCursoTest {
         Sala salaInsertada = salaRepositorio.obtenerSalaPorId(sala.getiD());
         assertNotNull(salaInsertada, "La sala no fue insertada correctamente");
 
-        List<Sala> salas = new ArrayList<>();
-        salas.add(salaInsertada);
-
         List<Profesor> profesores = new ArrayList<>();
         Profesor profesor = new Profesor();
         profesor.setId(1);
@@ -68,11 +65,11 @@ public class ServicioCursoTest {
         curso = new Curso();
         curso.setMateria(materia);
         curso.setCapacidad(30);
-        curso.setHorarios(horarios);
+        curso.setHorario(horario);
         curso.setProfesores(profesores);
         curso.setEstudiantes(new ArrayList<>());
         curso.setiD("CURSO101");
-        curso.setSalas(salas);
+        curso.setSala(sala);
 
         estudiante = new Estudiante();
         estudiante.setId(1);
@@ -96,18 +93,18 @@ public class ServicioCursoTest {
     }
 
     @Test
-    public void testCrearCursoExitoso() {
+    public void testCrearCursoExitoso() throws SQLException {
         Materia materia = new Materia();
         materia.setiD("102");
-        List<Horario> horarios = new ArrayList<>();
-        String dia = "Lunes"; // Definir el día de la semana
-        Date horaInicio = ServicioCurso.crearHorario(2024, Calendar.JANUARY, 1, 9);
-        Date horaFin = ServicioCurso.crearHorario(2024, Calendar.JANUARY, 1, 11);
-        horarios.add(new Horario(dia, horaInicio, horaFin));
-        List<Sala> salas = new ArrayList<>();
+        Horario horario = new Horario();
+        horario.setDia("Lunes");
+        horario.setHoraInicio(ServicioCurso.crearHorario(2024, Calendar.JANUARY, 1, 9));
+        horario.setHoraFin(ServicioCurso.crearHorario(2024, Calendar.JANUARY, 1, 11));
+
+       Sala sala = new Sala();
         List<Profesor> profesores = new ArrayList<>();
 
-        Curso nuevoCurso = servicioCurso.crearCurso(materia, 25, horarios, salas, 25, profesores);
+        Curso nuevoCurso = servicioCurso.crearCurso(materia, 25, horario, sala, 25, profesores);
 
 
         assertNotNull(nuevoCurso, "El curso creado no debería ser null");

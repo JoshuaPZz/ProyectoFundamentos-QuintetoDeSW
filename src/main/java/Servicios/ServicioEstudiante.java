@@ -181,7 +181,7 @@ public class ServicioEstudiante {
 
             //Verificar que no exceda los créditos máximos permitidos
             int creditosCurso = cursoAInscribir.getMateria().getCreditos();
-            if (totalCreditos + creditosCurso > estudiante.getCreditosmax()) {
+            if (totalCreditos + creditosCurso >= estudiante.getCreditosmax()) {
                 System.out.println("El curso " + cursoAInscribir.getiD() + " excede el límite de créditos permitidos.");
                 return false;
             }
