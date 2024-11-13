@@ -3,6 +3,7 @@ package Entidades;
 import Controladores.*;
 import RepositorioBD.CursoRepositorio;
 import RepositorioBD.EstudianteRepositorio;
+import RepositorioBD.MateriaRepositorio;
 import RepositorioBD.ProfesorRepositorio;
 import Servicios.*;
 import javafx.application.Application;
@@ -18,6 +19,7 @@ public class Principal extends Application {
         ProfesorRepositorio profesorRepositorio = new ProfesorRepositorio();
         CursoRepositorio cursoRepositorio = new CursoRepositorio();
         EstudianteRepositorio estudianteRepositorio = new EstudianteRepositorio();
+        MateriaRepositorio materiaRepositorio = new MateriaRepositorio();
 
         ServicioCurso servicioCurso = new ServicioCurso(cursoRepositorio, estudianteRepositorio);
         ServicioMateria servicioMateria = new ServicioMateria();
@@ -35,6 +37,7 @@ public class Principal extends Application {
         ControladorPantallaInformacionCompleta controladorPantallaInformacionCompleta = new ControladorPantallaInformacionCompleta();
         ControladorProfesor controladorProfesor = new ControladorProfesor();
         ControladorSeleccion controladorSeleccion = new ControladorSeleccion();
+        ControladorCreacionCurso controladorCreacionCurso = new ControladorCreacionCurso(materiaRepositorio);
 
         SceneManager.getInstance().getControllers().put("/Pantallas/PantallaLogin.fxml", controladorLogIn);
         SceneManager.getInstance().getControllers().put("/Pantallas/pantallaInscripcion.fxml", controladorPantallaInscripcion);
@@ -46,6 +49,7 @@ public class Principal extends Application {
         SceneManager.getInstance().getControllers().put("/Pantallas/pantallaInformacionCompleta.fxml", controladorPantallaInformacionCompleta);
         SceneManager.getInstance().getControllers().put("/Pantallas/PantallaProfesores.fxml", controladorProfesor);
         SceneManager.getInstance().getControllers().put("/Pantallas/pantallaSeleccion.fxml", controladorSeleccion);
+        SceneManager.getInstance().getControllers().put("/Pantallas/pantallaCreacionCurso.fxml", controladorCreacionCurso);
         // Set the primary stage in SceneManager
         SceneManager.getInstance().setPrimaryStage(stage);
         // Load custom font
