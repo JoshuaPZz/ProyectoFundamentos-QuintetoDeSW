@@ -390,10 +390,10 @@ public class CursoRepositorio{
         return switch (diaSemanaId) {
             case 1 -> "Lunes";
             case 2 -> "Martes";
-            case 3 -> "Miércoles";
+            case 3 -> "Miercoles";
             case 4 -> "Jueves";
             case 5 -> "Viernes";
-            case 6 -> "Sábado";
+            case 6 -> "Sabado";
             default -> "Desconocido";
         };
     }

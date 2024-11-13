@@ -42,6 +42,7 @@ public class ServicioProfesor {
         }
     }
 
+    /*
     //metodo para crear un curso, llamando el metodo de servicio curso y llama el repositorio para que ese curso se le asigne al profesor
     public Curso crearYAsignarCurso(Profesor profesor, String cursoID, Materia materia, int capacidad, Horario horarios, Sala salas, int cupos) throws SQLException {
         if (profesor == null) {
@@ -59,6 +60,8 @@ public class ServicioProfesor {
         System.out.println("Curso creado y asignado exitosamente al profesor.");
         return nuevoCurso;
     }
+
+     */
 
 
 

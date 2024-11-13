@@ -21,10 +21,10 @@ public class ServicioCurso {
     }
 
     // Método para crear un curso
-    public Curso crearCurso(Materia materia, int capacidad, Horario horarios, Sala sala, int cupos, List<Profesor> profesores) throws SQLException {
+    public Curso crearCurso(Materia materia, int capacidad, Horario horarios, Sala sala, int cupos, Profesor profesor) throws SQLException {
         try {
             Curso nuevoCurso = new Curso(materia, capacidad, horarios, sala, cupos);
-            nuevoCurso.setProfesores(profesores);
+            nuevoCurso.getProfesores().add(profesor);
 
             cursoRepositorio.crearCurso(nuevoCurso);
 
@@ -34,9 +34,7 @@ public class ServicioCurso {
             System.out.println("- Capacidad: " + capacidad);
             System.out.println("- Sala: " + sala.getUbicacion());
             System.out.println("- Cupos: " + cupos);
-            System.out.println("- Profesor(es): " + profesores.stream()
-                    .map(Profesor::getNombre)
-                    .collect(Collectors.joining(", ")));
+            System.out.println("- Profesor(es): " + profesor.getNombre());
             if (horarios != null) {
                 System.out.println("- Horario: " + horarios.getDia() +
                         " de " + horarios.getHoraInicio() + " a " + horarios.getHoraFin());

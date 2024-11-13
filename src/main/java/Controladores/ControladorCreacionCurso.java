@@ -1,8 +1,5 @@
 package Controladores;
-import Entidades.Horario;
-import Entidades.HorarioDisponible;
-import Entidades.Materia;
-import Entidades.Sala;
+import Entidades.*;
 import RepositorioBD.CursoRepositorio;
 import RepositorioBD.MateriaRepositorio;
 import RepositorioBD.SalaRepositorio;
@@ -49,7 +46,19 @@ public class ControladorCreacionCurso {
 
     @FXML
     void crearClasePressed(ActionEvent event) {
-        //servicioCurso.crearCurso(materiasChoice.getSelectionModel().getSelectedItem(), Integer.parseInt(cuposLabel), )
+        try {
+            servicioCurso.crearCurso(
+                    materiasChoice.getSelectionModel().getSelectedItem(),
+                    this.salasChoice.getSelectionModel().getSelectedItem().getCapacidad(),
+                    this.cursoRepositorio.obtenerHorarioPorRelacion(this.horariosChoice.getSelectionModel().getSelectedItem().getId()),
+                    this.salasChoice.getSelectionModel().getSelectedItem(),
+                    Integer.parseInt(this.cuposLabel.getText()),
+                    Sesion.getInstancia().getProfesor()
+            );
+
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -62,14 +71,17 @@ public class ControladorCreacionCurso {
                 @Override
                 public String toString(Materia object) {
                     try {
-                        String nombre = object.getNombre();
-                        System.out.println("Converting Materia: " + nombre);
-                        return nombre;
+                        if(object != null) {
+                            String nombre = object.getNombre();
+                            System.out.println("Converting Materia: " + nombre);
+                            return nombre;
+                        }
                     } catch (Exception e) {
                         System.out.println("Error in toString conversion: " + e.getMessage());
                         e.printStackTrace();
                         return "Error";
                     }
+                    return "";
                 }
 
                 @Override
@@ -80,12 +92,14 @@ public class ControladorCreacionCurso {
             List<Sala> salas = salaRepositorio.obtenerSalas();
             cuposLabel.textProperty().addListener((obs, oldValue, newValue) -> {
                 try {
-                    int cupos = Integer.parseInt(newValue);
-                    salasChoice.getItems().setAll(
-                            salas.stream()
-                                    .filter(s -> s.getCapacidad() >= cupos)
-                                    .toList()
-                    );
+                    if(newValue != "") {
+                        int cupos = Integer.parseInt(newValue);
+                        salasChoice.getItems().setAll(
+                                salas.stream()
+                                        .filter(s -> s.getCapacidad() >= cupos)
+                                        .toList()
+                        );
+                    }
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                 }
@@ -96,14 +110,17 @@ public class ControladorCreacionCurso {
                 @Override
                 public String toString(Sala sala) {
                     try {
-                        String nombre = sala.getUbicacion();
-                        System.out.println("Converting Materia: " + nombre);
-                        return nombre;
+                        if(sala != null) {
+                            String nombre = sala.getUbicacion();
+                            System.out.println("Converting Materia: " + nombre);
+                            return nombre + " Capacidad: " + sala.getCapacidad();
+                        }
                     } catch (Exception e) {
                         System.out.println("Error in toString conversion: " + e.getMessage());
                         e.printStackTrace();
                         return "";
                     }
+                    return "";
                 }
 
                 @Override
@@ -115,46 +132,31 @@ public class ControladorCreacionCurso {
             salasChoice.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
 
                 try{
-                    List<HorarioDisponible> horarios = cursoRepositorio.obtenerHorariosDisponiblesPorSala(Integer.parseInt(salasChoice.getSelectionModel().getSelectedItem().getiD()));
-                    horariosChoice.getItems().setAll(horarios);
+                    if(salasChoice.getSelectionModel().getSelectedItem() != null) {
+                        List<HorarioDisponible> horarios = cursoRepositorio.obtenerHorariosDisponiblesPorSala(Integer.parseInt(salasChoice.getSelectionModel().getSelectedItem().getiD()));
+                        horariosChoice.getItems().setAll(horarios);
+                    }
                 }catch (Exception e) {
                     e.printStackTrace();
                 }
-
             });
-            salasChoice.setConverter(new StringConverter<>() {
 
-                @Override
-                public String toString(Sala sala) {
-                    try {
-                        String nombre = sala.getUbicacion();
-                        System.out.println("Converting Materia: " + nombre);
-                        return nombre;
-                    } catch (Exception e) {
-                        System.out.println("Error in toString conversion: " + e.getMessage());
-                        e.printStackTrace();
-                        return "";
-                    }
-                }
-
-                @Override
-                public Sala fromString(String s) {
-                    return null;
-                }
-            });
             horariosChoice.setConverter(new StringConverter<>() {
 
                 @Override
                 public String toString(HorarioDisponible horario) {
                     try {
-                        String nombre = "Hora inicio: " + horario.getHoraInicio() + " Hora fin: " + horario.getHoraFin();
-                        System.out.println("Converting horario: " + nombre);
-                        return nombre;
+                        if(horario != null) {
+                            String dia = cursoRepositorio.obtenerNombreDiaSemana(horario.getDiaSemanaId());
+                            String nombre = dia + " " + "Hora inicio: " + horario.getHoraInicio() + " Hora fin: " + horario.getHoraFin();
+                            return nombre;
+                        }
                     } catch (Exception e) {
                         System.out.println("Error in toString conversion: " + e.getMessage());
                         e.printStackTrace();
                         return "";
                     }
+                    return "";
                 }
 
                 @Override

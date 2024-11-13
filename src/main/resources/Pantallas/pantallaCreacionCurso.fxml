@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+<HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <VBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" spacing="20.0" HBox.hgrow="ALWAYS">
          <children>
@@ -69,12 +69,12 @@
                   <Insets />
                </VBox.margin>
             </TextField>
-            <ChoiceBox fx:id="salasChoice" prefWidth="150.0">
+            <ChoiceBox fx:id="salasChoice" minWidth="150.0" VBox.vgrow="ALWAYS">
                <VBox.margin>
                   <Insets />
                </VBox.margin>
             </ChoiceBox>
-            <ChoiceBox fx:id="horariosChoice" prefWidth="150.0" />
+            <ChoiceBox fx:id="horariosChoice" minWidth="150.0" VBox.vgrow="ALWAYS" />
             <Button fx:id="btnCrearClase" mnemonicParsing="false" onAction="#crearClasePressed" text="CREAR CLASE">
                <VBox.margin>
                   <Insets />
