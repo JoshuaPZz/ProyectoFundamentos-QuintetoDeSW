@@ -7,6 +7,7 @@ import java.util.List;
 
 public class CursoRepositorio{
     private MateriaRepositorio materiaRepositorio;
+    private  SalaRepositorio salaRepositorio;
 
     public CursoRepositorio() {
         this.materiaRepositorio = new MateriaRepositorio(); // Inicializar el repositorio de materia
@@ -135,7 +136,8 @@ public class CursoRepositorio{
                 "JOIN Horario h2 ON h1.dia_semana_id = h2.dia_semana_id " +
                 "JOIN Curso c2 ON h2.materia_id = c2.materia_id " +
                 "AND i.estudiante_id = ? AND c2.id = ? " +
-                "AND (h1.hora_inicio < h2.hora_fin AND h1.hora_fin > h2.hora_inicio)";
+                "AND (h1.hora_inicio < h2.hora_fin AND h1.hora_fin > h2.hora_inicio) " +
+                "AND ha_aprobado = false";
 
         try (Connection conexion = getConnection();
              PreparedStatement pstmt = conexion.prepareStatement(query)) {
@@ -236,7 +238,8 @@ public class CursoRepositorio{
         Connection connection = ConexionBaseDeDatos.getConnection();
         connection.setAutoCommit(false);
          try {
-             String consulta = "INSERT INTO Curso (cupos, capacidad, materia_id, estado_id) VALUES (?, ?, ?, ?, ?)";
+             // 1. Insertar el curso
+             String consulta = "INSERT INTO Curso (cupos, capacidad, materia_id, estado_id) VALUES (?, ?, ?, ?)";
              PreparedStatement ps = connection.prepareStatement(consulta, Statement.RETURN_GENERATED_KEYS);
              ps.setInt(1, nuevoCurso.getCupos());
              ps.setInt(2, nuevoCurso.getCapacidad());
@@ -256,28 +259,30 @@ public class CursoRepositorio{
                     throw new SQLException("Falló la creación del curso, no se obtuvo el ID.");
             }
 
-                // 2. Insertar las salas asociadas al curso
+            // 2. Insertar las salas asociadas al curso
+            String salaId = nuevoCurso.getSala().getiD();
             String sqlSalaCurso = "UPDATE Curso SET sala_id = ? WHERE id = ?";
             PreparedStatement psSalaCurso = connection.prepareStatement(sqlSalaCurso);
+            psSalaCurso.setString(1, salaId);
+            psSalaCurso.setInt(2, cursoId);
+            psSalaCurso.executeUpdate();
 
-            for (Sala sala : nuevoCurso.getSalas()) {
-                psSalaCurso.setString(1, sala.getiD());
-                psSalaCurso.setInt(2, cursoId);
-                psSalaCurso.executeUpdate();
-            }
 
             // 3. Insertar los horarios
-            String sqlHorario = "INSERT INTO Horario (hora_inicio, hora_fin, dia_semana_id, materia_id, sala_id) VALUES (?, ?, ?, ?, ?)";
-            PreparedStatement psHorario = connection.prepareStatement(sqlHorario);
-
-            for (Horario horario : nuevoCurso.getHorarios()) {
-                psHorario.setTime(1, new Time(horario.getHoraInicio().getTime()));
-                psHorario.setTime(2, new Time(horario.getHoraFin().getTime()));
+            String sqlHorario = "INSERT INTO Horario (hora_inicio, hora_fin, dia_semana_id, materia_id, sala_id, curso_id) VALUES (?, ?, ?, ?, ?,?)";
+            try (PreparedStatement psHorario = connection.prepareStatement(sqlHorario)){
+                Horario horario = nuevoCurso.getHorario();
+                psHorario.setTime(1, new java.sql.Time(horario.getHoraInicio().getTime()));
+                psHorario.setTime(2, new java.sql.Time(horario.getHoraFin().getTime()));
                 psHorario.setInt(3, obtenerIdDiaSemana(horario.getDia()));
                 psHorario.setString(4, nuevoCurso.getMateria().getiD());
-                psHorario.setString(5, nuevoCurso.getSalas().get(0).getiD());
+                psHorario.setString(5, nuevoCurso.getSala().getiD());
+                psHorario.setString(6, String.valueOf(cursoId));
                 psHorario.executeUpdate();
+
             }
+
+
 
             // 4. Asignar los profesores al curso
             String sqlAsignacion = "INSERT INTO Asignacion (profesor_id, curso_id) VALUES (?, ?)";
@@ -325,27 +330,75 @@ public class CursoRepositorio{
         }
     }
 
-    public List<Sala> obtenerSalasPorCursoId(String salaId) throws SQLException {
-        List<Sala> salas = new ArrayList<>();
-        String sql = "SELECT * FROM Sala WHERE id = ?";
 
-        try (Connection conn = ConexionBaseDeDatos.getConnection();
-             PreparedStatement statement = conn.prepareStatement(sql)) {
+    public List<HorarioDisponible> obtenerHorariosDisponiblesPorSala(int salaId) throws SQLException {
+        List<HorarioDisponible> horariosDisponibles = new ArrayList<>();
+        String consulta = """
+            SELECT sh.id, sh.dia_semana_id, sh.hora_inicio, sh.hora_fin
+            FROM SEMANA_HORA sh
+            JOIN sala s ON s.id = ?
+            WHERE NOT EXISTS (
+                SELECT 1 FROM horario h
+                WHERE h.hora_inicio = sh.hora_inicio
+                  AND h.hora_fin = sh.hora_fin
+                  AND h.dia_semana_id = sh.dia_semana_id
+                  AND h.sala_id = s.id
+            )
+            ORDER BY sh.dia_semana_id, sh.hora_inicio, sh.hora_fin
+            """;
 
-            statement.setString(1, salaId);
-            ResultSet resultSet = statement.executeQuery();
+        try (Connection connection = ConexionBaseDeDatos.getConnection();
+             PreparedStatement ps = connection.prepareStatement(consulta)) {
 
-            while (resultSet.next()) {
-                Sala sala = new Sala();
-                sala.setUbicacion(resultSet.getString("ubicacion"));
-                sala.setCapacidad(resultSet.getInt("capacidad"));
+            ps.setInt(1, salaId);  // Asigna el valor de salaId al parámetro en la consulta
 
-                sala.setTipo(resultSet.getString("tipo"));
-                salas.add(sala);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    HorarioDisponible horarioDisponible = new HorarioDisponible(
+                            rs.getInt("id"),
+                            rs.getInt("dia_semana_id"),
+                            rs.getTime("hora_inicio"),
+                            rs.getTime("hora_fin")
+                    );
+                    horariosDisponibles.add(horarioDisponible);
+                }
             }
         }
-        return salas;
+        return horariosDisponibles;
     }
+
+    public Horario obtenerHorarioPorRelacion(int id) throws SQLException {
+        Horario horario = new Horario();
+        String sql = "SELECT sh.hora_inicio, sh.hora_fin, sh.dia_semana_id " +
+                     "FROM Semana_Hora sh " +
+                     "Where sh.id = ?";
+        try(Connection conn = ConexionBaseDeDatos.getConnection();
+        PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    horario.setHoraInicio(rs.getTime("hora_inicio"));
+                    horario.setHoraFin(rs.getTime("hora_fin"));
+                    horario.setDia(obtenerNombreDiaSemana(rs.getInt("dia_semana_id")));
+                }
+            }
+        }
+        return horario;
+    }
+
+    public String obtenerNombreDiaSemana(int diaSemanaId) {
+        return switch (diaSemanaId) {
+            case 1 -> "Lunes";
+            case 2 -> "Martes";
+            case 3 -> "Miércoles";
+            case 4 -> "Jueves";
+            case 5 -> "Viernes";
+            case 6 -> "Sábado";
+            default -> "Desconocido";
+        };
+    }
+
+
 
 /*
     public Curso agregarCurso(Curso curso) throws SQLException {

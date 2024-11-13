@@ -36,11 +36,10 @@ public class EstudianteRepositorio {
 
                     // Cargar las listas relacionadas usando una única conexión
                     try (Connection conn2 = getConnection()) {
-                        estudiante.setCursos(obtenerCursosPorEstudianteId(conn2, id));
                         estudiante.setCursosVistos(obtenerCursosVistosPorEstudianteId(conn2, id));
+                        estudiante.setCursos(obtenerCursosPorEstudianteId(conn2, id));
                         estudiante.setCarrito(obtenerCarritoPorEstudianteId(conn2, id));
                     }
-
                     return estudiante;
                 }
                 return null;
@@ -55,7 +54,7 @@ public class EstudianteRepositorio {
                 "FROM Curso c " +
                 "JOIN Materia m ON c.materia_id = m.id " +
                 "JOIN Inscripcion i ON c.id = i.curso_id " +
-                "WHERE i.estudiante_id = ?";
+                "WHERE i.estudiante_id = ? AND ha_aprobado = false";
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
             statement.setInt(1, estudianteId);
@@ -500,7 +499,17 @@ public class EstudianteRepositorio {
                 throw new SQLException("El estudiante superaría su límite de créditos permitidos");
             }
 
-            // 2. Inscribir el curso
+            // 2. Verificar prerrequisitos
+            if (!cumplePrerrequisitos(conn, estudianteId, cursoId)) {
+                throw new SQLException("El estudiante no cumple con los prerrequisitos necesarios");
+            }
+
+            // 3. Verificar correquisitos
+            if (!cumpleCorrequisitos(conn, estudianteId, cursoId)) {
+                throw new SQLException("El estudiante debe inscribir también los correquisitos necesarios");
+            }
+
+            // 4. Inscribir el curso
             String sqlInscripcion = "INSERT INTO Inscripcion (estudiante_id, curso_id, ha_aprobado) VALUES (?, ?, 0)";
             try (PreparedStatement stmtInscripcion = conn.prepareStatement(sqlInscripcion)) {
                 stmtInscripcion.setInt(1, estudianteId);
@@ -508,7 +517,7 @@ public class EstudianteRepositorio {
                 stmtInscripcion.executeUpdate();
             }
 
-            // 3. Eliminar el curso del carrito
+            // 5. Eliminar el curso del carrito
             String sqlEliminarCarrito = "DELETE FROM Carrito WHERE estudiante_id = ? AND curso_id = ?";
             try (PreparedStatement stmtEliminar = conn.prepareStatement(sqlEliminarCarrito)) {
                 stmtEliminar.setInt(1, estudianteId);
@@ -582,6 +591,118 @@ public class EstudianteRepositorio {
         }
 
         return (creditosActuales + creditosCurso) <= creditosMaximos;
+    }
+
+    private boolean cumplePrerrequisitos(Connection conn, int estudianteId, String cursoId) throws SQLException {
+        // 1. Obtener la materia del curso
+        String sqlMateria = "SELECT materia_id FROM Curso WHERE id = ?";
+        int materiaId;
+        try (PreparedStatement stmt = conn.prepareStatement(sqlMateria)) {
+            stmt.setString(1, cursoId);
+            ResultSet rs = stmt.executeQuery();
+            if (!rs.next()) {
+                throw new SQLException("No se encontró el curso");
+            }
+            materiaId = rs.getInt("materia_id");
+        }
+
+        // 2. Verificar los prerrequisitos
+        String sqlPrerrequisitos = """
+            SELECT p.PrerrequisitoID, m.nombre
+            FROM Prerrequisito p
+            JOIN Materia m ON p.PrerrequisitoID = m.id
+            WHERE p.MateriaID = ?
+        """;
+
+        try (PreparedStatement stmt = conn.prepareStatement(sqlPrerrequisitos)) {
+            stmt.setInt(1, materiaId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                int prerequisitoId = rs.getInt("PrerrequisitoID");
+                String nombreMateria = rs.getString("nombre");
+
+                // Verificar si el estudiante ha aprobado este prerrequisito
+                String sqlVerificarAprobacion = """
+                    SELECT COUNT(*) as aprobado
+                    FROM Inscripcion i
+                    JOIN Curso c ON i.curso_id = c.id
+                    WHERE i.estudiante_id = ? 
+                    AND c.materia_id = ?
+                    AND i.ha_aprobado = true
+                """;
+
+                try (PreparedStatement stmtVerificar = conn.prepareStatement(sqlVerificarAprobacion)) {
+                    stmtVerificar.setInt(1, estudianteId);
+                    stmtVerificar.setInt(2, prerequisitoId);
+                    ResultSet rsVerificar = stmtVerificar.executeQuery();
+
+                    if (rsVerificar.next() && rsVerificar.getInt("aprobado") == 0) {
+                        System.out.println("Falta prerrequisito: " + nombreMateria);
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean cumpleCorrequisitos(Connection conn, int estudianteId, String cursoId) throws SQLException {
+        // 1. Obtener la materia del curso
+        String sqlMateria = "SELECT materia_id FROM Curso WHERE id = ?";
+        int materiaId;
+        try (PreparedStatement stmt = conn.prepareStatement(sqlMateria)) {
+            stmt.setString(1, cursoId);
+            ResultSet rs = stmt.executeQuery();
+            if (!rs.next()) {
+                throw new SQLException("No se encontró el curso");
+            }
+            materiaId = rs.getInt("materia_id");
+        }
+
+        // 2. Verificar los correquisitos
+        String sqlCorrequisitos = """
+            SELECT c.CorrequisitoID, m.nombre
+            FROM Correquisito c
+            JOIN Materia m ON c.CorrequisitoID = m.id
+            WHERE c.MateriaID = ?
+        """;
+
+        try (PreparedStatement stmt = conn.prepareStatement(sqlCorrequisitos)) {
+            stmt.setInt(1, materiaId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                int correquisitoId = rs.getInt("CorrequisitoID");
+                String nombreMateria = rs.getString("nombre");
+
+                // Verificar si el estudiante está inscrito o ha aprobado este correquisito
+                String sqlVerificarInscripcion = """
+                    SELECT COUNT(*) as inscrito
+                    FROM Inscripcion i
+                    JOIN Curso c ON i.curso_id = c.id
+                    WHERE i.estudiante_id = ? 
+                    AND c.materia_id = ?
+                    AND (i.ha_aprobado = true OR 
+                        (i.ha_aprobado = false AND i.curso_id IN 
+                            (SELECT curso_id FROM Carrito WHERE estudiante_id = ?)))
+                """;
+
+                try (PreparedStatement stmtVerificar = conn.prepareStatement(sqlVerificarInscripcion)) {
+                    stmtVerificar.setInt(1, estudianteId);
+                    stmtVerificar.setInt(2, correquisitoId);
+                    stmtVerificar.setInt(3, estudianteId);
+                    ResultSet rsVerificar = stmtVerificar.executeQuery();
+
+                    if (rsVerificar.next() && rsVerificar.getInt("inscrito") == 0) {
+                        System.out.println("Falta correquisito: " + nombreMateria);
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
     }
 
     public boolean verificarInscripcion(int estudianteId, String cursoId) throws SQLException {

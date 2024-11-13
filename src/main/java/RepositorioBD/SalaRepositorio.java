@@ -10,16 +10,55 @@ public class SalaRepositorio {
     }
 
     // Método para insertar una sala en la base de datos
-    public void insertarSala(Sala sala) throws SQLException {
+    public boolean insertarSala(Sala sala) throws SQLException {
         String query = "INSERT INTO Sala (ubicacion, capacidad, tipo) VALUES (?, ?, ?)";
+
         try (Connection conexion = getConnection();
-             PreparedStatement ps = conexion.prepareStatement(query)) {
+             PreparedStatement ps = conexion.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+
             ps.setString(1, sala.getUbicacion());
             ps.setInt(2, sala.getCapacidad());
             ps.setString(3, sala.getTipo());
-            ps.executeUpdate();
-            System.out.println("Sala agregada: " + sala.getUbicacion());
+
+            // Ejecutar la inserción
+            int filasAfectadas = ps.executeUpdate();
+
+            if (filasAfectadas > 0) {
+                // Obtener el ID generado automáticamente
+                try (ResultSet rs = ps.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        sala.setiD(rs.getString(1));  // Obtener el ID (por lo general es el primer campo)
+                        return true;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al insertar la sala: " + e.getMessage());
+            throw e;
         }
+
+        return false;
+    }
+
+    public List<Sala> obtenerSalas() throws SQLException {
+        List<Sala> salas = new ArrayList<>();
+        String sql = "SELECT * FROM Sala";
+
+        try (Connection conn = ConexionBaseDeDatos.getConnection();
+             PreparedStatement statement = conn.prepareStatement(sql)) {
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                Sala sala = new Sala();
+                sala.setiD(resultSet.getString("id"));
+                sala.setUbicacion(resultSet.getString("ubicacion"));
+                sala.setCapacidad(resultSet.getInt("capacidad"));
+
+                sala.setTipo(resultSet.getString("tipo"));
+                salas.add(sala);
+            }
+        }
+        return salas;
     }
 
     // Método para actualizar una sala
@@ -46,7 +85,6 @@ public class SalaRepositorio {
     }
 
     public Sala obtenerSalaPorId(String salaId) throws SQLException {
-        Sala sala = null;
         String query = "SELECT * FROM Sala WHERE ID = ?";
 
         try (Connection connection = getConnection();
@@ -54,14 +92,30 @@ public class SalaRepositorio {
             statement.setString(1, salaId);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
-                    sala = new Sala();
+                    Sala sala = new Sala();
                     sala.setiD(resultSet.getString("ID"));
                     sala.setUbicacion(resultSet.getString("ubicacion"));
                     sala.setCapacidad(resultSet.getInt("capacidad"));
                     sala.setTipo(resultSet.getString("tipo"));
+                    return sala;
                 }
             }
         }
-        return sala;
+        return null;
+    }
+
+    public int obtenerCapacidadSala(String salaId) throws SQLException {
+        int capacidad = 0;
+        String query = "SELECT capacidad FROM Sala WHERE ID = ?";
+        try (Connection conexion = getConnection();
+        PreparedStatement statement = conexion.prepareStatement(query)) {
+            statement.setString(1, salaId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    capacidad = resultSet.getInt("capacidad");
+                }
+            }
+        }
+        return capacidad;
     }
 }
