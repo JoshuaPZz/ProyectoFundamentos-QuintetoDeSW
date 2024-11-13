@@ -11,7 +11,7 @@
 
 <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <VBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="195.0" prefWidth="66.0" spacing="20.0" HBox.hgrow="ALWAYS">
+      <VBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" spacing="20.0" HBox.hgrow="ALWAYS">
          <children>
             <Label prefHeight="25.0" text="MATERIA" VBox.vgrow="ALWAYS">
                <VBox.margin>
@@ -35,7 +35,15 @@
                   <Font name="League Gothic Regular" size="20.0" />
                </font>
             </Label>
-            <Label prefHeight="50.0" text="HORARIOS">
+            <Label prefHeight="25.0" text="SALA">
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
+               <font>
+                  <Font name="League Gothic Regular" size="20.0" />
+               </font>
+            </Label>
+            <Label prefHeight="25.0" text="HORARIOS">
                <padding>
                   <Insets left="10.0" />
                </padding>
@@ -46,48 +54,27 @@
                   <Font name="League Gothic Regular" size="20.0" />
                </font>
             </Label>
-            <Label prefHeight="35.0" />
+            <Label minHeight="25.0" prefHeight="35.0" />
          </children>
       </VBox>
-      <VBox alignment="CENTER_LEFT" fillWidth="false" maxHeight="-Infinity" maxWidth="-Infinity" HBox.hgrow="ALWAYS">
+      <VBox alignment="CENTER_LEFT" fillWidth="false" maxHeight="-Infinity" maxWidth="-Infinity" spacing="20.0" HBox.hgrow="ALWAYS">
          <children>
             <ChoiceBox fx:id="materiasChoice" prefWidth="150.0">
                <VBox.margin>
-                  <Insets bottom="20.0" />
+                  <Insets />
                </VBox.margin>
             </ChoiceBox>
             <TextField fx:id="cuposLabel">
                <VBox.margin>
-                  <Insets bottom="20.0" />
+                  <Insets />
                </VBox.margin>
             </TextField>
-            <HBox alignment="CENTER_LEFT">
-               <children>
-                  <VBox>
-                     <children>
-                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="25.0" text="HORA INICIO">
-                           <font>
-                              <Font name="League Gothic Regular" size="18.0" />
-                           </font>
-                        </Label>
-                        <TextField fx:id="inicioLabel" prefHeight="25.0" prefWidth="81.0" />
-                     </children>
-                  </VBox>
-                  <VBox>
-                     <children>
-                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="25.0" text="HORA FIN">
-                           <font>
-                              <Font name="League Gothic Regular" size="18.0" />
-                           </font>
-                        </Label>
-                        <TextField fx:id="finLabel" prefWidth="81.0" />
-                     </children>
-                  </VBox>
-               </children>
+            <ChoiceBox fx:id="salasChoice" prefWidth="150.0">
                <VBox.margin>
-                  <Insets bottom="20.0" />
+                  <Insets />
                </VBox.margin>
-            </HBox>
+            </ChoiceBox>
+            <ChoiceBox fx:id="horariosChoice" prefWidth="150.0" />
             <Button fx:id="btnCrearClase" mnemonicParsing="false" onAction="#crearClasePressed" text="CREAR CLASE">
                <VBox.margin>
                   <Insets />

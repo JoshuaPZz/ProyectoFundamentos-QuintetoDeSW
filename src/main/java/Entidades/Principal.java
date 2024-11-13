@@ -20,6 +20,7 @@ public class Principal extends Application {
         CursoRepositorio cursoRepositorio = new CursoRepositorio();
         EstudianteRepositorio estudianteRepositorio = new EstudianteRepositorio();
         MateriaRepositorio materiaRepositorio = new MateriaRepositorio();
+        SalaRepositorio salaRepositorio = new SalaRepositorio();
 
         ServicioCurso servicioCurso = new ServicioCurso(cursoRepositorio, estudianteRepositorio);
         ServicioMateria servicioMateria = new ServicioMateria();
@@ -37,7 +38,7 @@ public class Principal extends Application {
         ControladorPantallaInformacionCompleta controladorPantallaInformacionCompleta = new ControladorPantallaInformacionCompleta();
         ControladorProfesor controladorProfesor = new ControladorProfesor();
         ControladorSeleccion controladorSeleccion = new ControladorSeleccion();
-        ControladorCreacionCurso controladorCreacionCurso = new ControladorCreacionCurso(materiaRepositorio);
+        ControladorCreacionCurso controladorCreacionCurso = new ControladorCreacionCurso(materiaRepositorio, salaRepositorio, cursoRepositorio, servicioCurso);
 
         SceneManager.getInstance().getControllers().put("/Pantallas/PantallaLogin.fxml", controladorLogIn);
         SceneManager.getInstance().getControllers().put("/Pantallas/pantallaInscripcion.fxml", controladorPantallaInscripcion);
