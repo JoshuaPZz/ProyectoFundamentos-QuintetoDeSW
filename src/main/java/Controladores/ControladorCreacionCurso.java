@@ -47,13 +47,15 @@ public class ControladorCreacionCurso {
     @FXML
     void crearClasePressed(ActionEvent event) {
         try {
+            List<Profesor> profesores = new ArrayList<>();
+            profesores.add(Sesion.getInstancia().getProfesor());
             servicioCurso.crearCurso(
                     materiasChoice.getSelectionModel().getSelectedItem(),
                     this.salasChoice.getSelectionModel().getSelectedItem().getCapacidad(),
                     this.cursoRepositorio.obtenerHorarioPorRelacion(this.horariosChoice.getSelectionModel().getSelectedItem().getId()),
                     this.salasChoice.getSelectionModel().getSelectedItem(),
                     Integer.parseInt(this.cuposLabel.getText()),
-                    Sesion.getInstancia().getProfesor()
+                    profesores
             );
 
         }catch(Exception e) {
