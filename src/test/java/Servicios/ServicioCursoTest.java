@@ -34,14 +34,14 @@ public class ServicioCursoTest {
         salaRepositorio = new SalaRepositorio();
         servicioCurso = new ServicioCurso(cursoRepositorio, estudianteRepositorio);
 
-        // Create common test data
+
         materia = new Materia("Matematicas", "101", "", 3, new ArrayList<>(), new ArrayList<>());
         horario = new Horario("Lunes",
                 ServicioCurso.crearHorario(2024, Calendar.JANUARY, 1, 9),
                 ServicioCurso.crearHorario(2024, Calendar.JANUARY, 1, 11));
         sala = new Sala("105", "X", 30, "Y");
 
-        // Set up database
+
         salaRepositorio.insertarSala(sala);
         materiaRepositorio.agregarMateria(materia);
 
@@ -52,12 +52,9 @@ public class ServicioCursoTest {
 
         // Set up student
         estudiante = estudianteRepositorio.buscarPorId(1);
-
         for(Curso c : estudiante.getCursos()){
             estudianteRepositorio.eliminarInscripcion(estudiante.getId(), c.getiD());
         }
-
-
     }
 
     @AfterEach
@@ -74,14 +71,9 @@ public class ServicioCursoTest {
         }
     }
 
-
-
-
-
     @Test
     public void testCrearCursoExitoso() throws SQLException {
-
-        Curso nuevoCurso = servicioCurso.buscarCursoPorID(this.curso.getiD());
+        Curso nuevoCurso = servicioCurso.crearCurso(materia, 30, horario,sala, 25, new ArrayList<>());
         assertNotNull(nuevoCurso, "El curso creado no debería ser null");
         assertEquals(30, nuevoCurso.getCapacidad(), "La capacidad del curso no coincide");
         assertTrue(
@@ -152,9 +144,7 @@ public class ServicioCursoTest {
         Curso nuevoCurso = cursoRepositorio.obtenerCursoPorId(cursoId);
         assertNotNull(servicioCurso.verProfesor(nuevoCurso), "El profesor no debería ser null");
         assertEquals(1, servicioCurso.verProfesor(nuevoCurso).getId(), "El ID del profesor no coincide");
-
     }
-
 
 
     @Test
@@ -179,7 +169,6 @@ public class ServicioCursoTest {
         //AssertTrue
         boolean hayCruce = servicioCurso.hayCruceHorarios(curso2, estudiante);
         assertTrue(hayCruce, "Debería detectar el cruce de horarios");
-
     }
 
     @Test
