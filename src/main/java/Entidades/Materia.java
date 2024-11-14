@@ -10,6 +10,18 @@ public class Materia {
     private List<Materia> preRequisitos = new ArrayList<>();
     private List<Materia> coRequisitos = new ArrayList<>();
 
+    public Materia(){
+
+    }
+    public Materia(String nombre, String id, String descripcion, int creditos, List<Materia> preRequisitos, List<Materia> coRequisitos) {
+        this.nombre = nombre;
+        this.iD = id;
+        this.descripcion = descripcion;
+        this.creditos = creditos;
+        this.preRequisitos = preRequisitos;
+        this.coRequisitos = coRequisitos;
+
+    }
     public String getNombre() {
         return nombre;
     }

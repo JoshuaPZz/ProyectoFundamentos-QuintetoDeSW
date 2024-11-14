@@ -9,6 +9,17 @@ public class Sala {
     private String tipo;
     private List<Curso> cursos;
 
+    public Sala(){
+
+    }
+
+    public Sala(String iD, String ubicacion, int capacidad, String tipo) {
+        this.iD = iD;
+        this.ubicacion = ubicacion;
+        this.capacidad = capacidad;
+        this.tipo = tipo;
+    }
+
     public String getiD() {
         return iD;
     }

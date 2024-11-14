@@ -234,17 +234,18 @@ public class CursoRepositorio{
         return materia;
     }
 
-    public void crearCurso(Curso nuevoCurso) throws SQLException {
+    public String crearCurso(Curso nuevoCurso) throws SQLException {
         Connection connection = ConexionBaseDeDatos.getConnection();
         connection.setAutoCommit(false);
-         try {
-             // 1. Insertar el curso
-             String consulta = "INSERT INTO Curso (cupos, capacidad, materia_id, estado_id) VALUES (?, ?, ?, ?)";
-             PreparedStatement ps = connection.prepareStatement(consulta, Statement.RETURN_GENERATED_KEYS);
-             ps.setInt(1, nuevoCurso.getCupos());
-             ps.setInt(2, nuevoCurso.getCapacidad());
-             ps.setInt(3, Integer.parseInt(nuevoCurso.getMateria().getiD()));
-             ps.setInt(4, 1);
+        int cursoId;
+        try {
+            // 1. Insertar el curso
+            String consulta = "INSERT INTO Curso (cupos, capacidad, materia_id, estado_id) VALUES (?, ?, ?, ?)";
+            PreparedStatement ps = connection.prepareStatement(consulta, Statement.RETURN_GENERATED_KEYS);
+            ps.setInt(1, nuevoCurso.getCupos());
+            ps.setInt(2, nuevoCurso.getCapacidad());
+            ps.setInt(3, Integer.parseInt(nuevoCurso.getMateria().getiD()));
+            ps.setInt(4, 1);
 
             int filasInsertadas = ps.executeUpdate();
             if (filasInsertadas == 0) {
@@ -252,11 +253,10 @@ public class CursoRepositorio{
             }
 
             ResultSet generatedKeys = ps.getGeneratedKeys();
-            int cursoId;
             if (generatedKeys.next()) {
                 cursoId = generatedKeys.getInt(1);
             } else {
-                    throw new SQLException("Falló la creación del curso, no se obtuvo el ID.");
+                throw new SQLException("Falló la creación del curso, no se obtuvo el ID.");
             }
 
             // 2. Insertar las salas asociadas al curso
@@ -270,7 +270,7 @@ public class CursoRepositorio{
 
             // 3. Insertar los horarios
             String sqlHorario = "INSERT INTO Horario (hora_inicio, hora_fin, dia_semana_id, materia_id, sala_id, curso_id) VALUES (?, ?, ?, ?, ?,?)";
-            try (PreparedStatement psHorario = connection.prepareStatement(sqlHorario)){
+            try (PreparedStatement psHorario = connection.prepareStatement(sqlHorario)) {
                 Horario horario = nuevoCurso.getHorario();
                 psHorario.setTime(1, new java.sql.Time(horario.getHoraInicio().getTime()));
                 psHorario.setTime(2, new java.sql.Time(horario.getHoraFin().getTime()));
@@ -283,7 +283,6 @@ public class CursoRepositorio{
             }
 
 
-
             // 4. Asignar los profesores al curso
             String sqlAsignacion = "INSERT INTO Asignacion (profesor_id, curso_id) VALUES (?, ?)";
             PreparedStatement psAsignacion = connection.prepareStatement(sqlAsignacion);
@@ -294,14 +293,15 @@ public class CursoRepositorio{
                 psAsignacion.executeUpdate();
             }
             connection.commit();
-         } catch (SQLException e) {
-         // Si algo salió mal, hacemos rollback de la transacción
-         connection.rollback();
-         throw e;
-         } finally {
-         // Restauramos el auto-commit a su estado original
-         connection.setAutoCommit(true);
-         }
+        } catch (SQLException e) {
+            // Si algo salió mal, hacemos rollback de la transacción
+            connection.rollback();
+            throw e;
+        } finally {
+            // Restauramos el auto-commit a su estado original
+            connection.setAutoCommit(true);
+        }
+        return Integer.toString(cursoId);
     }
 
     private int obtenerIdDiaSemana(String nombreDia) throws SQLException {

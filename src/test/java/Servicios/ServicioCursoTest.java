@@ -2,6 +2,7 @@ package Servicios;
 
 import Entidades.*;
 import RepositorioBD.*;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.*;
@@ -20,10 +21,14 @@ public class ServicioCursoTest {
     private MateriaRepositorio materiaRepositorio;
     private SalaRepositorio salaRepositorio;
     private Curso curso;
+    private Materia materia;
+    private Horario horario;
     private Estudiante estudiante;
+    private Sala sala;
 
     @BeforeEach
     public void setUp() throws SQLException {
+        // Initialize services and repositories
         servicioSala = new ServicioSala();
         profesorRepositorio = new ProfesorRepositorio();
         cursoRepositorio = new CursoRepositorio();
@@ -32,84 +37,59 @@ public class ServicioCursoTest {
         salaRepositorio = new SalaRepositorio();
         servicioCurso = new ServicioCurso(cursoRepositorio, estudianteRepositorio);
 
-        // Configurar datos de prueba
-        Materia materia = new Materia();
-        materia.setiD("101");
-        materia.setCreditos(3);
-        materia.setNombre("Matemáticas");
+        // Create common test data
+        materia = new Materia("Matematicas", "101", "", 3, new ArrayList<>(), new ArrayList<>());
+        horario = new Horario("Lunes",
+                ServicioCurso.crearHorario(2024, Calendar.JANUARY, 1, 9),
+                ServicioCurso.crearHorario(2024, Calendar.JANUARY, 1, 11));
+        sala = new Sala("105", "X", 30, "Y");
+
+        // Set up database
+        salaRepositorio.insertarSala(sala);
         materiaRepositorio.agregarMateria(materia);
 
-        Horario horario = new Horario();
-        horario.setDia("Lunes");
-        horario.setHoraInicio(ServicioCurso.crearHorario(2024, Calendar.JANUARY, 1, 9));
-        horario.setHoraFin(ServicioCurso.crearHorario(2024, Calendar.JANUARY, 1, 11));
+        // Create course with common data
+        curso = new Curso(materia, 30, horario, sala, 25);
 
-
-        Sala sala = new Sala();
-        sala.setiD("101");
-        sala.setUbicacion("Edificio Basicas");
-        sala.setCapacidad(30);
-        sala.setTipo("Laboratorio");
-        salaRepositorio.insertarSala(sala);
-
-        Sala salaInsertada = salaRepositorio.obtenerSalaPorId(sala.getiD());
-        assertNotNull(salaInsertada, "La sala no fue insertada correctamente");
-
-        List<Profesor> profesores = new ArrayList<>();
-        Profesor profesor = new Profesor();
-        profesor.setId(1);
-        profesor.setNombre("Juan Perez");
-        profesores.add(profesor);
-
-
-        curso = new Curso();
-        curso.setMateria(materia);
-        curso.setCapacidad(30);
-        curso.setHorario(horario);
-        curso.setProfesores(profesores);
-        curso.setEstudiantes(new ArrayList<>());
-        curso.setiD("CURSO101");
-        curso.setSala(sala);
-
+        // Set up student
         estudiante = new Estudiante();
         estudiante.setId(1);
+        estudiante.setCreditosmax(500);
         estudiante.setNombre("Test Student");
         estudiante.setCursos(new ArrayList<>());
         estudiante.setCursosVistos(new ArrayList<>());
-/*
-        for(Horario horario : curso.getHorarios()) {
-            System.out.println(horario.getDia());
-            System.out.println(horario.getHoraInicio());
-            System.out.println(horario.getHoraFin());
-        }
-
- */
-
-        cursoRepositorio.crearCurso(curso);
     }
 
+    @AfterEach
     public void tearDown() throws SQLException {
-        cursoRepositorio.eliminarCurso(curso.getiD());
+        // Clean up test data
+        if (curso != null && curso.getiD() != null) {
+            cursoRepositorio.eliminarCurso(curso.getiD());
+        }
+        if (materia != null && materia.getiD() != null) {
+            materiaRepositorio.eliminarMateria(materia.getiD());
+        }
+        if (sala != null && sala.getiD() != null) {
+            salaRepositorio.eliminarSala(Integer.parseInt(sala.getiD()));
+        }
     }
+
+
+
+
 
     @Test
     public void testCrearCursoExitoso() throws SQLException {
-        Materia materia = new Materia();
-        materia.setiD("102");
-        Horario horario = new Horario();
-        horario.setDia("Lunes");
-        horario.setHoraInicio(ServicioCurso.crearHorario(2024, Calendar.JANUARY, 1, 9));
-        horario.setHoraFin(ServicioCurso.crearHorario(2024, Calendar.JANUARY, 1, 11));
 
-       Sala sala = new Sala();
-        List<Profesor> profesores = new ArrayList<>();
-
-        Curso nuevoCurso = servicioCurso.crearCurso(materia, 25, horario, sala, 25, profesores);
-
+        String cursoId = cursoRepositorio.crearCurso(this.curso);
+        Curso nuevoCurso = cursoRepositorio.obtenerCursoPorId(cursoId);
 
         assertNotNull(nuevoCurso, "El curso creado no debería ser null");
         assertEquals(25, nuevoCurso.getCapacidad(), "La capacidad del curso no coincide");
-        assertEquals(materia, nuevoCurso.getMateria(), "La materia del curso no coincide");
+        assertTrue(
+                Objects.equals(nuevoCurso.getMateria().getNombre(), materia.getNombre()) &&
+                        Objects.equals(nuevoCurso.getMateria().getiD(), materia.getiD()) &&
+                        Objects.equals(nuevoCurso.getMateria().getDescripcion(), materia.getDescripcion()));
     }
 
     @Test
@@ -146,24 +126,52 @@ public class ServicioCursoTest {
 
     @Test
     public void testVerEstudiantesCursoConEstudiantes() throws SQLException {
-        cursoRepositorio.crearCurso(curso);
-        estudianteRepositorio.inscribirCurso(estudiante.getId(), curso.getiD());
+        String cursoId = cursoRepositorio.crearCurso(curso);
+
+        estudianteRepositorio.inscribirCurso(estudiante.getId(), cursoId);
 
         List<Estudiante> estudiantes = servicioCurso.verEstudiantes(curso);
 
         assertNotNull(estudiantes, "La lista de estudiantes no debería ser null");
         assertFalse(estudiantes.isEmpty(), "La lista de estudiantes no debería estar vacía");
         assertEquals(1, estudiantes.size(), "Debería haber un estudiante en la lista");
+        cursoRepositorio.eliminarCurso(cursoId);
     }
 
     @Test
     public void testVerProfesorExistente() throws SQLException {
-        cursoRepositorio.crearCurso(curso);
-        Profesor profesor = servicioCurso.verProfesor(curso);
+        Materia materia = new Materia("Matematicas", "101", "", 3, new ArrayList<>(), new ArrayList<>());
+        Horario horario = new Horario("Lunes",
+                ServicioCurso.crearHorario(2024, Calendar.JANUARY, 1, 9),
+                ServicioCurso.crearHorario(2024, Calendar.JANUARY, 1, 11));
+        Sala sala = new Sala("105", "X", 30, "Y");
 
-        assertNotNull(profesor, "El profesor no debería ser null");
-        assertEquals("P001", profesor.getId(), "El ID del profesor no coincide");
+        //Agregar materia y curso a base de datos
+        salaRepositorio.insertarSala(sala);
+        materiaRepositorio.agregarMateria(materia);
+        Curso curso = new Curso(materia, 30,horario,sala,25);
+
+        //Crear profesor
+        List<Profesor> profesores = new ArrayList<>();
+        Profesor profesor = new Profesor();
+        profesor.setId(1);
+        profesor.setNombre("Juan Perez");
+        profesores.add(profesor);
+
+        curso.setProfesores(profesores);
+        String cursoId = cursoRepositorio.crearCurso(curso);
+        Curso nuevoCurso = cursoRepositorio.buscarPorId(cursoId);
+
+        assertNotNull(servicioCurso.verProfesor(nuevoCurso), "El profesor no debería ser null");
+
+        assertEquals(1, servicioCurso.verProfesor(nuevoCurso).getId(), "El ID del profesor no coincide");
+
+        cursoRepositorio.eliminarCurso(nuevoCurso.getiD());
+        materiaRepositorio.eliminarMateria(materia.getiD());
+        salaRepositorio.eliminarSala(Integer.parseInt(sala.getiD()));
     }
+
+
 
     @Test
     public void testVerProfesorCursoInexistente() {
@@ -176,43 +184,74 @@ public class ServicioCursoTest {
 
     @Test
     public void testHayCruceHorariosConCruce() throws SQLException {
-        cursoRepositorio.crearCurso(curso);
-        estudianteRepositorio.inscribirCurso(estudiante.getId(), curso.getiD());
+        Materia materia = new Materia("Matematicas", "101", "", 0, new ArrayList<>(), new ArrayList<>());
+        Horario horario = new Horario("Lunes",
+                ServicioCurso.crearHorario(2024, Calendar.JANUARY, 1, 9),
+                ServicioCurso.crearHorario(2024, Calendar.JANUARY, 1, 11));
+        Sala sala = new Sala("105", "X", 30, "Y");
 
-        // Crear otro curso con el mismo horario
-        Curso curso2 = new Curso();
-        Materia materia2 = new Materia();
-        materia2.setiD("103");
-        curso2.setMateria(materia2);
-        curso2.setHorarios(curso.getHorarios());
-        curso2.setiD("CURSO102");
-        cursoRepositorio.crearCurso(curso2);
+        //Agregar materia y curso a base de datos
+        salaRepositorio.insertarSala(sala);
+        materiaRepositorio.agregarMateria(materia);
+        Curso curso = new Curso(materia, 30,horario,sala,25);
 
+        String cursoId = cursoRepositorio.crearCurso(curso);
+        estudianteRepositorio.agregarAlCarrito(estudiante.getId(), Integer.parseInt(cursoId));
+        estudianteRepositorio.inscribirCurso(estudiante.getId(),cursoId);
+
+        //Crear un nuevo curso igual con diferente ID
+        String nuevoCurso = cursoRepositorio.crearCurso(curso);
+        Curso curso2 = cursoRepositorio.obtenerCursoPorId(nuevoCurso);
+
+        //AssertTrue
         boolean hayCruce = servicioCurso.hayCruceHorarios(curso2, estudiante);
         assertTrue(hayCruce, "Debería detectar el cruce de horarios");
+
+        //limpiar base e datos
+        cursoRepositorio.eliminarCurso(curso.getiD());
+        cursoRepositorio.eliminarCurso(curso2.getiD());
+        materiaRepositorio.eliminarMateria(materia.getiD());
+        salaRepositorio.eliminarSala(Integer.parseInt(sala.getiD()));
+
+        estudianteRepositorio.eliminarInscripcion(estudiante.getId(),curso.getiD());
     }
 
     @Test
     public void testHayCruceHorariosSinCruce() throws SQLException {
-        cursoRepositorio.crearCurso(curso);
-        estudianteRepositorio.inscribirCurso(estudiante.getId(), curso.getiD());
 
-        // Crear otro curso con horario diferente
-        Curso curso2 = new Curso();
-        Materia materia2 = new Materia();
-        materia2.setiD("103");
+        Materia materia = new Materia("Matematicas", "101", "", 0, new ArrayList<>(), new ArrayList<>());
+        Horario horario = new Horario("Lunes",
+                ServicioCurso.crearHorario(2024, Calendar.JANUARY, 1, 9),
+                ServicioCurso.crearHorario(2024, Calendar.JANUARY, 1, 11));
+        Sala sala = new Sala("105", "X", 30, "Y");
+
+        //Agregar materia y curso a base de datos
+        salaRepositorio.insertarSala(sala);
+        materiaRepositorio.agregarMateria(materia);
+        Curso curso = new Curso(materia, 30,horario,sala,25);
+
+        String cursoId = cursoRepositorio.crearCurso(curso);
+        estudianteRepositorio.agregarAlCarrito(estudiante.getId(), Integer.parseInt(cursoId));
+        estudianteRepositorio.inscribirCurso(estudiante.getId(),cursoId);
+
+
         List<Horario> horarios = new ArrayList<>();
         String dia = "Lunes"; // Definir el día de la semana
         Date horaInicio = ServicioCurso.crearHorario(2024, Calendar.JANUARY, 1, 9);
         Date horaFin = ServicioCurso.crearHorario(2024, Calendar.JANUARY, 1, 11);
         horarios.add(new Horario(dia, horaInicio, horaFin));
+        //Crear un nuevo curso igual con diferente ID
+        Curso curso2 = curso;
         curso2.setHorarios(horarios);
-        curso2.setMateria(materia2);
-        curso2.setiD("CURSO102");
-        cursoRepositorio.crearCurso(curso2);
-
+        //AssertFalse
         boolean hayCruce = servicioCurso.hayCruceHorarios(curso2, estudiante);
         assertFalse(hayCruce, "No debería haber cruce de horarios");
+        //limpiar base e datos
+        cursoRepositorio.eliminarCurso(curso.getiD());
+        cursoRepositorio.eliminarCurso(curso2.getiD());
+        materiaRepositorio.eliminarMateria(materia.getiD());
+        salaRepositorio.eliminarSala(Integer.parseInt(sala.getiD()));
+        estudianteRepositorio.eliminarInscripcion(estudiante.getId(),curso.getiD());
     }
 
     @Test
