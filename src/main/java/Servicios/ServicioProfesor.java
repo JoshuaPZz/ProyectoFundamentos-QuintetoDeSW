@@ -24,7 +24,7 @@ public class ServicioProfesor {
     public boolean AsignarSala(Sala sala, Curso curso){
         if(curso != null && sala!= null){
             if(curso.getSalas().isEmpty()){
-                servicioCurso.asignarSalaACurso(curso.getiD(),sala);
+                servicioCurso.asignarSalaACurso(curso,sala);
             }
         }
         return false;
